@@ -6,29 +6,32 @@
 template <typename T>
 class Queable {
 private:
-  Queable<T>* prev;
-  Queable<T>* next;
-  static Queable<T>* first;
+  Queable& operator=(const Queable&);
   
-  Queable<T>& operator=(const Queable<T>&);
+protected:
+  Queable* prev;
+  Queable* next;
+  static Queable* first; // TODO: these should probably all be volatile?
+  
+  void insert_before(Queable* t) {
+    prev = t->prev;
+    next = t;
+    prev->next = next->prev = this;
+  }
   
 public:
   Queable() : prev(0), next(0) { }
   ~Queable() { dequeue(); }
   
   void enqueue() {
-    CriticalSection m;
+    CriticalSection cs;
     dequeue();
-    if (any()) {
-      prev = &tail();
-      next = &head();
-      tail().next = this;
-      head().prev = this;
-    } else prev = next = first = this;
+    if (first) insert_before(first);
+    else prev = next = first = this;
   }
   
   void dequeue() {
-    CriticalSection m;
+    CriticalSection cs;
     if (next) {
       next->prev = prev;
       prev->next = next;

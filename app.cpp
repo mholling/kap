@@ -3,15 +3,11 @@
 #include <util/delay.h>
 
 void App::run() {
-  serial.string("hello, world!\r\n");
-  magnetometer.configure();
-  magnetometer.wake();
-  // magnetometer.show_diagnostic();
-  for (;;) {
-    delay(1000);
-    magnetometer.show_status();
-    magnetometer.show_bearing();
-  }
+  scheduler.init();
+  i2c.init();
+  magnetometer.init();
+  
+  scheduler.run();
 }
 
 void delay(int t) { for (int n = t; n >= 128; n -= 128) _delay_ms(128); _delay_ms(t % 128); }
@@ -32,4 +28,5 @@ void long_flash() {
   delay(500);
 }
 
-extern "C" void atexit(void) { } 
+void __cxa_pure_virtual(void) { }
+void atexit(void) { }

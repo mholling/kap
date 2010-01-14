@@ -17,7 +17,7 @@ void Serial::character(char c) {
 	UDR0 = c;
 }
 
-void Serial::string(char * const s) {
+void Serial::string(const char * const s) {
   for (int n = 0; s[n] != '\0'; n++)
     character(s[n]);
 }
@@ -53,28 +53,28 @@ void Serial::newline() {
   string("\r\n");
 }
 
-void Serial::debug(char * const s, char b) {
+void Serial::debug(const char * const s, char b) {
   string(s);
   string(": 0x");
   hex(b);
   newline();
 }
 
-void Serial::debug(char * const s, bool b) {
+void Serial::debug(const char * const s, bool b) {
   string(s);
   string(": ");
   boolean(b);
   newline();
 }
 
-void Serial::debug(char * const s, int b) {
+void Serial::debug(const char * const s, int b) {
   string(s);
   string(": ");
   integer(b);
   newline();
 }
 
-void Serial::debug_b(char * const s, char b) {
+void Serial::debug_b(const char * const s, char b) {
   string(s);
   string(": 0b");
   binary(b);

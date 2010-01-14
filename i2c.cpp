@@ -11,29 +11,37 @@ I2C::I2C() {
   TWCR = _BV(TWEN) | _BV(TWIE) | _BV(TWINT);
 }
 
-const void I2C::start() {
+const void I2C::init() {
+  
+}
+
+const void I2C::Task::start() {
   TWCR = _BV(TWEN) | _BV(TWIE) | _BV(TWINT) | _BV(TWEA) | _BV(TWSTA);
 }
 
-const void I2C::stop() {
+const void I2C::Task::stop() {
   TWCR = _BV(TWEN) | _BV(TWIE) | _BV(TWINT) | _BV(TWEA) | _BV(TWSTO);
   while (TWCR & _BV(TWSTO)) ;
 }
 
-const void I2C::ack() {
+const void I2C::Task::ack() {
   TWCR = _BV(TWEN) | _BV(TWIE) | _BV(TWINT) | _BV(TWEA);
 }
 
-const void I2C::nack() {
+const void I2C::Task::nack() {
   TWCR = _BV(TWEN) | _BV(TWIE) | _BV(TWINT);
 }
 
-const void I2C::release() {
+const void I2C::Task::release() {
   TWCR = _BV(TWEN) | _BV(TWIE) | _BV(TWINT) | _BV(TWEA);
 }
 
 const void I2C::interrupt() {
-  
+  TWCR &= ~(_BV(TWINT) | _BV(TWIE));
+  App::app().scheduler.signal(task);
+}
+
+void I2C::Task::operator ()() {
   switch (TW_STATUS) {
     case TW_START:     // sent start condition
       TWDR = TW_WRITE | (Message::head().address << 1);
@@ -56,7 +64,7 @@ const void I2C::interrupt() {
         ack();
       } else {
         stop();
-        next_message();
+        message_completed();
       }
       break;
   
@@ -69,26 +77,27 @@ const void I2C::interrupt() {
     case TW_MR_DATA_NACK: // data received, nack sent
       Message::head().put_data(TWDR);
       stop();
-      next_message(); // TODO: combine with below?
+      message_completed();
       break;
+      
     case TW_MR_SLA_NACK: // address sent, nack received
       stop();
-      App::app().serial.string("MR_SLA_NACK failure, trying again\r\n");
-      delay(500);
+      // App::app().serial.string("MR_SLA_NACK failure, trying again\r\n");
+      // delay(500);
       start();
       break;
   
     case TW_MT_SLA_NACK:  // address sent, nack received
       stop();
-      App::app().serial.string("MT_SLA_NACK failure, trying again\r\n");
-      delay(500);
+      // App::app().serial.string("MT_SLA_NACK failure, trying again\r\n");
+      // delay(500);
       start();
       break;
       
     case TW_MT_DATA_NACK: // data sent, nack received
       stop();
-      App::app().serial.string("MT_DATA_NACK failure, trying again\r\n");
-      delay(500);
+      // App::app().serial.string("MT_DATA_NACK failure, trying again\r\n");
+      // delay(500);
       start();
       break;
   
@@ -98,19 +107,19 @@ const void I2C::interrupt() {
   }
 }
 
-const void I2C::next_message() {
+const void I2C::Task::message_completed() {
   Message::head().dequeue();
   if (Message::any()) start();
 }
 
-const void I2C::new_message() {
+const void I2C::Task::new_message() {
   if (Message::just_one()) start();
 }
     
 void I2C::Message::enqueue() {
   index = 0;
   Queable<Message>::enqueue();
-  App::app().i2c.new_message();
+  App::app().i2c.task.new_message();
 }
 
 // TODO: need something here to prevent dequeing of messages if they are being transmitted!

@@ -2,29 +2,20 @@
 #define __I2C_H_
 
 #include "queable.h"
+#include "scheduler.h"
 
 class I2C {
-protected:
-  const void start();
-  const void stop();
-  const void ack();
-  const void nack();
-  const void release();
-  
-  const void next_message();
-  
 public:
   I2C();
   
+  const void init();
   const void interrupt();
-  const void new_message();
   
   class Message : public Queable<Message> {
   public:
     enum mode_value { read_mode, write_mode };
     
-    Message() : address(0), reg(0), mode(read_mode), data(0), length(0), index(0) { }
-    Message(unsigned char address, unsigned char reg, volatile unsigned char * data, int length) : address(address), reg(reg), mode(read_mode), data(data), length(length), index(0) { }
+    Message(unsigned char address = 0, unsigned char reg = 0, volatile unsigned char * data = 0, int length = 0) : Queable<Message>(), address(address), reg(reg), mode(read_mode), data(data), length(length), index(0) { }
     
     bool reading() { return mode == read_mode; }
     bool writing() { return mode == write_mode; }
@@ -56,6 +47,23 @@ public:
   public:
     ReadMessage(unsigned char address, unsigned char reg, volatile unsigned char *data, int length) : Message(address, reg, data, length) { }
   };
+  
+  class Task : public Scheduler::Task {
+  protected:
+    const void start();
+    const void stop();
+    const void ack();
+    const void nack();
+    const void release();
+    
+    const void message_completed();
+      
+  public:
+    const void new_message();
+ 
+    Task() : Scheduler::Task(10) { }
+    void operator()();
+  } task;
 };
 
 #endif

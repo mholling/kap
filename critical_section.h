@@ -7,10 +7,11 @@
 class CriticalSection {
 private:
   CriticalSection& operator=(const CriticalSection&);
-  bool interrupts;
+  unsigned char sreg;
 public:
-  CriticalSection() : interrupts(SREG & _BV(SREG_I)) { cli(); }
-  ~CriticalSection() { if (interrupts) sei(); };
+  // TODO: check these are working by using serial comms
+  CriticalSection() : sreg(SREG) { cli(); }
+  ~CriticalSection() { SREG = sreg; };
 };
 
 #endif

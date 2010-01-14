@@ -48,6 +48,7 @@ private:
   Vector vector;
   
 public:
+  void init() { configure(); wake(); }
   void configure() { config.set_defaults(); }
   void sleep() { mode.set_sleep(); }
   void wake() { mode.set_continuous(); }
