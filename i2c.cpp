@@ -42,6 +42,8 @@ const void I2C::interrupt() {
 }
 
 void I2C::Task::operator ()() {
+  // App::app().serial.debug("TW_STATUS", (char)TW_STATUS);
+
   switch (TW_STATUS) {
     case TW_START:     // sent start condition
       TWDR = TW_WRITE | (Message::head().address << 1);

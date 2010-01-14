@@ -12,40 +12,45 @@ public:
   const void interrupt();
   
   class Message : public Queable<Message> {
+  private:
+    Message& operator=(const Message&);
+
   public:
-    enum mode_value { read_mode, write_mode };
+    enum read_write_value { read, write };
     
-    Message(unsigned char address = 0, unsigned char reg = 0, volatile unsigned char * data = 0, int length = 0) : Queable<Message>(), address(address), reg(reg), mode(read_mode), data(data), length(length), index(0) { }
+    Message(unsigned char address, unsigned char reg, volatile unsigned char *buffer, int length, read_write_value read_write) : Queable<Message>(), address(address), reg(reg), buffer(buffer), length(length), read_write(read_write), index(0) { }
+        
+    void operator()() { enqueue(); }
     
-    bool reading() { return mode == read_mode; }
-    bool writing() { return mode == write_mode; }
-    
-    void read() { mode = read_mode; enqueue(); }
-    void write() { mode = write_mode; enqueue(); }
+    const bool reading() { return read_write == read; }
     
     const unsigned char address;
     const unsigned char reg;
 
-    void put_data(unsigned char b) { data[index++] = b; }
-    unsigned char get_data() { return data[index++]; }
+    void put_data(unsigned char b) { buffer[index++] = b; } // TODO: should these be protected/private?
+    unsigned char get_data() { return buffer[index++]; }
     bool any_data() { return index < length; }
     bool last_data() { return index == length - 1; }
 
   protected:
     void enqueue();
     
-    mode_value mode;
-    volatile unsigned char * const data;
+  private:
+    volatile unsigned char * const buffer;
     const int length;
+    const read_write_value read_write;
+
     int index;
   };
   
   class ReadMessage : public Message {
-  private:
-    void write() {};
-
   public:
-    ReadMessage(unsigned char address, unsigned char reg, volatile unsigned char *data, int length) : Message(address, reg, data, length) { }
+    ReadMessage(unsigned char address, unsigned char reg, volatile unsigned char *buffer, int length) : Message(address, reg, buffer, length, read) { }
+  };
+
+  class WriteMessage : public Message {
+  public:
+    WriteMessage(unsigned char address, unsigned char reg, volatile unsigned char *buffer, int length) : Message(address, reg, buffer, length, write) { }
   };
   
   class Task : public Scheduler::Task {
