@@ -27,8 +27,15 @@ COMPILE = avr-gcc -Wall -Os -DF_CPU=$(CLOCK) -mmcu=$(DEVICE) -fno-threadsafe-sta
 # # TODO: -fno-threadsafe-statics prevents __cxa_guard_acquire, &c errors. NEED TO FIX!
 
 # symbolic targets:
-all:	main.hex
+all:	clear main.hex
+	avr-size -t -B $(OBJECTS)
 
+clear:
+	clear
+
+debug:
+	screen /dev/tty.usbserial-A800csBR 9600
+	
 .c.o:
 	$(COMPILE) -c $< -o $@
 
@@ -45,7 +52,7 @@ all:	main.hex
 .c.s:
 	$(COMPILE) -S $< -o $@
 
-flash:	all
+flash:	all debug
 	$(AVRDUDE) -U flash:w:main.hex:i
 
 # Xcode uses the Makefile targets "", "clean" and "install"
