@@ -14,7 +14,7 @@ private:
   App& operator=(const App&);
   
 protected:
-  App() { sei(); }
+  App() { }
   
 public:
   static App& app() { return Singleton<App>::instance(); }

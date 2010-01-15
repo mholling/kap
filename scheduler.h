@@ -13,11 +13,12 @@ public:
   };
 
 private:
-  volatile unsigned int level;
-  void run_at_higher_level();
+  void run_tasks(Task* new_task = 0);
+  void idle();
+  volatile Task* current_task;
   
 public:
-  Scheduler() : level(0) { }
+  Scheduler() : current_task(0) { }
   void init();
   void signal(Task& task);
   void run();

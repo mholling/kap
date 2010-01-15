@@ -37,7 +37,7 @@ const void I2C::Task::release() {
 }
 
 const void I2C::interrupt() {
-  TWCR &= ~(_BV(TWINT) | _BV(TWIE));
+  TWCR &= ~(_BV(TWINT) | _BV(TWIE)); // disable I2C interrupts until our task gets run
   App::app().scheduler.signal(task);
 }
 
