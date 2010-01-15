@@ -33,7 +33,7 @@ public:
 
 
 void toggle_led();
-void delay(int t);
+// void delay(int t);
 
 extern "C" void __cxa_pure_virtual(void);
 extern "C" void atexit(void);

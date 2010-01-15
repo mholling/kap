@@ -7,11 +7,10 @@
 class CriticalSection {
 private:
   CriticalSection& operator=(const CriticalSection&);
-  unsigned char sreg;
+  const unsigned char sreg;
 public:
-  // TODO: check these are working by using serial comms
-  CriticalSection() : sreg(SREG) { cli(); }
-  ~CriticalSection() { SREG = sreg; };
+  inline CriticalSection() : sreg(SREG) { cli(); }
+  inline ~CriticalSection() { SREG = sreg; }
 };
 
 #endif
