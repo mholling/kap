@@ -21,11 +21,10 @@ protected:
   
 public:
   Queable() : prev(0), next(0) { }
-  ~Queable() { dequeue(); }
   
   void enqueue() {
     CriticalSection cs;
-    dequeue();
+    if (pending()) return;
     if (first) insert_before(first);
     else prev = next = first = this;
   }
@@ -41,11 +40,9 @@ public:
     }
   }
 
-  bool at_head() { return first == this; }
-  bool pending() { return next != 0; }
+  inline bool pending() { return next != 0; }
 
-  static T& head() { return *static_cast<T*>(first); }
-  static T& tail() { return *static_cast<T*>(first->prev); }
+  inline static T& head() { return *static_cast<T*>(first); }
 
   static bool empty() { return first == 0; }
   static bool any() { return first != 0; }

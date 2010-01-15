@@ -6,6 +6,7 @@
 #include "serial.h"
 #include "i2c.h"
 #include "magnetometer.h"
+#include "timer.h"
 
 class App {
   friend class Singleton<App>;
@@ -17,12 +18,13 @@ protected:
   App() { }
   
 public:
-  static App& app() { return Singleton<App>::instance(); }
+  inline static App& app() { return Singleton<App>::instance(); }
   
   Scheduler scheduler;
   Serial serial;
   I2C i2c;
   Magnetometer magnetometer;
+  Timer timer;
   
   void run();
 };
@@ -30,8 +32,7 @@ public:
 
 
 
-void flash();
-void long_flash();
+void toggle_led();
 void delay(int t);
 
 extern "C" void __cxa_pure_virtual(void);

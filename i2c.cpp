@@ -84,22 +84,16 @@ void I2C::Task::operator ()() {
       
     case TW_MR_SLA_NACK: // address sent, nack received
       stop();
-      // App::app().serial.string("MR_SLA_NACK failure, trying again\r\n");
-      // delay(500);
       start();
       break;
   
     case TW_MT_SLA_NACK:  // address sent, nack received
       stop();
-      // App::app().serial.string("MT_SLA_NACK failure, trying again\r\n");
-      // delay(500);
       start();
       break;
       
     case TW_MT_DATA_NACK: // data sent, nack received
       stop();
-      // App::app().serial.string("MT_DATA_NACK failure, trying again\r\n");
-      // delay(500);
       start();
       break;
   
@@ -124,4 +118,6 @@ void I2C::Message::enqueue() {
   App::app().i2c.task.new_message();
 }
 
-// TODO: need something here to prevent dequeing of messages if they are being transmitted!
+ISR(TWI_vect) {
+  App::app().i2c.interrupt();
+}

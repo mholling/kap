@@ -25,18 +25,18 @@ private:
     volatile unsigned char data[1];
   public:
     StatusMessage() : I2C::ReadMessage(i2c_address, status_register, data, 1) { }
-    const bool ready() { return data[0] & 0x01; }
-    const char value() { return data[0]; }
+    inline const bool ready() { return data[0] & 0x01; }
+    inline const char value() { return data[0]; }
   };
   
   class VectorMessage : public I2C::ReadMessage {
     volatile unsigned char data[6];
   public:
     VectorMessage() : I2C::ReadMessage(i2c_address, vector_registers, data, 6) { }
-    int x() { int i = (data[0] << 8) + data[1]; return i; }
-    int y() { int i = (data[2] << 8) + data[3]; return i; }
-    int z() { int i = (data[4] << 8) + data[5]; return i; }
-    int bearing() { return static_cast<int>(atan2(x(), y()) * 180.0 / M_PI); }
+    inline int x() { int i = (data[0] << 8) + data[1]; return i; }
+    inline int y() { int i = (data[2] << 8) + data[3]; return i; }
+    inline int z() { int i = (data[4] << 8) + data[5]; return i; }
+    inline int bearing() { return static_cast<int>(atan2(x(), y()) * 180.0 / M_PI); }
   };
   
   ConfigMessage configure;
