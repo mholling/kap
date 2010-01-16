@@ -23,14 +23,14 @@ public:
   Queable() : prev(0), next(0) { }
   
   void enqueue() {
-    CriticalSection cs;
+    CriticalSection cs; // TODO: remove these and put them in I2C::Message methods instead ??
     if (pending()) return;
     if (first) insert_before(first);
     else prev = next = first = this;
   }
   
   void dequeue() {
-    CriticalSection cs;
+    CriticalSection cs; // TODO: remove these and put them in I2C::Message methods instead
     if (next) {
       next->prev = prev;
       prev->next = next;

@@ -2,14 +2,23 @@
 #define __I2C_H_
 
 #include "queable.h"
-#include "scheduler.h"
 
 class I2C {
+protected:
+  inline const void start();
+  inline const void stop();
+  inline const void ack();
+  inline const void nack();
+  inline const void release();
+  
+  const void message_completed();
+    
 public:
   I2C();
   
   const void init();
   const void interrupt();
+  const void new_message();
   
   class Message : public Queable<Message> {
   private:
@@ -52,23 +61,6 @@ public:
   public:
     WriteMessage(unsigned char address, unsigned char reg, volatile unsigned char *buffer, int length) : Message(address, reg, buffer, length, write) { }
   };
-  
-  class Task : public Scheduler::Task {
-  protected:
-    inline const void start();
-    inline const void stop();
-    inline const void ack();
-    inline const void nack();
-    inline const void release();
-    
-    const void message_completed();
-      
-  public:
-    const void new_message();
- 
-    Task() : Scheduler::Task(10) { }
-    void operator()();
-  } task;
 };
 
 #endif

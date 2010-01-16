@@ -30,7 +30,7 @@ private:
     inline int z() { int i = (data[4] << 8) + data[5]; return i; }
     inline int bearing() { return static_cast<int>(atan2(x(), y()) * 180.0 / M_PI); }
     inline const bool ready() { return data[6] & 0x01; }
-    inline const char value() { return data[6]; }
+    inline const char status() { return data[6]; }
   };
   
   ConfigMessage configure;

@@ -3,6 +3,7 @@
 #include <avr/io.h>
 #include <util/twi.h>
 #include "serial.h"
+#include "critical_section.h"
 
 I2C::I2C() {
   PORTC |= _BV(PINC4) | _BV(PINC5); // set them high to enable pullups
@@ -15,35 +16,29 @@ const void I2C::init() {
   
 }
 
-const void I2C::Task::start() {
+const void I2C::start() {
   TWCR = _BV(TWEN) | _BV(TWIE) | _BV(TWINT) | _BV(TWEA) | _BV(TWSTA);
 }
 
-const void I2C::Task::stop() {
+const void I2C::stop() {
   TWCR = _BV(TWEN) | _BV(TWIE) | _BV(TWINT) | _BV(TWEA) | _BV(TWSTO);
   while (TWCR & _BV(TWSTO)) ;
 }
 
-const void I2C::Task::ack() {
+const void I2C::ack() {
   TWCR = _BV(TWEN) | _BV(TWIE) | _BV(TWINT) | _BV(TWEA);
 }
 
-const void I2C::Task::nack() {
+const void I2C::nack() {
   TWCR = _BV(TWEN) | _BV(TWIE) | _BV(TWINT);
 }
 
-const void I2C::Task::release() {
+const void I2C::release() {
   TWCR = _BV(TWEN) | _BV(TWIE) | _BV(TWINT) | _BV(TWEA);
 }
 
 const void I2C::interrupt() {
-  TWCR &= ~(_BV(TWINT) | _BV(TWIE)); // disable I2C interrupts until our task gets run
-  App::app().scheduler.signal(task);
-}
-
-void I2C::Task::operator ()() {
   // App::app().serial.debug("TW_STATUS", (char)TW_STATUS);
-
   switch (TW_STATUS) {
     case TW_START:     // sent start condition
       TWDR = TW_WRITE | (Message::head().address << 1);
@@ -103,19 +98,20 @@ void I2C::Task::operator ()() {
   }
 }
 
-const void I2C::Task::message_completed() {
+const void I2C::message_completed() {
+  CriticalSection cs;
   Message::head().dequeue();
   if (Message::any()) start();
 }
 
-const void I2C::Task::new_message() {
+const void I2C::new_message() {
   if (Message::just_one()) start();
 }
     
 void I2C::Message::enqueue() {
   index = 0;
   Queable<Message>::enqueue();
-  App::app().i2c.task.new_message();
+  App::app().i2c.new_message();
 }
 
 ISR(TWI_vect) {

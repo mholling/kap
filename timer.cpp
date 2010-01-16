@@ -1,28 +1,26 @@
 #include "timer.h"
 #include <avr/io.h>
 #include "app.h"
+#include "analog.h"
 
-Timer::Timer() : count(0) {
-  TCCR0B |= _BV(CS02) | _BV(CS00);
-  TIMSK0 |= _BV(TOIE0); 
+Timer::Timer() {
+  TCCR2A = _BV(WGM21);
+  TCCR2B = _BV(CS22) | _BV(CS21) | _BV(CS20);
+  OCR2A = F_CPU / 1024 / tick_frequency;
+  TIMSK2 = _BV(OCIE2A); 
 }
 
 void Timer::init() {
-  
 }
 
 void Timer::interrupt() {
-  if (++count > 30) {
-    count = 0;
-    App::app().scheduler.signal(task);
-  }
+  App& app = App::app();
+  app.analog.start_conversions();
+
+  // signal other timer tasks here...
 }
 
-void Timer::Task::operator ()() {
-  toggle_led();
-  App::app().magnetometer.show_bearing();
-}
-
-ISR(TIMER0_OVF_vect) {
+ISR(TIMER2_COMPA_vect) {
   App::app().timer.interrupt();
 }
+

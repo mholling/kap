@@ -5,17 +5,11 @@
 
 class Timer {
 private:
-  int count;
+  enum { tick_frequency = 50 };
 public:
   Timer();
   void init();
   void interrupt();
-  
-  class Task : public Scheduler::Task {
-  public:
-    Task() : Scheduler::Task(5) { }
-    void operator ()();
-  } task;
 };
 
 #endif

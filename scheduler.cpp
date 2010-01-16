@@ -25,8 +25,9 @@ void Scheduler::run_tasks(Task* new_task) {
 }
 
 void Scheduler::idle() {
-  set_sleep_mode(SLEEP_MODE_IDLE);
-  sleep_mode();
+  // // can't idle for now because it triggers ADC conversion and screws everything up... (TODO!)
+  // set_sleep_mode(SLEEP_MODE_IDLE);
+  // sleep_mode();
 }
 
 void Scheduler::run() {
@@ -35,10 +36,6 @@ void Scheduler::run() {
     idle();
   }
 }
-
-    // delay(1000);
-    // App::app().magnetometer.show_status();
-    // App::app().magnetometer.show_bearing();
 
 void Scheduler::signal(Task& task) {
   run_tasks(&task);

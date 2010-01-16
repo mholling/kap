@@ -12,7 +12,7 @@ public:
   PrioritisedQueable(unsigned int level) : Queable<T>(), level(level) { }
   
   void enqueue() {
-    CriticalSection cs;
+    CriticalSection cs; // TODO: remove these and put them in I2C::Message methods instead
     if (this->pending()) return;
     if (this->empty())
       this->prev = this->next = this->first = this;

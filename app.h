@@ -7,6 +7,7 @@
 #include "i2c.h"
 #include "magnetometer.h"
 #include "timer.h"
+#include "analog.h"
 
 class App {
   friend class Singleton<App>;
@@ -25,6 +26,7 @@ public:
   I2C i2c;
   Magnetometer magnetometer;
   Timer timer;
+  Analog analog;
   
   void run();
 };

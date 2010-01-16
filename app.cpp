@@ -1,12 +1,19 @@
 #include "app.h"
+#include "scheduler.h"
+#include "i2c.h"
+#include "magnetometer.h"
+#include "timer.h"
+#include "analog.h"
 #include <avr/io.h>
 #include <util/delay.h>
+
 
 void App::run() {
   scheduler.init();
   i2c.init();
   magnetometer.init();
   timer.init();
+  analog.init();
   
   scheduler.run();
 }
