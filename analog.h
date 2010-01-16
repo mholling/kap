@@ -9,7 +9,7 @@ public:
   unsigned int data[4];
   Analog();
   void init();
-  inline void interrupt();
+  void interrupt();
   void start_conversions();
   
   class ShowResults : public Scheduler::Task {

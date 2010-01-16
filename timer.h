@@ -5,7 +5,7 @@
 
 class Timer {
 private:
-  enum { tick_frequency = 50 };
+  enum { frequency = 50 };
 public:
   Timer();
   void init();

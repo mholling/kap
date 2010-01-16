@@ -4,9 +4,9 @@
 #include "analog.h"
 
 Timer::Timer() {
-  TCCR2A = _BV(WGM21);
+  TCCR2A = _BV(WGM21); // CTC mode
   TCCR2B = _BV(CS22) | _BV(CS21) | _BV(CS20);
-  OCR2A = F_CPU / 1024 / tick_frequency;
+  OCR2A = F_CPU / 1024 / frequency - 1;
   TIMSK2 = _BV(OCIE2A); 
 }
 
@@ -18,6 +18,12 @@ void Timer::interrupt() {
   app.analog.start_conversions();
 
   // signal other timer tasks here...
+
+  // static int count = 0;
+  // if (++count > 50) {
+  //   count = 0;
+  //   app.magnetometer.show_bearing();
+  // }
 }
 
 ISR(TIMER2_COMPA_vect) {

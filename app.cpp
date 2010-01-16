@@ -14,6 +14,7 @@ void App::run() {
   magnetometer.init();
   timer.init();
   analog.init();
+  pwm.init();
   
   scheduler.run();
 }

@@ -8,6 +8,7 @@
 #include "magnetometer.h"
 #include "timer.h"
 #include "analog.h"
+#include "pwm.h"
 
 class App {
   friend class Singleton<App>;
@@ -27,6 +28,7 @@ public:
   Magnetometer magnetometer;
   Timer timer;
   Analog analog;
+  Pwm pwm;
   
   void run();
 };
