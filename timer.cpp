@@ -20,9 +20,12 @@ void Timer::interrupt() {
   // signal other timer tasks here...
 
   // static int count = 0;
-  // if (++count > 50) {
+  // static char t = 0xff;
+  // if (++count > 150) {
   //   count = 0;
-  //   app.magnetometer.show_bearing();
+  //   t ^= 0xff;
+  //   app.shift_register.set_value(t);
+  //   // app.magnetometer.show_bearing();
   // }
 }
 

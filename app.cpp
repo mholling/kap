@@ -4,6 +4,9 @@
 #include "magnetometer.h"
 #include "timer.h"
 #include "analog.h"
+#include "pwm.h"
+#include "spi.h"
+#include "shift_register.h"
 #include <avr/io.h>
 #include <util/delay.h>
 
@@ -15,11 +18,11 @@ void App::run() {
   timer.init();
   analog.init();
   pwm.init();
+  spi.init();
+  shift_register.init();
   
   scheduler.run();
 }
-
-// void delay(int t) { for (int n = t; n >= 128; n -= 128) _delay_ms(128); _delay_ms(t % 128); }
 
 void toggle_led() {
   DDRB |= _BV(5);

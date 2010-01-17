@@ -12,8 +12,7 @@ I2C::I2C() {
   TWCR = _BV(TWEN) | _BV(TWIE) | _BV(TWINT);
 }
 
-const void I2C::init() {
-  
+void I2C::init() {
 }
 
 const void I2C::start() {

@@ -1,4 +1,5 @@
 #include "pwm.h"
+#include <avr/io.h>
 #include "critical_section.h"
 
 Pwm::Pwm() {

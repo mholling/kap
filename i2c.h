@@ -16,19 +16,24 @@ protected:
 public:
   I2C();
   
-  const void init();
+  void init();
   const void interrupt();
-  const void new_message();
+  const void new_message(); // TODO: move into Message class as per SPI?
   
   class Message : public Queable<Message> {
-  private:
-    Message& operator=(const Message&);
-
-  public:
+  protected:
     enum read_write_value { read, write };
+    void enqueue();
     
-    Message(unsigned char address, unsigned char reg, volatile unsigned char *buffer, int length, read_write_value read_write) : Queable<Message>(), address(address), reg(reg), buffer(buffer), length(length), read_write(read_write), index(0) { }
-        
+  private:
+    volatile unsigned char * const buffer;
+    const unsigned int length;
+    const read_write_value read_write;
+    unsigned int index;
+
+  public:    
+    Message(unsigned char address, unsigned char reg, volatile unsigned char *buffer, unsigned int length, read_write_value read_write) : Queable<Message>(), buffer(buffer), length(length), read_write(read_write), index(0), address(address), reg(reg) { }
+    
     inline void operator()() { enqueue(); }
     
     inline const bool reading() { return read_write == read; }
@@ -40,16 +45,6 @@ public:
     inline unsigned char get_data() { return buffer[index++]; }
     inline bool any_data() { return index < length; }
     inline bool last_data() { return index == length - 1; }
-
-  protected:
-    void enqueue();
-    
-  private:
-    volatile unsigned char * const buffer;
-    const int length;
-    const read_write_value read_write;
-
-    int index;
   };
   
   class ReadMessage : public Message {

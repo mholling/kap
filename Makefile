@@ -16,7 +16,7 @@
 DEVICE     = atmega168
 CLOCK      = 8000000
 PROGRAMMER = -c arduino -P /dev/tty.usbserial-A800csBR -b 19200
-OBJECTS    = main.o i2c.o serial.o magnetometer.o app.o scheduler.o timer.o analog.o pwm.o
+OBJECTS    = main.o i2c.o serial.o magnetometer.o app.o scheduler.o timer.o analog.o pwm.o spi.o shift_register.o
 
 # Tune the lines below only if you know what you are doing:
 
@@ -27,7 +27,7 @@ COMPILE = avr-gcc -Wall -Os -DF_CPU=$(CLOCK) -mmcu=$(DEVICE) -fno-threadsafe-sta
 # # TODO: -fno-threadsafe-statics prevents __cxa_guard_acquire, &c errors. NEED TO FIX!
 
 # symbolic targets:
-all:	clean clear main.hex size
+all:	clear main.hex size
 
 size:
 	avr-size -t -B $(OBJECTS)

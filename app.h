@@ -9,6 +9,8 @@
 #include "timer.h"
 #include "analog.h"
 #include "pwm.h"
+#include "spi.h"
+#include "shift_register.h"
 
 class App {
   friend class Singleton<App>;
@@ -29,6 +31,8 @@ public:
   Timer timer;
   Analog analog;
   Pwm pwm;
+  Spi spi;
+  ShiftRegister shift_register;
   
   void run();
 };
@@ -37,7 +41,6 @@ public:
 
 
 void toggle_led();
-// void delay(int t);
 
 extern "C" void __cxa_pure_virtual(void);
 extern "C" void atexit(void);
