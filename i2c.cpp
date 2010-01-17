@@ -15,65 +15,69 @@ I2C::I2C() {
 void I2C::init() {
 }
 
-const void I2C::start() {
+const void I2C::interrupt() {
+  Message::head().interrupt();
+}
+
+const void I2C::Message::start() {
   TWCR = _BV(TWEN) | _BV(TWIE) | _BV(TWINT) | _BV(TWEA) | _BV(TWSTA);
 }
 
-const void I2C::stop() {
+const void I2C::Message::stop() {
   TWCR = _BV(TWEN) | _BV(TWIE) | _BV(TWINT) | _BV(TWEA) | _BV(TWSTO);
   while (TWCR & _BV(TWSTO)) ;
 }
 
-const void I2C::ack() {
+const void I2C::Message::ack() {
   TWCR = _BV(TWEN) | _BV(TWIE) | _BV(TWINT) | _BV(TWEA);
 }
 
-const void I2C::nack() {
+const void I2C::Message::nack() {
   TWCR = _BV(TWEN) | _BV(TWIE) | _BV(TWINT);
 }
 
-const void I2C::release() {
+const void I2C::Message::release() {
   TWCR = _BV(TWEN) | _BV(TWIE) | _BV(TWINT) | _BV(TWEA);
 }
 
-const void I2C::interrupt() {
+void I2C::Message::interrupt() {
   // App::app().serial.debug("TW_STATUS", (char)TW_STATUS);
   switch (TW_STATUS) {
     case TW_START:     // sent start condition
-      TWDR = TW_WRITE | (Message::head().address << 1);
+      TWDR = TW_WRITE | (address << 1);
       ack();
       break;
     case TW_REP_START: // sent repeated start condition
-      TWDR =  TW_READ | (Message::head().address << 1);
+      TWDR =  TW_READ | (address << 1);
       ack();
       break;
   
     case TW_MT_SLA_ACK:  // slave receiver acked address
-      TWDR = Message::head().reg;
+      TWDR = reg;
       ack();
       break;
     case TW_MT_DATA_ACK: // slave receiver acked data
-      if (Message::head().reading())
+      if (read_write == read)
         start();
-      else if (Message::head().any_data()) {
-        TWDR = Message::head().get_data();
+      else if (index < length) {
+        TWDR = buffer[index++];
         ack();
       } else {
         stop();
-        message_completed();
+        completed();
       }
       break;
   
     case TW_MR_DATA_ACK: // data received, ack sent
-      Message::head().put_data(TWDR);
+      buffer[index++] = TWDR;
     case TW_MR_SLA_ACK:  // address sent, ack received
-      Message::head().last_data() ? nack() : ack();
+      index == length - 1 ? nack() : ack();
       break;
   
     case TW_MR_DATA_NACK: // data received, nack sent
-      Message::head().put_data(TWDR);
+      buffer[index++] = TWDR;
       stop();
-      message_completed();
+      completed();
       break;
       
     case TW_MR_SLA_NACK: // address sent, nack received
@@ -97,14 +101,14 @@ const void I2C::interrupt() {
   }
 }
 
-const void I2C::message_completed() {
+const void I2C::Message::completed() {
   CriticalSection cs;
-  Message::head().dequeue();
-  if (Message::any()) start();
+  dequeue();
+  if (any()) head().start();
 }
 
 const void I2C::new_message() {
-  if (Message::just_one()) start();
+  if (Message::just_one()) Message::start();
 }
     
 void I2C::Message::enqueue() {
