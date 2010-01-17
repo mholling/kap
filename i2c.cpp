@@ -60,7 +60,7 @@ void I2C::Message::interrupt() {
       if (read_write == read)
         start();
       else if (index < length) {
-        TWDR = buffer[index++];
+        TWDR = buffer()[index++];
         ack();
       } else {
         stop();
@@ -69,13 +69,13 @@ void I2C::Message::interrupt() {
       break;
   
     case TW_MR_DATA_ACK: // data received, ack sent
-      buffer[index++] = TWDR;
+      buffer()[index++] = TWDR;
     case TW_MR_SLA_ACK:  // address sent, ack received
       index == length - 1 ? nack() : ack();
       break;
   
     case TW_MR_DATA_NACK: // data received, nack sent
-      buffer[index++] = TWDR;
+      buffer()[index++] = TWDR;
       stop();
       completed();
       break;
@@ -106,15 +106,11 @@ const void I2C::Message::completed() {
   dequeue();
   if (any()) head().start();
 }
-
-const void I2C::new_message() {
-  if (Message::just_one()) Message::start();
-}
     
 void I2C::Message::enqueue() {
   index = 0;
   Queable<Message>::enqueue();
-  App::app().i2c.new_message();
+  if (at_head()) start();
 }
 
 ISR(TWI_vect) {

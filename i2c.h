@@ -10,13 +10,13 @@ public:
   
   void init();
   const void interrupt();
-  const void new_message(); // TODO: move into Message class as per SPI?
   
   class Message : public Queable<Message> {
   protected:
     enum read_write_value { read, write };
     void enqueue();
     
+    inline static const void start();
     inline static const void stop();
     inline static const void ack();
     inline static const void nack();
@@ -24,17 +24,17 @@ public:
 
     const void completed();
 
+    virtual volatile unsigned char * const buffer() = 0;
+
   private:
-    volatile unsigned char * const buffer;
     const unsigned int length;
     const read_write_value read_write;
     unsigned int index;
 
   public:    
-    Message(unsigned char address, unsigned char reg, volatile unsigned char *buffer, unsigned int length, read_write_value read_write) : Queable<Message>(), buffer(buffer), length(length), read_write(read_write), index(0), address(address), reg(reg) { }
+    Message(unsigned char address, unsigned char reg, unsigned int length, read_write_value read_write) : Queable<Message>(), length(length), read_write(read_write), index(0), address(address), reg(reg) { }
     
     void interrupt();
-    inline static const void start();
     
     inline void operator()() { enqueue(); }
         
@@ -44,12 +44,12 @@ public:
   
   class ReadMessage : public Message {
   public:
-    ReadMessage(unsigned char address, unsigned char reg, volatile unsigned char *buffer, int length) : Message(address, reg, buffer, length, read) { }
+    ReadMessage(unsigned char address, unsigned char reg, int length) : Message(address, reg, length, read) { }
   };
 
   class WriteMessage : public Message {
   public:
-    WriteMessage(unsigned char address, unsigned char reg, volatile unsigned char *buffer, int length) : Message(address, reg, buffer, length, write) { }
+    WriteMessage(unsigned char address, unsigned char reg, int length) : Message(address, reg, length, write) { }
   };
 };
 

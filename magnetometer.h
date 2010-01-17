@@ -10,21 +10,24 @@ private:
 
   class ConfigMessage : public I2C::WriteMessage {
     volatile unsigned char data[2];
+    inline volatile unsigned char * const buffer() { return data; };
   public:
-    ConfigMessage(unsigned char a = 0x10, unsigned char b = 0x20) : I2C::WriteMessage(i2c_address, config_registers, data, 2) { data[0] = a; data[1] = b; }
+    ConfigMessage(unsigned char a = 0x10, unsigned char b = 0x20) : I2C::WriteMessage(i2c_address, config_registers, 2) { data[0] = a; data[1] = b; }
   };
   
   class ModeMessage : public I2C::WriteMessage {
     volatile unsigned char data[1];
+    inline volatile unsigned char * const buffer() { return data; };
   public:
     enum mode_value { sleep = 0x03, idle = 0x02, single_shot = 0x01, continuous = 0x00 };
-    ModeMessage(mode_value mode) : I2C::WriteMessage(i2c_address, mode_register, data, 1) { data[0] = mode; }
+    ModeMessage(mode_value mode) : I2C::WriteMessage(i2c_address, mode_register, 1) { data[0] = mode; }
   };
     
   class VectorStatusMessage : public I2C::ReadMessage {
     volatile unsigned char data[7];
+    inline volatile unsigned char * const buffer() { return data; };
   public:
-    VectorStatusMessage() : I2C::ReadMessage(i2c_address, vector_status_registers, data, 7) { }
+    VectorStatusMessage() : I2C::ReadMessage(i2c_address, vector_status_registers, 7) { }
     inline int x() { int i = (data[0] << 8) + data[1]; return i; }
     inline int y() { int i = (data[2] << 8) + data[3]; return i; }
     inline int z() { int i = (data[4] << 8) + data[5]; return i; }
