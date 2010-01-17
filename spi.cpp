@@ -10,22 +10,22 @@ void Spi::init() {
 }
 
 const void Spi::interrupt() {
-  Message::head().next();
+  Packet::head().next();
 }
 
-void Spi::Message::enqueue() {
+void Spi::Packet::enqueue() {
   index = 0;
-  Queable<Message>::enqueue();
+  Queable<Packet>::enqueue();
   if (at_head()) start();
 }
 
-void Spi::Message::start() {
+void Spi::Packet::start() {
   index = 0;
   toggle_select();
   SPDR = index < tx_length ? tx_buffer[index] : 0;
 }
 
-void Spi::Message::next() {
+void Spi::Packet::next() {
   if (index < rx_length) rx_buffer[index] = SPDR;
   index++;
   if (index < tx_length || index < rx_length)

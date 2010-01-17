@@ -9,9 +9,9 @@ public:
   void init();
   const void interrupt();
   
-  class Message : public Queable<Message> {
+  class Packet : public Queable<Packet> {
   public:
-    Message(const unsigned char *tx_buffer, volatile unsigned char *rx_buffer, unsigned int tx_length, unsigned int rx_length) : tx_buffer(tx_buffer), rx_buffer(rx_buffer), tx_length(tx_length), rx_length(rx_length) { }
+    Packet(const unsigned char *tx_buffer, volatile unsigned char *rx_buffer, unsigned int tx_length, unsigned int rx_length) : tx_buffer(tx_buffer), rx_buffer(rx_buffer), tx_length(tx_length), rx_length(rx_length) { }
     
     inline void operator()() { enqueue(); }
     void next();

@@ -8,12 +8,12 @@ public:
   ShiftRegister();
   void init();
   
-  class SetValue : public Spi::Message {
+  class SetValue : public Spi::Packet {
   private:
     unsigned char data;
     const void toggle_select();
   public:
-    SetValue() : Spi::Message(&data, 0, 1, 0) { }
+    SetValue() : Spi::Packet(&data, 0, 1, 0) { }
     void operator ()(unsigned char value);
   } set_value;
 };

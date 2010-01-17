@@ -16,31 +16,37 @@ void I2C::init() {
 }
 
 const void I2C::interrupt() {
-  Message::head().interrupt();
+  Packet::head().interrupt();
 }
 
-const void I2C::Message::start() {
+void I2C::Packet::enqueue() {
+  index = 0;
+  Queable<Packet>::enqueue();
+  if (at_head()) start();
+}
+
+const void I2C::Packet::start() {
   TWCR = _BV(TWEN) | _BV(TWIE) | _BV(TWINT) | _BV(TWEA) | _BV(TWSTA);
 }
 
-const void I2C::Message::stop() {
+const void I2C::Packet::stop() {
   TWCR = _BV(TWEN) | _BV(TWIE) | _BV(TWINT) | _BV(TWEA) | _BV(TWSTO);
   while (TWCR & _BV(TWSTO)) ;
 }
 
-const void I2C::Message::ack() {
+const void I2C::Packet::ack() {
   TWCR = _BV(TWEN) | _BV(TWIE) | _BV(TWINT) | _BV(TWEA);
 }
 
-const void I2C::Message::nack() {
+const void I2C::Packet::nack() {
   TWCR = _BV(TWEN) | _BV(TWIE) | _BV(TWINT);
 }
 
-const void I2C::Message::release() {
+const void I2C::Packet::release() {
   TWCR = _BV(TWEN) | _BV(TWIE) | _BV(TWINT) | _BV(TWEA);
 }
 
-void I2C::Message::interrupt() {
+void I2C::Packet::interrupt() {
   // App::app().serial.debug("TW_STATUS", (char)TW_STATUS);
   switch (TW_STATUS) {
     case TW_START:     // sent start condition
@@ -81,36 +87,22 @@ void I2C::Message::interrupt() {
       break;
       
     case TW_MR_SLA_NACK: // address sent, nack received
-      stop();
-      start();
-      break;
-  
     case TW_MT_SLA_NACK:  // address sent, nack received
-      stop();
-      start();
-      break;
-      
     case TW_MT_DATA_NACK: // data sent, nack received
       stop();
       start();
       break;
-  
+    
     case TW_MT_ARB_LOST: // lost bus arbitration
       start();
       break;
   }
 }
 
-const void I2C::Message::completed() {
+const void I2C::Packet::completed() {
   CriticalSection cs;
   dequeue();
   if (any()) head().start();
-}
-    
-void I2C::Message::enqueue() {
-  index = 0;
-  Queable<Message>::enqueue();
-  if (at_head()) start();
 }
 
 ISR(TWI_vect) {

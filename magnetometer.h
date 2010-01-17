@@ -8,26 +8,26 @@ class Magnetometer {
 private:
   enum { i2c_address = 0x1e, config_registers = 0x00, mode_register = 0x02, vector_status_registers = 0x03 };
 
-  class ConfigMessage : public I2C::WriteMessage {
+  class ConfigPacket : public I2C::WritePacket {
     volatile unsigned char data[2];
     inline volatile unsigned char * const buffer() { return data; };
   public:
-    ConfigMessage(unsigned char a = 0x10, unsigned char b = 0x20) : I2C::WriteMessage(i2c_address, config_registers, 2) { data[0] = a; data[1] = b; }
+    ConfigPacket(unsigned char a = 0x10, unsigned char b = 0x20) : I2C::WritePacket(i2c_address, config_registers, 2) { data[0] = a; data[1] = b; }
   };
   
-  class ModeMessage : public I2C::WriteMessage {
+  class ModePacket : public I2C::WritePacket {
     volatile unsigned char data[1];
     inline volatile unsigned char * const buffer() { return data; };
   public:
     enum mode_value { sleep = 0x03, idle = 0x02, single_shot = 0x01, continuous = 0x00 };
-    ModeMessage(mode_value mode) : I2C::WriteMessage(i2c_address, mode_register, 1) { data[0] = mode; }
+    ModePacket(mode_value mode) : I2C::WritePacket(i2c_address, mode_register, 1) { data[0] = mode; }
   };
     
-  class VectorStatusMessage : public I2C::ReadMessage {
+  class VectorStatusPacket : public I2C::ReadPacket {
     volatile unsigned char data[7];
     inline volatile unsigned char * const buffer() { return data; };
   public:
-    VectorStatusMessage() : I2C::ReadMessage(i2c_address, vector_status_registers, 7) { }
+    VectorStatusPacket() : I2C::ReadPacket(i2c_address, vector_status_registers, 7) { }
     inline int x() { int i = (data[0] << 8) + data[1]; return i; }
     inline int y() { int i = (data[2] << 8) + data[3]; return i; }
     inline int z() { int i = (data[4] << 8) + data[5]; return i; }
@@ -36,12 +36,12 @@ private:
     inline const char status() { return data[6]; }
   };
   
-  ConfigMessage configure;
-  ModeMessage sleep, wake;
-  VectorStatusMessage vector_status;
+  ConfigPacket configure;
+  ModePacket sleep, wake;
+  VectorStatusPacket vector_status;
   
 public:
-  Magnetometer() : sleep(ModeMessage(ModeMessage::sleep)), wake(ModeMessage(ModeMessage::continuous)) { }
+  Magnetometer() : sleep(ModePacket(ModePacket::sleep)), wake(ModePacket(ModePacket::continuous)) { }
   
   void init() { configure(); wake(); }
 
