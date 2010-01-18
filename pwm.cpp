@@ -2,7 +2,7 @@
 #include <avr/io.h>
 #include "critical_section.h"
 
-Pwm::Pwm() : channel_a(Channel(OCR1A)), channel_b(Channel(OCR1B)) {
+Pwm::Pwm() {
   // set phase-correct PWM using TOP = ICR1, no pre-scaling, non-inverting outputs:
   TCCR1A = _BV(COM1A1) | _BV(COM1B1) | _BV(WGM11);
   TCCR1B = _BV(WGM13) | _BV(CS10);
@@ -11,11 +11,4 @@ Pwm::Pwm() : channel_a(Channel(OCR1A)), channel_b(Channel(OCR1B)) {
 }
 
 void Pwm::init() {
-  channel_a.set_duty_cycle(0.1);
-  channel_b.set_duty_cycle(0.1);
-}
-
-void Pwm::Channel::set_duty_cycle(float value) {
-  CriticalSection cs;
-  reg = value * Pwm::resolution;
 }

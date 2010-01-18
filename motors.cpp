@@ -3,15 +3,15 @@
 #include "app.h"
 #include <avr/io.h>
 
-Motors::Motors() {
+Motors::Motors() : yaw(Motor(OCR1A, PORTD, PIND7, PORTB, PINB0, false)), pitch(Motor(OCR1B, PORTD, PIND5, PORTD, PIND4, false)) {
   DDRD |= _BV(DDD4) | _BV(DDD5) | _BV(DDD7);
   DDRB |= _BV(DDB0);
 }
 
 void Motors::init() {
   enable();
-  yaw(-0.5);
-  pitch(0.8);
+  yaw.set(0.5);
+  pitch.set(-0.85);
 }
 
 void Motors::disable() {
@@ -22,24 +22,14 @@ void Motors::enable() {
   App::app().shift_register.set_bit(standby_shift_register_bit);
 }
 
-void Motors::yaw(float value) {
-  if (yaw_polarity * value > 0) {
-    PORTD |= _BV(PIND7);
-    PORTB &= ~_BV(PINB0);
+void Motors::Motor::set(float value) {
+  if (polarity * value > 0.0) {
+    in1_reg |= in1_mask;
+    in2_reg &= ~in2_mask;    
   } else {
-    PORTD &= ~_BV(PIND7);
-    PORTB |= _BV(PINB0);
+    in2_reg |= in2_mask;
+    in1_reg &= ~in1_mask;    
   }
-  App::app().pwm.channel_a.set_duty_cycle(value > 0.0 ? value : -value);
-}
-
-void Motors::pitch(float value) {
-  if (pitch_polarity * value > 0) {
-    PORTD |= _BV(PIND5);
-    PORTD &= ~_BV(PINB4);
-  } else {
-    PORTD &= ~_BV(PIND5);
-    PORTD |= _BV(PIND4);
-  }
-  App::app().pwm.channel_b.set_duty_cycle(value > 0.0 ? value : -value);
+  pwm_reg = Pwm::resolution * (value < 0.0 ? -value : value); // TODO: use clamp?
+  // TODO: clamp value to [-1.0,1.0] ?
 }
