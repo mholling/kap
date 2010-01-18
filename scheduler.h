@@ -7,7 +7,7 @@ class Scheduler {
 public:
   class Task : public PrioritisedQueable<Task> {
   public:
-    Task(unsigned int level) : PrioritisedQueable<Task>(level) { }
+    Task(unsigned int level) : PrioritisedQueable<Task>(level) { } // TODO: is this even needed??
     
     virtual void operator()() = 0;
     inline void complete() { dequeue(); }

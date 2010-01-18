@@ -31,7 +31,7 @@ public:
     unsigned int index;
 
   public:    
-    Packet(unsigned char address, unsigned char reg, unsigned int length, read_write_value read_write) : Queable<Packet>(), length(length), read_write(read_write), index(0), address(address), reg(reg) { }
+    Packet(unsigned char address, unsigned char reg, unsigned int length, read_write_value read_write) : length(length), read_write(read_write), index(0), address(address), reg(reg) { }
     
     void interrupt();
     

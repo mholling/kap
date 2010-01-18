@@ -1,7 +1,7 @@
 #include "shift_register.h"
 #include <avr/io.h>
 
-ShiftRegister::ShiftRegister() : data(0), send_data(SendData(data)) {
+ShiftRegister::ShiftRegister() : data(0), send_data(data) {
   DDRD |= _BV(DDD6);
   PORTD |= _BV(PIND6);
 }

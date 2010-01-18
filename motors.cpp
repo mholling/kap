@@ -3,7 +3,7 @@
 #include "app.h"
 #include <avr/io.h>
 
-Motors::Motors() : yaw(Motor(OCR1A, PORTD, PIND7, PORTB, PINB0, false)), pitch(Motor(OCR1B, PORTD, PIND5, PORTD, PIND4, false)) {
+Motors::Motors() : yaw(OCR1A, PORTD, PIND7, PORTB, PINB0, false), pitch(OCR1B, PORTD, PIND5, PORTD, PIND4, false) {
   DDRD |= _BV(DDD4) | _BV(DDD5) | _BV(DDD7);
   DDRB |= _BV(DDB0);
 }

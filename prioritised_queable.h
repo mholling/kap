@@ -9,7 +9,7 @@ class PrioritisedQueable : public Queable<T> {
 
 public:
   const unsigned int level;
-  PrioritisedQueable(unsigned int level) : Queable<T>(), level(level) { }
+  PrioritisedQueable(unsigned int level) : level(level) { }
   
   void enqueue() {
     if (this->pending()) return;

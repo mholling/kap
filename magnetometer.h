@@ -41,7 +41,7 @@ private:
   VectorStatusPacket vector_status;
   
 public:
-  Magnetometer() : sleep(ModePacket(ModePacket::sleep)), wake(ModePacket(ModePacket::continuous)) { }
+  Magnetometer() : sleep(ModePacket::sleep), wake(ModePacket::continuous) { }
   
   void init() { configure(); wake(); }
 
