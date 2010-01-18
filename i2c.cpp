@@ -20,6 +20,7 @@ const void I2C::interrupt() {
 }
 
 void I2C::Packet::enqueue() {
+  CriticalSection cs;
   index = 0;
   Queable<Packet>::enqueue();
   if (at_head()) start();
@@ -70,7 +71,7 @@ void I2C::Packet::interrupt() {
         ack();
       } else {
         stop();
-        completed();
+        dequeue();
       }
       break;
   
@@ -83,7 +84,7 @@ void I2C::Packet::interrupt() {
     case TW_MR_DATA_NACK: // data received, nack sent
       buffer()[index++] = TWDR;
       stop();
-      completed();
+      dequeue();
       break;
       
     case TW_MR_SLA_NACK: // address sent, nack received
@@ -99,9 +100,9 @@ void I2C::Packet::interrupt() {
   }
 }
 
-const void I2C::Packet::completed() {
+void I2C::Packet::dequeue() {
   CriticalSection cs;
-  dequeue();
+  Queable<Packet>::dequeue();
   if (any()) head().start();
 }
 

@@ -15,6 +15,7 @@ public:
   protected:
     enum read_write_value { read, write };
     void enqueue();
+    void dequeue();
     
     inline static const void start();
     inline static const void stop();
@@ -22,9 +23,7 @@ public:
     inline static const void nack();
     inline static const void release();
 
-    const void completed();
-
-    virtual volatile unsigned char * const buffer() = 0;
+    virtual volatile unsigned char * const buffer() = 0; // TODO: should this just be a stored pointer instead?
 
   private:
     const unsigned int length;

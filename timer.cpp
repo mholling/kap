@@ -18,16 +18,11 @@ void Timer::interrupt() {
   app.analog.start_conversions();
 
   // signal other timer tasks here...
+  
+  static unsigned int count = 0;
+  count++;
 
-  // static char t = 0xff;
-  // if (++count > 150) {
-  //   t ^= 0xff;
-  //   app.shift_register.set_value(t);
-  // }
-
-  static int count = 0;
-  if (++count > 25) {
-    count = 0;
+  if (count % 50 == 0) {
     app.magnetometer.show_bearing();
   }
 }

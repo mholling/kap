@@ -19,19 +19,13 @@ protected:
     prev->next = next->prev = this;
   }
   
-public:
-  Queable() : prev(0), next(0) { }
-  
   void enqueue() {
-    CriticalSection cs; // TODO: remove these and put them in I2C::Packet methods instead ??
     if (pending()) return;
     if (first) insert_before(first);
     else prev = next = first = this;
   }
   
   void dequeue() {
-    CriticalSection cs; // TODO: remove these and put them in I2C::Packet methods instead ??
-    // TODO: prevent dequeing of head item?
     if (next) {
       next->prev = prev;
       prev->next = next;
@@ -40,6 +34,9 @@ public:
       next = prev = 0;
     }
   }
+  
+public:
+  Queable() : prev(0), next(0) { }
 
   inline bool pending() { return next != 0; }
   inline bool at_head() { return first == this; }

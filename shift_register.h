@@ -7,15 +7,18 @@ class ShiftRegister {
 public:
   ShiftRegister();
   void init();
+  void set_bit(int n);
+  void clear_bit(int n);
   
-  class SetValue : public Spi::Packet {
+private:
+  unsigned char data;
+  
+  class SendData : public Spi::WritePacket {
   private:
-    unsigned char data;
     const void toggle_select();
   public:
-    SetValue() : Spi::Packet(&data, 0, 1, 0) { }
-    void operator ()(unsigned char value);
-  } set_value;
+    SendData(const unsigned char& data) : Spi::WritePacket(&data, 1) { }
+  } send_data;
 };
 
 #endif

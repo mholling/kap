@@ -10,6 +10,7 @@ public:
     Task(unsigned int level) : PrioritisedQueable<Task>(level) { }
     
     virtual void operator()() = 0;
+    inline void complete() { dequeue(); }
   };
 
 private:

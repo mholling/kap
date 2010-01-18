@@ -19,7 +19,7 @@ void Scheduler::run_tasks(Task* new_task) {
     sei();
     task();
     cli();
-    task.dequeue();
+    task.complete(); // TODO: could this functionality be moved into the Task class as per SPI?
   }
   current_task = interrupted_task;
 }

@@ -1,5 +1,6 @@
 #include "spi.h"
 #include "app.h"
+#include "critical_section.h"
 
 Spi::Spi() {
   SPCR = _BV(SPIE) | _BV(SPE) | _BV(MSTR); // enable SPI in master mode with interrupts, SCK freq = F_CPU/4
@@ -10,13 +11,20 @@ void Spi::init() {
 }
 
 const void Spi::interrupt() {
-  Packet::head().next();
+  Packet::head().interrupt();
 }
 
 void Spi::Packet::enqueue() {
+  CriticalSection cs;
   index = 0;
   Queable<Packet>::enqueue();
   if (at_head()) start();
+}
+
+void Spi::Packet::dequeue() {
+  CriticalSection cs;
+  Queable<Packet>::dequeue();
+  if (any()) head().start();
 }
 
 void Spi::Packet::start() {
@@ -25,16 +33,14 @@ void Spi::Packet::start() {
   SPDR = index < tx_length ? tx_buffer[index] : 0;
 }
 
-void Spi::Packet::next() {
+void Spi::Packet::interrupt() {
   if (index < rx_length) rx_buffer[index] = SPDR;
   index++;
   if (index < tx_length || index < rx_length)
     SPDR = index < tx_length ? tx_buffer[index] : 0;
   else {
-    CriticalSection cs;
     toggle_select();
     dequeue();
-    if (any()) head().start();
   }
 }
 
