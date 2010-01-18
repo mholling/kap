@@ -2,14 +2,22 @@
 #define __PWM_H_
 
 class Pwm {
-private:
+public:
+  class Channel {
+  private:
+    volatile unsigned int& reg;
+  public:
+    Channel(volatile unsigned int& reg) : reg(reg) { }
+    void set_duty_cycle(float value);
+  };
+  
   enum { frequency = 4000, resolution = F_CPU / frequency / 2 };
   
-public:
   Pwm();
   void init();
-  inline void set_A(float a);
-  inline void set_B(float b);
+  
+  Channel channel_a;
+  Channel channel_b;
 };
 
 #endif

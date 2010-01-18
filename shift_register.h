@@ -7,8 +7,8 @@ class ShiftRegister {
 public:
   ShiftRegister();
   void init();
-  void set_bit(int n);
-  void clear_bit(int n);
+  void set_bit(unsigned char n);
+  void clear_bit(unsigned char n);
   
 private:
   unsigned char data;

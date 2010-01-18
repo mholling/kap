@@ -7,16 +7,17 @@ ShiftRegister::ShiftRegister() : data(0), send_data(SendData(data)) {
 }
 
 void ShiftRegister::init() {
+  send_data();
 }
 
-void ShiftRegister::set_bit(int n) {
-  while (send_data.pending()) ; // block until the SPI packet is not enqueued
+void ShiftRegister::set_bit(unsigned char n) {
+  while (send_data.pending()) ; // block until any previous SPI packets are sent
   data |= (1 << n);
   send_data();
 }
 
-void ShiftRegister::clear_bit(int n) {
-  while (send_data.pending()) ; // block until the SPI packet is not enqueued
+void ShiftRegister::clear_bit(unsigned char n) {
+  while (send_data.pending()) ; // block until any previous SPI packets are sent
   data &= ~(1 << n);
   send_data();
 }

@@ -11,6 +11,7 @@
 #include "pwm.h"
 #include "spi.h"
 #include "shift_register.h"
+#include "motors.h"
 
 class App {
   friend class Singleton<App>;
@@ -33,6 +34,7 @@ public:
   Pwm pwm;
   Spi spi;
   ShiftRegister shift_register;
+  Motors motors;
   
   void run();
 };

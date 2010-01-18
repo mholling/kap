@@ -2,8 +2,8 @@
 #include <avr/io.h>
 #include "critical_section.h"
 
-Pwm::Pwm() {
-  // set phase-correct PWM using TOP = ICR1, no pre-scaling, non-inverting outputs
+Pwm::Pwm() : channel_a(Channel(OCR1A)), channel_b(Channel(OCR1B)) {
+  // set phase-correct PWM using TOP = ICR1, no pre-scaling, non-inverting outputs:
   TCCR1A = _BV(COM1A1) | _BV(COM1B1) | _BV(WGM11);
   TCCR1B = _BV(WGM13) | _BV(CS10);
   ICR1 = resolution - 1; // set TOP counter value to the resolution, determine by PWM frequency
@@ -11,16 +11,11 @@ Pwm::Pwm() {
 }
 
 void Pwm::init() {
-  set_A(0.0);
-  set_B(0.0);
+  channel_a.set_duty_cycle(0.1);
+  channel_b.set_duty_cycle(0.1);
 }
 
-inline void Pwm::set_A(float a) {
+void Pwm::Channel::set_duty_cycle(float value) {
   CriticalSection cs;
-  OCR1A = a * resolution;
-}
-
-inline void Pwm::set_B(float b) {
-  CriticalSection cs;
-  OCR1B = b * resolution;
+  reg = value * Pwm::resolution;
 }

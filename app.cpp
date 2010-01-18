@@ -7,6 +7,7 @@
 #include "pwm.h"
 #include "spi.h"
 #include "shift_register.h"
+#include "motors.h"
 #include <avr/io.h>
 #include <util/delay.h>
 
@@ -20,6 +21,7 @@ void App::run() {
   pwm.init();
   spi.init();
   shift_register.init();
+  motors.init();
   
   scheduler.run();
 }
