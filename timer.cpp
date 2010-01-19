@@ -3,7 +3,7 @@
 #include "app.h"
 #include "analog.h"
 
-Timer::Timer() {
+Timer::Timer(App* app) : Resource(app) {
   TCCR2A = _BV(WGM21); // CTC mode
   TCCR2B = _BV(CS22) | _BV(CS21) | _BV(CS20);
   OCR2A = F_CPU / 1024 / frequency - 1;
@@ -14,8 +14,7 @@ void Timer::init() {
 }
 
 void Timer::interrupt() {
-  App& app = App::app();
-  app.analog.start_conversions();
+  app().analog.start_conversions();
 
   // signal other timer tasks here...
   
@@ -23,11 +22,14 @@ void Timer::interrupt() {
   count++;
 
   if (count % 50 == 0) {
-    app.magnetometer.show_bearing();
+    app().magnetometer.show_bearing();
   }
+  
+  app().motors.yaw.set((float)(count % 250)/250.0);
+  app().motors.pitch.set((float)(count % 250)/250.0);
 }
 
 ISR(TIMER2_COMPA_vect) {
-  App::app().timer.interrupt();
+  app.timer.interrupt();
 }
 

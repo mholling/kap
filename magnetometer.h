@@ -1,10 +1,11 @@
 #ifndef __MAGNETOMETER_H_
 #define __MAGNETOMETER_H_
 
+#include "resource.h"
 #include "i2c.h"
 #include <math.h>
 
-class Magnetometer {
+class Magnetometer : private Resource {
 private:
   enum { i2c_address = 0x1e, config_registers = 0x00, mode_register = 0x02, vector_status_registers = 0x03 };
 
@@ -41,7 +42,7 @@ private:
   VectorStatusPacket vector_status;
   
 public:
-  Magnetometer() : sleep(ModePacket::sleep), wake(ModePacket::continuous) { }
+  Magnetometer(App* app) : Resource(app), sleep(ModePacket::sleep), wake(ModePacket::continuous) { }
   
   void init() { configure(); wake(); }
 

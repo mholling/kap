@@ -2,7 +2,7 @@
 #include "app.h"
 #include "critical_section.h"
 
-Spi::Spi() {
+Spi::Spi(App* app) : Resource(app) {
   SPCR = _BV(SPIE) | _BV(SPE) | _BV(MSTR); // enable SPI in master mode with interrupts, SCK freq = F_CPU/4
   DDRB |= _BV(DDB3) | _BV(DDB5); // set MOSI and SCK as outputs
 }
@@ -45,5 +45,5 @@ void Spi::Packet::interrupt() {
 }
 
 ISR(SPI_STC_vect) {
-  App::app().spi.interrupt();
+  app.spi.interrupt();
 }

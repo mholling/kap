@@ -1,12 +1,13 @@
 #ifndef __I2C_H_
 #define __I2C_H_
 
+#include "resource.h"
 #include "queable.h"
 
-class I2C {
+class I2C : private Resource {
     
 public:
-  I2C();
+  I2C(App* app);
   
   void init();
   const void interrupt();

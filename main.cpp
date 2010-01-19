@@ -1,5 +1,7 @@
 #include "app.h"
 
+App app;
+
 int main(void) {
-  App::app().run();
+  app.run();
 }

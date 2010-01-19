@@ -5,7 +5,7 @@
 #include "serial.h"
 #include "critical_section.h"
 
-I2C::I2C() {
+I2C::I2C(App* app) : Resource(app) {
   PORTC |= _BV(PINC4) | _BV(PINC5); // set them high to enable pullups
   TWSR &= ~(_BV(TWPS0) | _BV(TWPS1)); // set pre-scaler to 1
   TWBR = ((F_CPU / 100000) - 16) / 2; // set bit-rate to 400 kbps
@@ -48,7 +48,7 @@ const void I2C::Packet::release() {
 }
 
 void I2C::Packet::interrupt() {
-  // App::app().serial.debug("TW_STATUS", (char)TW_STATUS);
+  // app().serial.debug("TW_STATUS", (char)TW_STATUS);
   switch (TW_STATUS) {
     case TW_START:     // sent start condition
       TWDR = TW_WRITE | (address << 1);
@@ -107,5 +107,5 @@ void I2C::Packet::dequeue() {
 }
 
 ISR(TWI_vect) {
-  App::app().i2c.interrupt();
+  app.i2c.interrupt();
 }

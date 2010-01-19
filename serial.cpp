@@ -4,7 +4,7 @@
 
 char Serial::lookup[] = "0123456789ABCDEF";
 
-Serial::Serial() : blips(0) {
+Serial::Serial(App* app) : Resource(app), blips(0) {
   unsigned int bittimer = (F_CPU / 9600 / 16 ) - 1;
 	UBRR0H = (unsigned char) (bittimer >> 8);
 	UBRR0L = (unsigned char) bittimer;

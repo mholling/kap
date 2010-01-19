@@ -1,7 +1,6 @@
 #ifndef __APP_H_
 #define __APP_H_
 
-#include "singleton.h"
 #include "scheduler.h"
 #include "serial.h"
 #include "i2c.h"
@@ -13,17 +12,9 @@
 #include "shift_register.h"
 #include "motors.h"
 
-class App {
-  friend class Singleton<App>;
-  
-private:
-  App& operator=(const App&);
-  
-protected:
-  App() { }
-  
+class App {  
 public:
-  inline static App& app() { return Singleton<App>::instance(); }
+  App() : scheduler(this), serial(this), i2c(this), magnetometer(this), timer(this), analog(this), pwm(this), spi(this), shift_register(this), motors(this) { }
   
   Scheduler scheduler;
   Serial serial;
@@ -39,8 +30,7 @@ public:
   void run();
 };
 
-
-
+extern App app;
 
 void toggle_led();
 

@@ -21,10 +21,7 @@ OBJECTS    = main.o i2c.o serial.o magnetometer.o app.o scheduler.o timer.o anal
 # Tune the lines below only if you know what you are doing:
 
 AVRDUDE = avrdude $(PROGRAMMER) -p $(DEVICE)
-# COMPILE = avr-gcc -Wall -Os -DF_CPU=$(CLOCK) -mmcu=$(DEVICE)
-COMPILE = avr-gcc -Wall -Os -DF_CPU=$(CLOCK) -mmcu=$(DEVICE) -fno-threadsafe-statics -mcall-prologues
-
-# # TODO: -fno-threadsafe-statics prevents __cxa_guard_acquire, &c errors. NEED TO FIX!
+COMPILE = avr-gcc -Wall -Os -DF_CPU=$(CLOCK) -mmcu=$(DEVICE) -mcall-prologues
 
 # symbolic targets:
 all:	clear main.hex size
