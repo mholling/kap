@@ -3,13 +3,18 @@
 
 #include "resource.h"
 #include "app.h"
+#include "analog.h"
 
 class Gyros : private Resource {
 private:
   enum { power_down_shift_register_bit = 6, self_test_shift_register_pin = 7 };
+  class FakeChannel : public Analog::Channel {
+  public:
+    FakeChannel(unsigned int value) : Analog::Channel(0x0f) { data = value; }
+  } fixed;
 
 public:
-  Gyros(App* app) : Resource(app), yaw(0, 4, 600), pitch(1, 3, 800), roll(2, 3, 800) { }
+  Gyros(App* app_) : Resource(app_), fixed(512), yaw(app().analog.yaw, fixed, 300), pitch(app().analog.pitch, app().analog.ref, 400), roll(app().analog.roll, app().analog.ref, 400) { }
   void init();
   
   void disable();
@@ -19,12 +24,12 @@ public:
   
   class Gyro {
   private:
-    const unsigned int value_channel;
-    const unsigned int reference_channel;
-    const unsigned int scale;
+    Analog::Channel& value;
+    Analog::Channel& reference;
+    const unsigned int range;
     
   public:
-    Gyro(unsigned int value_channel, unsigned int origin_channel, unsigned int scale) : value_channel(value_channel), origin_channel(origin_channel), scale(scale) { }
+    Gyro(Analog::Channel& value, Analog::Channel& reference, unsigned int range) : value(value), reference(reference), range(range) { }
     float operator ()();
   };
   

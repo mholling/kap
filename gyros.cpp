@@ -24,5 +24,5 @@ void Gyros::normal_mode() {
 
 inline float Gyros::Gyro::operator ()() {
   CriticalSection cs;
-  return (value - origin) * scale / 1024;
+  return (value() - reference()) * range / reference(); // TODO: do we need to cast any of these?
 }

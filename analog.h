@@ -2,16 +2,38 @@
 #define __ADC_H_
 
 #include "resource.h"
-#include <avr/io.h>
-#include "scheduler.h"
+#include "queable.h"
 
 class Analog : private Resource {
 public:
-  volatile unsigned int data[4];
   Analog(App* app);
   inline void init() { }
-  void interrupt();
+  const void interrupt();
+  
   void start_conversions();
+    
+  class Channel : public Queable<Channel> {
+  protected:
+    const unsigned int channel;
+    volatile unsigned int data;
+
+    void dequeue();
+    
+    void start();
+    
+  public:
+    Channel(unsigned int channel) : channel(channel) { }
+    
+    void interrupt();
+    
+    void enqueue();
+    inline unsigned int operator ()() { return data; };
+  };
+  
+  Channel yaw;
+  Channel pitch;
+  Channel roll;
+  Channel ref;
 };
 
 #endif

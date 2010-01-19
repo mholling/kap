@@ -3,25 +3,42 @@
 #include "scheduler.h"
 #include "app.h"
 
-Analog::Analog(App* app) : Resource(app) {
+Analog::Analog(App* app) : Resource(app), yaw(0), pitch(1), roll(2), ref(3) {
   ADCSRA = _BV(ADEN) | _BV(ADIE) | _BV(ADPS2) | _BV(ADPS1);
   DIDR0 = _BV(ADC3D) | _BV(ADC2D) | _BV(ADC1D) | _BV(ADC0D);
 }
 
+inline const void Analog::interrupt() { // TODO: SPI, I2C etc should be inline here too!
+  Channel::head().interrupt();
+}
+
 void Analog::start_conversions() {
-  ADMUX = _BV(REFS0);
+  yaw.enqueue();
+  pitch.enqueue();
+  roll.enqueue();
+  ref.enqueue();
+}
+
+void Analog::Channel::enqueue() {
+  CriticalSection cs;
+  Queable<Channel>::enqueue();
+  if (at_head()) start();
+}
+
+void Analog::Channel::dequeue() {
+  CriticalSection cs;
+  Queable<Channel>::dequeue();
+  if (any()) head().start();
+}
+
+void Analog::Channel::start() {
+  ADMUX = _BV(REFS0) | (channel & 0x0f);
   ADCSRA |= _BV(ADSC);
 }
 
-void Analog::interrupt() {
-  const unsigned int channel = ADMUX & 0x03;
-  data[channel] = ADCL + (ADCH << 8);
-  if (channel == 3) {
-    // TODO: signal conversions are complete...
-  } else {
-    ADMUX++;
-    ADCSRA |= _BV(ADSC);
-  }
+void Analog::Channel::interrupt() {
+  data = ADCL + (ADCH << 8);
+  dequeue();
 }
 
 ISR(ADC_vect) {
