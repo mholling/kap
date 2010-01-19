@@ -1,10 +1,9 @@
 #ifndef __SCHEDULER_H_
 #define __SCHEDULER_H_
 
-#include "resource.h"
 #include "prioritised_queable.h"
 
-class Scheduler : private Resource {
+class Scheduler {
 public:
   class Task : public PrioritisedQueable<Task> {
   public:
@@ -16,12 +15,11 @@ public:
 
 private:
   void run_tasks(Task* new_task = 0);
-  void idle();
   volatile Task* current_task;
   
 public:
-  Scheduler(App* app) : Resource(app), current_task(0) { }
-  void init();
+  Scheduler() : current_task(0) { }
+  inline void init() { sei(); }
   void signal(Task& task);
   void run();
 };

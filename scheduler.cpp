@@ -4,10 +4,6 @@
 #include <avr/sleep.h>
 #include "critical_section.h"
 
-void Scheduler::init() {
-  sei();
-}
-
 void Scheduler::run_tasks(Task* new_task) {
   CriticalSection cs;
   if (new_task) new_task->enqueue();
@@ -24,17 +20,8 @@ void Scheduler::run_tasks(Task* new_task) {
   current_task = interrupted_task;
 }
 
-void Scheduler::idle() {
-  // // can't idle for now because it triggers ADC conversion and screws everything up... (TODO!)
-  // set_sleep_mode(SLEEP_MODE_IDLE);
-  // sleep_mode();
-}
-
 void Scheduler::run() {
-  while (true) {
-    run_tasks();
-    idle();
-  }
+  while (true) run_tasks();
 }
 
 void Scheduler::signal(Task& task) {

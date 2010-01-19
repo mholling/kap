@@ -1,12 +1,11 @@
 #ifndef __SHIFT_REGISTER_H_
 #define __SHIFT_REGISTER_H_
 
-#include "resource.h"
 #include "spi.h"
 
-class ShiftRegister : private Resource {
+class ShiftRegister {
 public:
-  ShiftRegister(App* app);
+  ShiftRegister();
   void init();
   void set_bit(unsigned char n);
   void clear_bit(unsigned char n);

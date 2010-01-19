@@ -1,12 +1,11 @@
 #ifndef __ADC_H_
 #define __ADC_H_
 
-#include "resource.h"
 #include "queable.h"
 
-class Analog : private Resource {
+class Analog {
 public:
-  Analog(App* app);
+  Analog();
   inline void init() { }
   const void interrupt();
   

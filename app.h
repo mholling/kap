@@ -11,10 +11,11 @@
 #include "spi.h"
 #include "shift_register.h"
 #include "motors.h"
+#include "gyros.h"
 
 class App {  
 public:
-  App() : scheduler(this), serial(this), i2c(this), magnetometer(this), timer(this), analog(this), pwm(this), spi(this), shift_register(this), motors(this) { }
+  App() { }
   
   Scheduler scheduler;
   Serial serial;
@@ -26,13 +27,12 @@ public:
   Spi spi;
   ShiftRegister shift_register;
   Motors motors;
+  Gyros gyros;
   
   void run();
 };
 
 extern App app;
-
-void toggle_led();
 
 extern "C" void __cxa_pure_virtual(void);
 extern "C" void atexit(void);

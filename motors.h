@@ -1,14 +1,13 @@
 #ifndef __MOTOR_H_
 #define __MOTOR_H_
 
-#include "resource.h"
 #include <avr/io.h>
 
-class Motors : private Resource {
+class Motors {
   enum { standby_shift_register_bit = 1, yaw_polarity = +1, pitch_polarity = +1 };
   
 public:
-  Motors(App* app);
+  Motors();
   void init();
   
   void disable();

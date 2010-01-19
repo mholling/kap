@@ -4,7 +4,8 @@
 
 char Serial::lookup[] = "0123456789ABCDEF";
 
-Serial::Serial(App* app) : Resource(app), blips(0) {
+Serial::Serial() {
+  // TODO: rewrite to use UBRR0 16-bit reg? use CriticalSection?
   unsigned int bittimer = (F_CPU / 9600 / 16 ) - 1;
 	UBRR0H = (unsigned char) (bittimer >> 8);
 	UBRR0L = (unsigned char) bittimer;
@@ -79,8 +80,4 @@ void Serial::debug_b(const char * const s, char b) {
   string(": 0b");
   binary(b);
   newline();
-}
-
-void Serial::blip() {
-  debug("blip", blips++);
 }

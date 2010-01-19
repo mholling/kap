@@ -1,14 +1,13 @@
 #ifndef __SERIAL_H_
 #define __SERIAL_H_
 
-#include "resource.h"
 
-class Serial : private Resource {
+class Serial {
 protected:
   static char lookup[];
-  int blips;
+
 public:
-  Serial(App* app);
+  Serial();
   void character(char c);
   void string(const char * const s);
   void boolean(bool b);
@@ -20,7 +19,6 @@ public:
   void debug(const char * const s, bool b);
   void debug(const char * const s, int b);
   void debug_b(const char * const s, char b);
-  void blip();
 };
 
 #endif

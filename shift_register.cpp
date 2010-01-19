@@ -1,7 +1,7 @@
 #include "shift_register.h"
 #include <avr/io.h>
 
-ShiftRegister::ShiftRegister(App* app) : Resource(app), data(0), send_data(data) {
+ShiftRegister::ShiftRegister() : data(0), send_data(data) {
   DDRD |= _BV(DDD6);
   PORTD |= _BV(PIND6);
 }
@@ -14,12 +14,14 @@ void ShiftRegister::set_bit(unsigned char n) {
   while (send_data.pending()) ; // block until any previous SPI packets are sent
   data |= (1 << n);
   send_data();
+  // make this blocking? (TODO)
 }
 
 void ShiftRegister::clear_bit(unsigned char n) {
   while (send_data.pending()) ; // block until any previous SPI packets are sent
   data &= ~(1 << n);
   send_data();
+  // make this blocking? (TODO)
 }
 
 inline const void ShiftRegister::SendData::toggle_select() {

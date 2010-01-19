@@ -1,12 +1,11 @@
 #ifndef __SPI_H_
 #define __SPI_H_
 
-#include "resource.h"
 #include "queable.h"
 
-class Spi : private Resource {
+class Spi {
 public:
-  Spi(App* app);
+  Spi();
   inline void init() { }
   const void interrupt();
   
