@@ -5,9 +5,9 @@
 #include <avr/io.h>
 #include "scheduler.h"
 
-class Analog : private Resource {  
+class Analog : private Resource {
 public:
-  unsigned int data[4];
+  volatile unsigned int data[4];
   Analog(App* app);
   inline void init() { }
   void interrupt();
