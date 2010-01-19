@@ -7,9 +7,6 @@ Spi::Spi(App* app) : Resource(app) {
   DDRB |= _BV(DDB3) | _BV(DDB5); // set MOSI and SCK as outputs
 }
 
-void Spi::init() {
-}
-
 const void Spi::interrupt() {
   Packet::head().interrupt();
 }

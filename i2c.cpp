@@ -12,9 +12,6 @@ I2C::I2C(App* app) : Resource(app) {
   TWCR = _BV(TWEN) | _BV(TWIE) | _BV(TWINT);
 }
 
-void I2C::init() {
-}
-
 const void I2C::interrupt() {
   Packet::head().interrupt();
 }

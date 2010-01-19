@@ -9,7 +9,7 @@ private:
   enum { frequency = 50 };
 public:
   Timer(App* app);
-  void init();
+  inline void init() { }
   void interrupt();
 };
 

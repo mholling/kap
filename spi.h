@@ -7,7 +7,7 @@
 class Spi : private Resource {
 public:
   Spi(App* app);
-  void init();
+  inline void init() { }
   const void interrupt();
   
   class Packet : public Queable<Packet> {

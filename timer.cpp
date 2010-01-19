@@ -10,9 +10,6 @@ Timer::Timer(App* app) : Resource(app) {
   TIMSK2 = _BV(OCIE2A); 
 }
 
-void Timer::init() {
-}
-
 void Timer::interrupt() {
   app().analog.start_conversions();
 

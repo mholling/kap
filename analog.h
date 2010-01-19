@@ -9,7 +9,7 @@ class Analog : private Resource {
 public:
   unsigned int data[4];
   Analog(App* app);
-  void init();
+  inline void init() { }
   void interrupt();
   void start_conversions();
 };

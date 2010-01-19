@@ -9,9 +9,7 @@ Motors::Motors(App* app) : Resource(app), yaw(OCR1A, PORTD, PIND7, PORTB, PINB0,
 }
 
 void Motors::init() {
-  enable();
-  yaw.set(0.5);
-  pitch.set(-0.85);
+  disable();
 }
 
 void Motors::disable() {

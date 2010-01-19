@@ -9,7 +9,7 @@ class I2C : private Resource {
 public:
   I2C(App* app);
   
-  void init();
+  inline void init() { }
   const void interrupt();
   
   class Packet : public Queable<Packet> {

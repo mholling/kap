@@ -10,5 +10,3 @@ Pwm::Pwm(App* app) : Resource(app) {
   DDRB |= _BV(DDB1) | _BV(DDB2); // set PB1 and PB2 as outputs
 }
 
-void Pwm::init() {
-}
