@@ -19,9 +19,8 @@ public:
     inline static const void nack();
     inline static const void release();
 
-    virtual volatile unsigned char * const buffer() = 0; // TODO: should this just be a stored pointer instead?
-
   private:
+    volatile unsigned char * const buffer;
     const unsigned int length;
     const read_write_value read_write;
     unsigned int index;
@@ -29,7 +28,7 @@ public:
     const unsigned char reg;
 
   public:    
-    Packet(unsigned char address, unsigned char reg, unsigned int length, read_write_value read_write) : length(length), read_write(read_write), index(0), address(address), reg(reg) { }
+    Packet(volatile unsigned char * buffer, unsigned char address, unsigned char reg, unsigned int length, read_write_value read_write) : buffer(buffer), length(length), read_write(read_write), index(0), address(address), reg(reg) { }
     
     void interrupt();
     void operator()();
@@ -40,12 +39,12 @@ public:
   
   class ReadPacket : public Packet {
   public:
-    ReadPacket(unsigned char address, unsigned char reg, int length) : Packet(address, reg, length, read) { }
+    ReadPacket(volatile unsigned char * buffer, unsigned char address, unsigned char reg, int length) : Packet(buffer, address, reg, length, read) { }
   };
 
   class WritePacket : public Packet {
   public:
-    WritePacket(unsigned char address, unsigned char reg, int length) : Packet(address, reg, length, write) { }
+    WritePacket(volatile unsigned char * buffer, unsigned char address, unsigned char reg, int length) : Packet(buffer, address, reg, length, write) { }
   };
 };
 

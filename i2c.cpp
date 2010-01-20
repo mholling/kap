@@ -62,7 +62,7 @@ void I2C::Packet::interrupt() {
       if (read_write == read)
         start();
       else if (index < length) {
-        TWDR = buffer()[index++];
+        TWDR = buffer[index++];
         ack();
       } else {
         stop();
@@ -71,13 +71,13 @@ void I2C::Packet::interrupt() {
       break;
   
     case TW_MR_DATA_ACK: // data received, ack sent
-      buffer()[index++] = TWDR;
+      buffer[index++] = TWDR;
     case TW_MR_SLA_ACK:  // address sent, ack received
       index == length - 1 ? nack() : ack();
       break;
   
     case TW_MR_DATA_NACK: // data received, nack sent
-      buffer()[index++] = TWDR;
+      buffer[index++] = TWDR;
       stop();
       dequeue();
       break;
