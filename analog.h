@@ -11,7 +11,7 @@ public:
   
   void start_conversions();
     
-  class Channel : public Queable<Channel> {
+  class Channel : protected Queable<Channel> {
   protected:
     const unsigned int channel;
     volatile unsigned int data;
@@ -27,6 +27,9 @@ public:
     
     void enqueue();
     inline unsigned int operator ()() { return data; };
+
+    inline bool pending() { return Queable<Channel>::pending(); }; // TODO: add critical section here and in corresponding others?
+    inline static Channel& head() { return Queable<Channel>::head(); };
   };
   
   Channel yaw;

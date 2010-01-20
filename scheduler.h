@@ -5,12 +5,17 @@
 
 class Scheduler {
 public:
-  class Task : public PrioritisedQueable<Task> {
+  class Task : protected PrioritisedQueable<Task> {
   public:
     Task(unsigned int level) : PrioritisedQueable<Task>(level) { }
     
     virtual void operator()() = 0;
     inline void complete() { dequeue(); }
+
+    inline void enqueue() { return PrioritisedQueable<Task>::enqueue(); }
+    inline bool pending() { return PrioritisedQueable<Task>::pending(); }
+    inline static Task& head() { return PrioritisedQueable<Task>::head(); }
+    inline static bool any() { return PrioritisedQueable<Task>::any(); }
   };
 
 private:

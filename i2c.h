@@ -11,10 +11,9 @@ public:
   inline void init() { }
   const void interrupt();
   
-  class Packet : public Queable<Packet> {
+  class Packet : protected Queable<Packet> {
   protected:
     enum read_write_value { read, write };
-    void enqueue();
     void dequeue();
     
     inline static const void start();
@@ -35,10 +34,13 @@ public:
     
     void interrupt();
     
-    inline void operator()() { enqueue(); }
-        
+    void operator()();        
     const unsigned char address;
     const unsigned char reg;
+    
+    void enqueue();
+    inline bool pending() { return Queable<Packet>::pending(); }; // TODO?
+    inline static Packet& head() { return Queable<Packet>::head(); }; // TODO?
   };
   
   class ReadPacket : public Packet {

@@ -11,7 +11,7 @@ const void Spi::interrupt() {
   Packet::head().interrupt();
 }
 
-void Spi::Packet::enqueue() {
+void Spi::Packet::operator ()() {
   CriticalSection cs;
   index = 0;
   Queable<Packet>::enqueue();

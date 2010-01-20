@@ -16,6 +16,7 @@ void Scheduler::run_tasks(Task* new_task) {
     task();
     cli();
     task.complete(); // TODO: could this functionality be moved into the Task class as per SPI?
+    // (TODO) then we would not need to make Task::any() public
   }
   current_task = interrupted_task;
 }

@@ -9,9 +9,8 @@ public:
   inline void init() { }
   const void interrupt();
   
-  class Packet : public Queable<Packet> {
+  class Packet : protected Queable<Packet> {
   protected:
-    void enqueue();    
     void dequeue();    
 
     void start();    
@@ -21,7 +20,9 @@ public:
     
     void interrupt();
 
-    inline void operator()() { enqueue(); }
+    void operator()();
+    inline bool pending() { return Queable<Packet>::pending(); }; // TODO?
+    inline static Packet& head() { return Queable<Packet>::head(); }; // TODO?
 
   private:
     const unsigned char * const tx_buffer;

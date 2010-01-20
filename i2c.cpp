@@ -16,7 +16,7 @@ const void I2C::interrupt() {
   Packet::head().interrupt();
 }
 
-void I2C::Packet::enqueue() {
+void I2C::Packet::operator ()() {
   CriticalSection cs;
   index = 0;
   Queable<Packet>::enqueue();
