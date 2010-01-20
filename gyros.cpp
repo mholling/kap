@@ -29,7 +29,7 @@ inline float Gyros::Gyro::operator ()() {
   return (float)((int)value() - (int)reference()) * range / reference();
 }
 
-void Gyros::Task::operator ()() {
+void Gyros::Task::run() {
   app.analog.start_conversions();
   for (bool done = false; done; done = !app.gyros.yaw.pending()) { } // TODO: can we have tasks suspend themselves instead?
   app.serial.debug("  yaw", (int)app.gyros.yaw());

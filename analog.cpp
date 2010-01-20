@@ -8,21 +8,18 @@ Analog::Analog() : yaw(0), pitch(1), roll(2), ref(3) {
   DIDR0 = _BV(ADC3D) | _BV(ADC2D) | _BV(ADC1D) | _BV(ADC0D);
 }
 
-inline const void Analog::interrupt() { // TODO: SPI, I2C etc should be inline here too!
-  Channel::head().interrupt();
-}
-
 void Analog::start_conversions() {
-  yaw.enqueue();
-  pitch.enqueue();
-  roll.enqueue();
-  ref.enqueue();
+  yaw.convert();
+  pitch.convert();
+  roll.convert();
+  ref.convert();
 }
 
-void Analog::Channel::enqueue() {
+void Analog::Channel::convert() {
   CriticalSection cs;
-  Queable<Channel>::enqueue();
-  if (at_head()) start();
+  if (Queable<Channel>::enqueue())
+    if (at_head())
+      start();
 }
 
 void Analog::Channel::dequeue() {
@@ -42,5 +39,5 @@ void Analog::Channel::interrupt() {
 }
 
 ISR(ADC_vect) {
-  app.analog.interrupt();
+  Analog::Channel::head().interrupt();
 }

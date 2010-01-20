@@ -17,19 +17,18 @@ public:
     volatile unsigned int data;
 
     void dequeue();
-    
     void start();
     
   public:
     Channel(unsigned int channel) : channel(channel) { }
     
     void interrupt();
+    void convert();
     
-    void enqueue();
-    inline unsigned int operator ()() { return data; };
+    inline unsigned int operator ()() { return data; } // TODO: change this to return a [0.0, 1.0] float
 
-    inline bool pending() { return Queable<Channel>::pending(); }; // TODO: add critical section here and in corresponding others?
-    inline static Channel& head() { return Queable<Channel>::head(); };
+    inline bool pending() { return Queable<Channel>::pending(); }
+    inline static Channel& head() { return Queable<Channel>::head(); }
   };
   
   Channel yaw;

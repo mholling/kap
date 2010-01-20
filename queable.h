@@ -11,7 +11,7 @@ private:
 protected:
   Queable* prev;
   Queable* next;
-  static Queable* first; // TODO: these should probably all be volatile?
+  static Queable* first;
   
   void insert_before(Queable* t) {
     prev = t->prev;
@@ -19,10 +19,11 @@ protected:
     prev->next = next->prev = this;
   }
   
-  void enqueue() {
-    if (pending()) return;
+  bool enqueue() {
+    if (pending()) return false;
     if (first) insert_before(first);
     else prev = next = first = this;
+    return true;
   }
   
   void dequeue() {

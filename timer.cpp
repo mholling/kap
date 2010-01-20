@@ -15,7 +15,7 @@ void Timer::interrupt() {
   count++;
 
   if (!app.gyros.task.pending() && (count % 35 == 0)) {
-    app.scheduler.signal(app.gyros.task);
+    app.gyros.task();
   }
 
   // app.analog.start_conversions();

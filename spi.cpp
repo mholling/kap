@@ -7,15 +7,13 @@ Spi::Spi() {
   DDRB |= _BV(DDB3) | _BV(DDB5); // set MOSI and SCK as outputs
 }
 
-const void Spi::interrupt() {
-  Packet::head().interrupt();
-}
-
 void Spi::Packet::operator ()() {
   CriticalSection cs;
-  index = 0;
-  Queable<Packet>::enqueue();
-  if (at_head()) start();
+  if (Queable<Packet>::enqueue()) {
+    index = 0;    
+    if (at_head())
+      start();
+  }
 }
 
 void Spi::Packet::dequeue() {
@@ -42,5 +40,5 @@ void Spi::Packet::interrupt() {
 }
 
 ISR(SPI_STC_vect) {
-  app.spi.interrupt();
+  Spi::Packet::head().interrupt();
 }

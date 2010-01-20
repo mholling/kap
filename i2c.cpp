@@ -12,15 +12,13 @@ I2C::I2C() {
   TWCR = _BV(TWEN) | _BV(TWIE) | _BV(TWINT);
 }
 
-const void I2C::interrupt() {
-  Packet::head().interrupt();
-}
-
 void I2C::Packet::operator ()() {
   CriticalSection cs;
-  index = 0;
-  Queable<Packet>::enqueue();
-  if (at_head()) start();
+  if (Queable<Packet>::enqueue()) {
+    index = 0;
+    if (at_head())
+      start();
+  }
 }
 
 const void I2C::Packet::start() {
@@ -104,5 +102,5 @@ void I2C::Packet::dequeue() {
 }
 
 ISR(TWI_vect) {
-  app.i2c.interrupt();
+  I2C::Packet::head().interrupt();
 }

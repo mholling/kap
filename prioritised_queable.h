@@ -6,13 +6,9 @@
 
 template <typename T>
 class PrioritisedQueable : public Queable<T> {
-
-public:
-  const unsigned int level;
-  PrioritisedQueable(unsigned int level) : level(level) { }
-  
-  void enqueue() {
-    if (this->pending()) return;
+protected:
+  bool enqueue() {
+    if (this->pending()) return false;
     if (this->empty())
       this->prev = this->next = this->first = this;
     else {
@@ -22,7 +18,12 @@ public:
       this->insert_before(t);
       if (static_cast<PrioritisedQueable*>(this->first)->level < level) this->first = this;
     }
+    return true;
   }
+  
+public:
+  const unsigned int level;
+  PrioritisedQueable(unsigned int level) : level(level) { }
 };
 
 #endif

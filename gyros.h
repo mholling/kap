@@ -44,7 +44,7 @@ public:
   public:
     Task() : Scheduler::Task(20) { }
     
-    void operator ()();
+    void run();
   } task;
 };
 

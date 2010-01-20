@@ -7,15 +7,12 @@ class I2C {
     
 public:
   I2C();
-  
   inline void init() { }
-  const void interrupt();
   
   class Packet : protected Queable<Packet> {
   protected:
     enum read_write_value { read, write };
     void dequeue();
-    
     inline static const void start();
     inline static const void stop();
     inline static const void ack();
@@ -28,19 +25,17 @@ public:
     const unsigned int length;
     const read_write_value read_write;
     unsigned int index;
+    const unsigned char address;
+    const unsigned char reg;
 
   public:    
     Packet(unsigned char address, unsigned char reg, unsigned int length, read_write_value read_write) : length(length), read_write(read_write), index(0), address(address), reg(reg) { }
     
     void interrupt();
+    void operator()();
     
-    void operator()();        
-    const unsigned char address;
-    const unsigned char reg;
-    
-    void enqueue();
-    inline bool pending() { return Queable<Packet>::pending(); }; // TODO?
-    inline static Packet& head() { return Queable<Packet>::head(); }; // TODO?
+    inline bool pending() { return Queable<Packet>::pending(); }
+    inline static Packet& head() { return Queable<Packet>::head(); }
   };
   
   class ReadPacket : public Packet {

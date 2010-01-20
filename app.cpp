@@ -13,7 +13,8 @@ void App::run() {
   motors.init();
   gyros.init();
   
-  scheduler.run();
+  // scheduler.run();
+  while (true) { }
 }
 
 // void toggle_led() {

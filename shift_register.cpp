@@ -11,17 +11,15 @@ void ShiftRegister::init() {
 }
 
 void ShiftRegister::set_bit(unsigned char n) {
-  while (send_data.pending()) ; // block until any previous SPI packets are sent
   data |= (1 << n);
   send_data();
-  // make this blocking? (TODO)
+  for (bool done = false; done; done = send_data.pending()) { }
 }
 
 void ShiftRegister::clear_bit(unsigned char n) {
-  while (send_data.pending()) ; // block until any previous SPI packets are sent
   data &= ~(1 << n);
   send_data();
-  // make this blocking? (TODO)
+  for (bool done = false; done; done = send_data.pending()) { }
 }
 
 inline const void ShiftRegister::SendData::toggle_select() {
