@@ -30,11 +30,7 @@ inline float Gyros::Gyro::operator ()() {
 }
 
 void Gyros::Task::operator ()() {
-  app.serial.debug_b("SREG", SREG);
   app.analog.start_conversions();
-  app.serial.string(" ");
-  // while (app.gyros.yaw.pending()) ;
+  for (bool done = false; done; done = !app.gyros.yaw.pending()) { } // TODO: can we have tasks suspend themselves instead?
   app.serial.debug("  yaw", (int)app.gyros.yaw());
-  app.serial.debug("pitch", (int)app.gyros.pitch());
-  app.serial.debug(" roll", (int)app.gyros.roll());
 }

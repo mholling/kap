@@ -27,7 +27,7 @@ COMPILE = avr-gcc -Wall -Os -DF_CPU=$(CLOCK) -mmcu=$(DEVICE) -mcall-prologues
 all:	clear main.hex size
 
 size:
-	avr-size -t -B $(OBJECTS)
+    # avr-size -t -B $(OBJECTS)
 	ruby count.rb
 
 clear:
