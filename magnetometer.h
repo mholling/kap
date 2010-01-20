@@ -2,6 +2,7 @@
 #define __MAGNETOMETER_H_
 
 #include "i2c.h"
+#include "scheduler.h"
 #include <math.h>
 
 class Magnetometer {
@@ -21,10 +22,10 @@ private:
     ModePacket(mode_value mode) : I2C::WritePacket(data, i2c_address, mode_register, 1) { data[0] = mode; }
   };
     
-  class VectorStatusPacket : public I2C::ReadPacket {
+  class GetVectorStatusPacket : public I2C::ReadPacket {
     volatile unsigned char data[7];
   public:
-    VectorStatusPacket() : I2C::ReadPacket(data, i2c_address, vector_status_registers, 7) { }
+    GetVectorStatusPacket() : I2C::ReadPacket(data, i2c_address, vector_status_registers, 7) { }
     inline int x() { int i = (data[0] << 8) + data[1]; return i; }
     inline int y() { int i = (data[2] << 8) + data[3]; return i; }
     inline int z() { int i = (data[4] << 8) + data[5]; return i; }
@@ -35,14 +36,18 @@ private:
   
   ConfigPacket configure;
   ModePacket sleep, wake;
-  VectorStatusPacket vector_status;
+  GetVectorStatusPacket get_vector_status;
   
 public:
   Magnetometer() : sleep(ModePacket::sleep), wake(ModePacket::continuous) { }
-  
   void init() { configure(); wake(); }
 
-  void show_bearing();
+  class Task : public Scheduler::Task {
+  public:
+    Task() : Scheduler::Task(20) { }
+    
+    void run();
+  } task;
 };
 
 #endif

@@ -16,17 +16,9 @@ void Timer::interrupt() {
 
   if (!app.gyros.task.pending() && (count % 35 == 0)) {
     app.gyros.task();
+    app.magnetometer.task();
   }
 
-  // app.analog.start_conversions();
-  // 
-  // // signal other timer tasks here...
-  // 
-  // 
-  // if (count % 50 == 0) {
-  //   app.magnetometer.show_bearing();
-  // }
-  // 
   // app.motors.yaw.set((float)(count % 250)/250.0);
   // app.motors.pitch.set((float)(count % 250)/250.0);
 }
