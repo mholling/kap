@@ -1,7 +1,7 @@
 #include "gyros.h"
 #include "app.h"
 
-Gyros::Gyros() : fixed(512), yaw(app.analog.yaw, fixed, 300), pitch(app.analog.pitch, app.analog.ref, 400), roll(app.analog.roll, app.analog.ref, 400) { }
+Gyros::Gyros() : fixed(0.5), yaw(app.analog.yaw, fixed, 300.0), pitch(app.analog.pitch, app.analog.ref, 400.0), roll(app.analog.roll, app.analog.ref, 400.0) { }
 
 void Gyros::init() {
   normal_mode();
@@ -26,7 +26,7 @@ void Gyros::normal_mode() {
 
 inline float Gyros::Gyro::operator ()() {
   CriticalSection cs;
-  return (float)((int)value() - (int)reference()) * range / reference();
+  return (value() / reference() - 1.0) * range;
 }
 
 void Gyros::Task::run() {

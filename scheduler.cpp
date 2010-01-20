@@ -1,5 +1,4 @@
 #include "scheduler.h"
-#include <avr/interrupt.h>
 #include "critical_section.h"
 
 void Scheduler::Task::operator ()() {

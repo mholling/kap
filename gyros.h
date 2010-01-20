@@ -12,7 +12,7 @@ private:
   enum { power_down_shift_register_bit = 6, self_test_shift_register_pin = 7 };
   class FakeChannel : public Analog::Channel {
   public:
-    FakeChannel(unsigned int value) : Analog::Channel(0x0f) { data = value; }
+    FakeChannel(float value) : Analog::Channel(0x0f) { data = 1024 * value; }
   } fixed;
 
 public:
@@ -28,7 +28,7 @@ public:
   private:
     Analog::Channel& value;
     Analog::Channel& reference;
-    const unsigned int range;
+    const float range;
     
   public:
     Gyro(Analog::Channel& value, Analog::Channel& reference, unsigned int range) : value(value), reference(reference), range(range) { }

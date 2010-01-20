@@ -25,7 +25,7 @@ public:
     void interrupt();
     void convert();
     
-    inline unsigned int operator ()() { return data; } // TODO: change this to return a [0.0, 1.0] float
+    inline float operator ()() { return static_cast<float>(data) / 1024; }
 
     inline bool pending() { return Queable<Channel>::pending(); }
     inline static Channel& head() { return Queable<Channel>::head(); }

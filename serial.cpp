@@ -5,10 +5,7 @@
 char Serial::lookup[] = "0123456789ABCDEF";
 
 Serial::Serial() {
-  // TODO: rewrite to use UBRR0 16-bit reg? use CriticalSection?
-  unsigned int bittimer = (F_CPU / 9600 / 16 ) - 1;
-	UBRR0H = (unsigned char) (bittimer >> 8);
-	UBRR0L = (unsigned char) bittimer;
+  UBRR0 = F_CPU / 9600 / 16 - 1;
 	UCSR0C = (3 << UCSZ00);
 	UCSR0B = (1 << RXEN0) | (1 << TXEN0);
 }

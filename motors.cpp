@@ -28,7 +28,8 @@ void Motors::Motor::set(float value) {
     in2_reg |= in2_mask;
     in1_reg &= ~in1_mask;    
   }
+  const float absolute_value = value < 0.0 ? -value : value;
+  const float clamped_value = absolute_value > 1.0 ? 1.0 : absolute_value;
   CriticalSection cs;
-  pwm_reg = Pwm::resolution * (value < 0.0 ? -value : value);
-  // TODO: clamp value to [-1.0,1.0] ?
+  pwm_reg = Pwm::resolution * clamped_value;
 }
