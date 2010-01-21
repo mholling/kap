@@ -24,7 +24,7 @@ void Gyros::normal_mode() {
   app.shift_register.clear_bit(self_test_shift_register_pin);
 }
 
-inline float Gyros::Gyro::operator ()() {
+float Gyros::Gyro::operator ()() const {
   CriticalSection cs;
   return (value() / reference() - 1.0) * range;
 }

@@ -32,7 +32,7 @@ public:
     
   public:
     Gyro(Analog::Channel& value, Analog::Channel& reference, unsigned int range) : value(value), reference(reference), range(range) { }
-    float operator ()();
+    float operator ()() const;
     bool pending() { CriticalSection cs; return value.pending() || reference.pending(); }
   };
   

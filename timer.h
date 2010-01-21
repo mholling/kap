@@ -2,9 +2,8 @@
 #define __TIMER_H_
 
 class Timer {
-private:
-  enum { frequency = 50 };
 public:
+  enum { frequency = 50 };
   Timer();
   inline void init() { }
   void interrupt();

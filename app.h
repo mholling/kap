@@ -12,11 +12,10 @@
 #include "shift_register.h"
 #include "motors.h"
 #include "gyros.h"
+#include "kalman_filters.h"
 
 class App {  
 public:
-  App() { }
-  
   Scheduler scheduler;
   Serial serial;
   I2C i2c;
@@ -28,6 +27,7 @@ public:
   ShiftRegister shift_register;
   Motors motors;
   Gyros gyros;
+  KalmanFilters kalman_filters;
   
   void run();
 };

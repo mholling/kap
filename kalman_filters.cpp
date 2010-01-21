@@ -1,7 +1,10 @@
-#include "kalman.h"
+#include "kalman_filters.h"
+#include "app.h"
 
-KalmanFilter::Task::Task(Gyros::Gyro& gyro) :
-   SchedulerTask(20),
+KalmanFilters::KalmanFilters() : yaw(app.gyros.yaw), pitch(app.gyros.pitch), roll(app.gyros.roll) { }
+
+KalmanFilters::Task::Task(Gyros::Gyro& gyro) :
+   Scheduler::Task(20),
    gyro(gyro),
    x1(0.0), x2(0.0), x3(0.0),
    dt(1.0 / Timer::frequency),
@@ -14,14 +17,14 @@ KalmanFilter::Task::Task(Gyros::Gyro& gyro) :
      
 }  
 
-void KalmanFilter::Task::run() {
+void KalmanFilters::Task::run() {
   z1 = gyro();
-  z2 = magneto();
+  // z2 = magneto();
   predict();
   update();
 }
 
-void KalmanFilter::Task::predict() {
+void KalmanFilters::Task::predict() {
   x2  = z1 - x3; // rate = gyro - bias
   x1 += dt * x2; // angle += dt * rate
   
@@ -41,7 +44,7 @@ void KalmanFilter::Task::predict() {
   p33 = q33 + t4;
 }
 
-void KalmanFilter::Task::update() {
+void KalmanFilters::Task::update() {
   float hphr11 = p22 + p32 + p23 + p33 + r11;
   float hphr12 = p21 + p31;
   float hphr21 = p12 + p13;

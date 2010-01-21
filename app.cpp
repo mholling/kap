@@ -12,6 +12,7 @@ void App::run() {
   shift_register.init();
   motors.init();
   gyros.init();
+  kalman_filters.init();
   
   // scheduler.run();
   while (true) { }
