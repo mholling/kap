@@ -14,10 +14,10 @@ void Timer::interrupt() {
   static unsigned int count = 0;
   count++;
 
-  if (!app.gyros.task.pending() && (count % 35 == 0)) {
-    app.gyros.task();
-    app.magnetometer.task();
-  }
+  // if (!app.gyros.task.pending() && (count % 35 == 0)) {
+  //   app.gyros.task();
+  //   app.magnetometer.task();
+  // }
 
   // app.motors.yaw.set((float)(count % 250)/250.0);
   // app.motors.pitch.set((float)(count % 250)/250.0);
