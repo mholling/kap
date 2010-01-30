@@ -12,7 +12,7 @@
 #include "shift_register.h"
 #include "motors.h"
 #include "gyros.h"
-#include "kalman_filters.h"
+#include "kalman.h"
 
 class App {  
 public:
@@ -27,7 +27,7 @@ public:
   ShiftRegister shift_register;
   Motors motors;
   Gyros gyros;
-  KalmanFilters kalman_filters;
+  Kalman kalman;
   
   void run();
 };

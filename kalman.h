@@ -8,9 +8,9 @@ extern App app;
 #include "gyros.h"
 #include "timer.h"
 
-class KalmanFilters {
+class Kalman {
 public:
-  KalmanFilters();
+  Kalman();
   void init() { }
   
   class Task : public Scheduler::Task {
