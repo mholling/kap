@@ -42,12 +42,12 @@ public:
   Magnetometer() : sleep(ModePacket::sleep), wake(ModePacket::continuous) { }
   void init() { configure(); wake(); }
 
-  class Task : public Scheduler::Task {
-  public:
-    Task() : Scheduler::Task(20) { }
-    
-    void run();
-  } task;
+  // class Task : public Scheduler::Task {
+  // public:
+  //   Task() : Scheduler::Task(20) { }
+  //   
+  //   void run();
+  // } task;
 };
 
 #endif
