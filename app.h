@@ -27,7 +27,7 @@ public:
   ShiftRegister shift_register;
   Motors motors;
   Gyros gyros;
-  Kalman kalman;
+  // Kalman kalman;
   
   void run();
 };
