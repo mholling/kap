@@ -17,7 +17,7 @@ public:
     Packet(const unsigned char *tx_buffer, unsigned int tx_length, volatile unsigned char *rx_buffer, unsigned int rx_length) : tx_buffer(tx_buffer), tx_length(tx_length), rx_buffer(rx_buffer), rx_length(rx_length) { }
     
     void interrupt();
-    void operator()();
+    void operator ()(bool block = false);
     
     inline bool pending() { return Queable<Packet>::pending(); }
     inline static Packet& head() { return Queable<Packet>::head(); }

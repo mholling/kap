@@ -12,13 +12,14 @@ I2C::I2C() {
   TWCR = _BV(TWEN) | _BV(TWIE) | _BV(TWINT);
 }
 
-void I2C::Packet::operator ()() {
+void I2C::Packet::operator ()(bool block) {
   CriticalSection cs;
   if (Queable<Packet>::enqueue()) {
     index = 0;
     if (at_head())
       start();
   }
+  for (bool done = !block; done; done = !pending()) { }
 }
 
 const void I2C::Packet::start() {

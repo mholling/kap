@@ -16,7 +16,6 @@ void Timer::interrupt() {
 
   // if (!app.gyros.task.pending() && (count % 35 == 0)) {
   //   app.gyros.task();
-  //   app.magnetometer.task();
   // }
 
   // app.motors.yaw.set((float)(count % 250)/250.0);

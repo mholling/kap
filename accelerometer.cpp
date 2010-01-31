@@ -2,8 +2,12 @@
 #include "accelerometer.h"
 #include "serial.h"
 
-void Accelerometer::Task::run() {
-  // app.accelerometer.some_i2c_message();
-  // for (bool done = false; done; done = !app.accelerometer.some_i2c_message.pending()) { }
-  // app.serial.debug("bearing", app.magnetometer.some_i2c_message.some_method());
+void Accelerometer::init() {
+  set_rate();
+  set_data_format();
+  configure_interrupt();
+  wake();
 }
+
+unsigned char Accelerometer::InterruptConfigPacket::data[2] = { 0x08, 0x08 }; // send interrupts for DATA_READY to INT2
+unsigned char Accelerometer::DataFormatPacket::data[1] = { 0x20 }; // active-low interrupts

@@ -5,6 +5,7 @@ void App::run() {
   scheduler.init();
   i2c.init();
   magnetometer.init();
+  accelerometer.init();
   timer.init();
   analog.init();
   pwm.init();

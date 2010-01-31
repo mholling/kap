@@ -7,13 +7,14 @@ Spi::Spi() {
   DDRB |= _BV(DDB3) | _BV(DDB5); // set MOSI and SCK as outputs
 }
 
-void Spi::Packet::operator ()() {
+void Spi::Packet::operator ()(bool block) {
   CriticalSection cs;
   if (Queable<Packet>::enqueue()) {
     index = 0;    
     if (at_head())
       start();
   }
+  for (bool done = !block; done; done = !pending()) { }
 }
 
 void Spi::Packet::dequeue() {

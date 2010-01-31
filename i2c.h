@@ -31,7 +31,7 @@ public:
     Packet(volatile unsigned char * buffer, unsigned char address, unsigned char reg, unsigned int length, read_write_value read_write) : buffer(buffer), length(length), read_write(read_write), index(0), address(address), reg(reg) { }
     
     void interrupt();
-    void operator()();
+    void operator ()(bool block = false);
     
     inline bool pending() { return Queable<Packet>::pending(); }
     inline static Packet& head() { return Queable<Packet>::head(); }

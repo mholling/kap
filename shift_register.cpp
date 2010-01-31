@@ -12,14 +12,16 @@ void ShiftRegister::init() {
 
 void ShiftRegister::set_bit(unsigned char n) {
   data |= (1 << n);
-  send_data();
-  for (bool done = false; done; done = send_data.pending()) { }
+  // send_data();
+  // for (bool done = false; done; done = !send_data.pending()) { }
+  send_data(true);
 }
 
 void ShiftRegister::clear_bit(unsigned char n) {
   data &= ~(1 << n);
-  send_data();
-  for (bool done = false; done; done = send_data.pending()) { }
+  // send_data();
+  // for (bool done = false; done; done = !send_data.pending()) { }
+  send_data(true);
 }
 
 inline const void ShiftRegister::SendData::toggle_select() {

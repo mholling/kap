@@ -5,6 +5,7 @@
 #include "serial.h"
 #include "i2c.h"
 #include "magnetometer.h"
+#include "accelerometer.h"
 #include "timer.h"
 #include "analog.h"
 #include "pwm.h"
@@ -20,6 +21,7 @@ public:
   Serial serial;
   I2C i2c;
   Magnetometer magnetometer;
+  Accelerometer accelerometer;
   Timer timer;
   Analog analog;
   Pwm pwm;
