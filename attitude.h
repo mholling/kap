@@ -1,8 +1,8 @@
 #ifndef __ATTITUDE_H_
 #define __ATTITUDE_H_
-
-class App;
-extern App app;
+// 
+// class App;
+// extern App app;
 
 #include "magnetometer.h"
 #include "accelerometer.h"
@@ -19,7 +19,7 @@ public:
   public:
     Quaternion result;
 
-    EstimateTask() : Scheduler::Task(20), r1(0.0, 0.0, 1.0), r2(0.0, 1.0, 0.0), r3(r1 * r2) { }
+    EstimateTask() : Scheduler::Task(20), r1(0.0, 0.0, -1.0), r2(0.0, -1.0, 0.0), r3(r1 * r2) { }
     
     void run();
   } estimate;

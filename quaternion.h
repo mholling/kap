@@ -60,7 +60,7 @@ public:
   }
   
   const float yaw() {
-    return atan2(2 * (w * v.x + v.y * v.z), 1 - 2 * (v.x * v.x + v.y * v.y)) * 180.0 / M_PI;
+    return atan2(2 * (w * v.z + v.y * v.z), 1 - 2 * (v.y * v.y + v.z * v.z)) * 180.0 / M_PI;
   }
   
   const float pitch() {

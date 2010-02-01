@@ -3,7 +3,7 @@
 
 class Timer {
 public:
-  enum { frequency = 50 };
+  enum { frequency = 35 };
   Timer();
   inline void init() { }
   void interrupt();

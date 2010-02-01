@@ -29,9 +29,6 @@ private:
     inline int x() { return static_cast<int>((static_cast<unsigned int>(data[0]) << 8) | static_cast<unsigned int>(data[1])); }
     inline int y() { return static_cast<int>((static_cast<unsigned int>(data[2]) << 8) | static_cast<unsigned int>(data[3])); }
     inline int z() { return static_cast<int>((static_cast<unsigned int>(data[4]) << 8) | static_cast<unsigned int>(data[5])); }
-    // inline int x() { return (int)(((unsigned int)data[0] << 8) | (unsigned int)data[1]); }
-    // inline int y() { return (int)(((unsigned int)data[2] << 8) | (unsigned int)data[3]); }
-    // inline int z() { return (int)(((unsigned int)data[4] << 8) | (unsigned int)data[5]); }
   protected:
     void dequeue() {
       I2C::ReadPacket::dequeue();

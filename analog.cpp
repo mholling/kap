@@ -17,7 +17,7 @@ void Analog::start_conversions() {
 
 void Analog::Channel::convert() {
   CriticalSection cs;
-  if (Queable<Channel>::enqueue())
+  if (Queable<Channel>::enqueue()) // TODO: qualifier needed?
     if (at_head())
       start();
 }

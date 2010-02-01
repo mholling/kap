@@ -9,7 +9,7 @@ Spi::Spi() {
 
 void Spi::Packet::operator ()(bool block) {
   CriticalSection cs;
-  if (Queable<Packet>::enqueue()) {
+  if (Queable<Packet>::enqueue()) { // TODO: qualifier needed?
     index = 0;    
     if (at_head())
       start();

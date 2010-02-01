@@ -26,7 +26,7 @@ protected:
     return true;
   }
   
-  void dequeue() {
+  virtual void dequeue() {
     if (next) {
       next->prev = prev;
       prev->next = next;

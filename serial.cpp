@@ -50,3 +50,8 @@ void Serial::debug(const char * const s, Vector v) {
   send();
 }
 
+void Serial::line() {
+  sprintf(buffer, "\r\n");
+  send();
+}
+

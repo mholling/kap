@@ -3,11 +3,12 @@
 
 #include "i2c.h"
 #include "scheduler.h"
+#include "vector.h"
 #include <math.h>
 
 class Accelerometer {
 private:
-  enum { i2c_address = 0x1d, thresh_tap_reg = 0x1d, ofsx_reg, ofsy_reg, ofsz_reg, dur_reg, latent_reg, window_reg, thresh_act_reg, thresh_inact_reg, time_inact_reg, time_inact_ctl_reg, act_inact_ctl_reg, thresh_ff_reg, time_ff_reg, tap_exes_reg, act_tap_status_reg, bw_rate_reg, power_ctl_reg, int_enable_reg, int_map_reg, int_source_reg, data_format_reg, datax0_reg, datax1_reg, datay0_reg, datay1_reg, dataz0_reg, dataz1_reg, fifo_ctl_reg, fifo_status_reg };
+  enum { i2c_address = 0x1d, bw_rate_reg = 0x2c, power_ctl_reg = 0x2d, int_enable_reg = 0x2e, data_format_reg = 0x31, datax0_reg = 0x32 };
   
   class ModePacket : public I2C::WritePacket {
     volatile unsigned char data[1];
@@ -43,22 +44,30 @@ private:
   
   class MeasurementPacket : public I2C::ReadPacket {
   private:
-    unsigned char data[8];
+    unsigned char data[6];
     inline int x() { return reinterpret_cast<int *>(data)[0]; }
     inline int y() { return reinterpret_cast<int *>(data)[1]; }
     inline int z() { return reinterpret_cast<int *>(data)[2]; }
+    // inline int x() { return static_cast<int>((static_cast<unsigned int>(data[1]) << 8) | static_cast<unsigned int>(data[0])); }
+    // inline int y() { return static_cast<int>((static_cast<unsigned int>(data[3]) << 8) | static_cast<unsigned int>(data[2])); }
+    // inline int z() { return static_cast<int>((static_cast<unsigned int>(data[5]) << 8) | static_cast<unsigned int>(data[4])); }
   protected:
     void dequeue() {
       I2C::ReadPacket::dequeue();
-      vector.x =  static_cast<float>(y());
+      
+      // // for PCB:
+      // vector.x =  static_cast<float>(y());
+      // vector.y = -static_cast<float>(z());
+      // vector.z = -static_cast<float>(x());
+      
+      // for breadboard:
+      vector.x = -static_cast<float>(y());
       vector.y = -static_cast<float>(z());
-      vector.z = -static_cast<float>(x());
+      vector.z =  static_cast<float>(x());
     }
   public:
-    MeasurementPacket() : I2C::ReadPacket(data, i2c_address, datax0_reg, 8) { }
+    MeasurementPacket() : I2C::ReadPacket(data, i2c_address, datax0_reg, 6) { }
     Vector vector;
-    inline int ready() { return data[7] & 0x3f; }
-    inline bool triggered() { return data[7] & 0x80; }
   };
   
   RatePacket set_rate;
@@ -68,9 +77,9 @@ private:
   
 public:
   Accelerometer() : set_rate(RatePacket::hz_50), standby(ModePacket::standby), wake(ModePacket::measure) { }
-  void init();
+  void init() { set_rate(); set_data_format(); configure_interrupt(); wake(); }
 
-  MeasurementPacket measure;
+  MeasurementPacket measure; // TODO: make this private.
   
   inline const Vector& vector() { return measure.vector; }
 };

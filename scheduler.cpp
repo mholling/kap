@@ -3,7 +3,7 @@
 
 void Scheduler::Task::operator ()() {
   CriticalSection cs;
-  if (PrioritisedQueable<Task>::enqueue())
+  if (PrioritisedQueable<Task>::enqueue()) // TODO: qualifier needed?
     if (at_head())
       start();
 }

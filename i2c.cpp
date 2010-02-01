@@ -14,7 +14,7 @@ I2C::I2C() {
 
 void I2C::Packet::operator ()(bool block) {
   CriticalSection cs;
-  if (Queable<Packet>::enqueue()) {
+  if (Queable<Packet>::enqueue()) { // TODO: qualifier needed?
     index = 0;
     if (at_head())
       start();
