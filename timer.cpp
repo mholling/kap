@@ -14,7 +14,7 @@ void Timer::interrupt() {
   static unsigned int count = 0;
   count++;
   
-  if (count % frequency == 0) {
+  if (count % (frequency * 3) == 0) {
     app.attitude.estimate();
   }
 

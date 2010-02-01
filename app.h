@@ -24,12 +24,12 @@ public:
   Magnetometer magnetometer;
   Accelerometer accelerometer;
   Timer timer;
-  Analog analog;
-  Pwm pwm;
-  Spi spi;
-  ShiftRegister shift_register;
-  Motors motors;
-  Gyros gyros;
+  // Analog analog;
+  // Pwm pwm;
+  // Spi spi;
+  // ShiftRegister shift_register;
+  // Motors motors;
+  // Gyros gyros;
   Attitude attitude;
   // Kalman kalman;
   

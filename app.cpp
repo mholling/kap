@@ -7,12 +7,12 @@ void App::run() {
   magnetometer.init();
   accelerometer.init();
   timer.init();
-  analog.init();
-  pwm.init();
-  spi.init();
-  shift_register.init();
-  motors.init();
-  gyros.init();
+  // analog.init();
+  // pwm.init();
+  // spi.init();
+  // shift_register.init();
+  // motors.init();
+  // gyros.init();
   attitude.init();
   // kalman.init();
   

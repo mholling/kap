@@ -1,9 +1,7 @@
 #include "app.h"
 #include "serial.h"
 #include <avr/io.h>
-#include <avr/stdio.h>
-
-char Serial::lookup[] = "0123456789ABCDEF";
+#include <stdio.h>
 
 Serial::Serial() {
   UBRR0 = F_CPU / 9600 / 16 - 1;
@@ -11,81 +9,44 @@ Serial::Serial() {
 	UCSR0B = (1 << RXEN0) | (1 << TXEN0);
 }
 
-void Serial::character(char c) {
-  while (!(UCSR0A & (1 << UDRE0))) ;
-	UDR0 = c;
-}
-
-void Serial::string(const char * const s) {
-  for (int n = 0; s[n] != '\0'; n++)
-    character(s[n]);
-}
-
-void Serial::boolean(bool b) {
-  b ? string("true") : string("false");
-}
-
-void Serial::binary(char b) {
-  for (int n = 8; n > 0; character((b & _BV(--n)) == 0 ? '0' : '1')) ;
-}
-
-void Serial::hex(char b) {
-  character(lookup[(b>>4)&0x0f]);
-  character(lookup[(b>>0)&0x0f]);
-}
-
-void Serial::integer(int i) {
-  if (i < 0) {
-    character('-');
-    i = -i;
+void Serial::send() {
+  for (int n = 0; buffer[n] != '\0'; n++) {
+    while (!(UCSR0A & (1 << UDRE0))) ;
+  	UDR0 = buffer[n];
   }
-  char buffer[6];
-  int n = 0;
-  do {
-    buffer[n++] = '0' + i % 10;
-    i /= 10;
-  } while (i > 0);
-  for (; n > 0; character(buffer[--n])) ;
-}
-
-void Serial::newline() {
-  string("\r\n");
 }
 
 void Serial::debug(const char * const s, char b) {
-  string(s);
-  string(": 0x");
-  hex(b);
-  newline();
+  sprintf(buffer, "%15s: 0x%02x\r\n", s, b);
+  send();
 }
 
 void Serial::debug(const char * const s, bool b) {
-  string(s);
-  string(": ");
-  boolean(b);
-  newline();
+  sprintf(buffer, "%15s: %s\r\n", s, b ? "true" : "false");
+  send();
 }
 
 void Serial::debug(const char * const s, int b) {
-  string(s);
-  string(": ");
-  integer(b);
-  newline();
+  sprintf(buffer, "%15s: %i\r\n", s, b);
+  send();
 }
 
 void Serial::debug_b(const char * const s, char b) {
-  string(s);
-  string(": 0b");
-  binary(b);
-  newline();
+  char binary[9];
+  for (int n = 0; n < 8; n++)
+    binary[n] = ((b & _BV(7 - n)) ? '1' : '0');
+  binary[8] = '\0';
+  sprintf(buffer, "%15s: 0b%s\r\n", s, binary);
+  send();
 }
 
-void Serial::debug(const char * const s, float f, const char * const fmt = "") {
-  // char [20]
-  // sprintf
+void Serial::debug(const char * const s, float f) {
+  sprintf(buffer, "%15s: %.3g\r\n", s, (double)f);
+  send();
 }
 
-void Serial::debug(const char * const s, Vector v, int sf) {
-  
+void Serial::debug(const char * const s, Vector v) {
+  sprintf(buffer, "%15s: (%.5g, %.5g, %.5g)\r\n", s, (double)v.x, (double)v.y, (double)v.z);
+  send();
 }
 
