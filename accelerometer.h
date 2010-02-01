@@ -65,13 +65,14 @@ private:
   ModePacket standby, wake;
   InterruptConfigPacket configure_interrupt;
   DataFormatPacket set_data_format;
-  MeasurementPacket measurement;
   
 public:
   Accelerometer() : set_rate(RatePacket::hz_50), standby(ModePacket::standby), wake(ModePacket::measure) { }
   void init();
+
+  MeasurementPacket measure;
   
-  inline const Vector& vector() { return measurement.vector; }
+  inline const Vector& vector() { return measure.vector; }
 };
 
 #endif

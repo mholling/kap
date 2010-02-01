@@ -13,6 +13,10 @@ Timer::Timer() {
 void Timer::interrupt() {
   static unsigned int count = 0;
   count++;
+  
+  if (count % frequency == 0) {
+    app.attitude.estimate();
+  }
 
   // if (!app.gyros.task.pending() && (count % 35 == 0)) {
   //   app.gyros.task();

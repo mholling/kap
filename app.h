@@ -13,6 +13,7 @@
 #include "shift_register.h"
 #include "motors.h"
 #include "gyros.h"
+#include "attitude.h"
 #include "kalman.h"
 
 class App {  
@@ -29,6 +30,7 @@ public:
   ShiftRegister shift_register;
   Motors motors;
   Gyros gyros;
+  Attitude attitude;
   // Kalman kalman;
   
   void run();

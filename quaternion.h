@@ -8,35 +8,67 @@ public:
   Vector v;
   float w;
   
+  Quaternion() { }
   Quaternion(const Vector&v, float w) : v(v), w(w) { }
-  Quaternion(float x, float y, float z, float w) : Quaternion(Vector(x,y,z), w) { }
+  Quaternion(float x, float y, float z, float w) : v(Vector(x,y,z)), w(w) { }
   
-  Quaternion& operator *=(float a) {
-    v *= a;
-    w *= a;
+  Quaternion& operator *=(float rhs) {
+    v *= rhs;
+    w *= rhs;
     return *this;
   }
   
-  Quaternion& operator *=(const Quaternion& quaternion) {
-    Vector cross_product(v, quaternion.v);
-    Vector vector(quaternion.vector);
+  const Quaternion operator *(float rhs) {
+    return Quaternion(*this) *= rhs;
+  }
+  
+  Quaternion& operator *=(const Quaternion& rhs) {
+    Vector cross_product = v * rhs.v;
+    Vector vector = rhs.v;
     vector *= w;
-    w *= quaternion.w;
-    w -= v * quaternion.v;
-    v *= quaternion.w;
+    w *= rhs.w;
+    w -= v % rhs.v;
+    v *= rhs.w;
     v += vector;
     v -= cross_product;
     return *this;
   }
+  
+  const Quaternion operator *(const Quaternion& rhs) {
+    return Quaternion(*this) *= rhs;
+  }
     
+  Quaternion& operator /=(float rhs) {
+    v /= rhs;
+    w /= rhs;
+    return *this;
+  }
+  
+  const Quaternion operator /(const float rhs) {
+    return Quaternion(*this) /= rhs;
+  }
+
   inline float norm_squared() const { return v.norm_squared() + w * w; }
   inline float norm() const { return sqrt(norm_squared()); }
   
   Quaternion& normalise() {
-    float _norm = norm();
-    v /= _norm;
-    w /= _norm;
-    return *this;
+    return *this /= norm();
+  }
+  
+  const Quaternion normalised() const {
+    return Quaternion(*this).normalise();
+  }
+  
+  const float yaw() {
+    return atan2(2 * (w * v.x + v.y * v.z), 1 - 2 * (v.x * v.x + v.y * v.y)) * 180.0 / M_PI;
+  }
+  
+  const float pitch() {
+    return asin(2 * (w * v.y - v.z * v.x)) * 180.0 / M_PI;
+  }
+  
+  const float roll() {
+    return atan2(2 * (w * v.x + v.y * v.z), 1 - 2 * (v.x * v.x + v.y * v.y)) * 180.0 / M_PI;
   }
 };
 

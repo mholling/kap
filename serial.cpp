@@ -1,6 +1,7 @@
 #include "app.h"
 #include "serial.h"
 #include <avr/io.h>
+#include <avr/stdio.h>
 
 char Serial::lookup[] = "0123456789ABCDEF";
 
@@ -78,3 +79,13 @@ void Serial::debug_b(const char * const s, char b) {
   binary(b);
   newline();
 }
+
+void Serial::debug(const char * const s, float f, const char * const fmt = "") {
+  // char [20]
+  // sprintf
+}
+
+void Serial::debug(const char * const s, Vector v, int sf) {
+  
+}
+

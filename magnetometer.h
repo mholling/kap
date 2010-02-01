@@ -48,13 +48,14 @@ private:
   
   ConfigPacket configure;
   ModePacket sleep, wake;
-  MeasurementPacket measurement;
   
 public:
   Magnetometer() : sleep(ModePacket::sleep), wake(ModePacket::continuous) { }
   void init() { configure(); wake(); }
+
+  MeasurementPacket measure;
   
-  inline const Vector& vector() { return measurement.vector; }
+  inline const Vector& vector() { return measure.vector; }
 };
 
 #endif
