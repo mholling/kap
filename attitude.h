@@ -16,7 +16,7 @@ public:
   public:
     Quaternion result;
 
-    EstimateTask() : Scheduler::Task(20), a1(1.0), a2 (2.0) { }
+    EstimateTask() : Scheduler::Task(20), a1(1.0), a2(2.0) { }
     
     void run();
   } estimate;
