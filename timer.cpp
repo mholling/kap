@@ -15,12 +15,12 @@ void Timer::interrupt() {
   count++;
   
   if (count % (frequency * 1) == 0) {
+    app.magnetometer.measure();
+    app.accelerometer.measure();
+    app.gyros.measure();
     app.estimate_attitude();
+    // app.kalman_filter();
   }
-
-  // if (!app.gyros.task.pending() && (count % 35 == 0)) {
-  //   app.gyros.task();
-  // }
 
   // app.motors.yaw.set((float)(count % 250)/250.0);
   // app.motors.pitch.set((float)(count % 250)/250.0);

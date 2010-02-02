@@ -40,6 +40,7 @@ public:
   Queable() : prev(0), next(0) { }
 
   inline bool pending() { return next != 0; }
+  inline void wait() { for (bool done = false; done; done = pending()) ; }
   inline bool at_head() { return first == this; }
 
   inline static T& head() { return *static_cast<T*>(first); }

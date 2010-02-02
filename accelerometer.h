@@ -48,9 +48,6 @@ private:
     inline int x() { return reinterpret_cast<int *>(data)[0]; }
     inline int y() { return reinterpret_cast<int *>(data)[1]; }
     inline int z() { return reinterpret_cast<int *>(data)[2]; }
-    // inline int x() { return static_cast<int>((static_cast<unsigned int>(data[1]) << 8) | static_cast<unsigned int>(data[0])); }
-    // inline int y() { return static_cast<int>((static_cast<unsigned int>(data[3]) << 8) | static_cast<unsigned int>(data[2])); }
-    // inline int z() { return static_cast<int>((static_cast<unsigned int>(data[5]) << 8) | static_cast<unsigned int>(data[4])); }
   protected:
     void dequeue() {
       I2C::ReadPacket::dequeue();
@@ -69,19 +66,17 @@ private:
     MeasurementPacket() : I2C::ReadPacket(data, i2c_address, datax0_reg, 6) { }
     Vector vector;
   };
-  
+    
   RatePacket set_rate;
   ModePacket standby, wake;
   InterruptConfigPacket configure_interrupt;
   DataFormatPacket set_data_format;
-  
+
 public:
   Accelerometer() : set_rate(RatePacket::hz_50), standby(ModePacket::standby), wake(ModePacket::measure) { }
   void init() { set_rate(); set_data_format(); configure_interrupt(); wake(); }
-
-  MeasurementPacket measure; // TODO: make this private.
   
-  inline const Vector& vector() { return measure.vector; }
+  MeasurementPacket measure;
 };
 
 #endif

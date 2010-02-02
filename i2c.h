@@ -3,9 +3,10 @@
 
 #include "queable.h"
 
-class I2C {
-    
+class I2C {  
 public:
+  enum { frequency = 300000 }; // cannot use 400000 as TWSTO doesn't get released and a hang results
+  
   I2C();
   inline void init() { }
   
@@ -34,6 +35,7 @@ public:
     void operator ()(bool block = false);
     
     inline bool pending() { return Queable<Packet>::pending(); }
+    inline void wait() { return Queable<Packet>::wait(); }
     inline static Packet& head() { return Queable<Packet>::head(); }
   };
   

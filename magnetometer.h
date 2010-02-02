@@ -42,17 +42,15 @@ private:
     inline bool ready() { return data[6] & 0x01; }
     inline char status() { return data[6]; }
   };
-  
+    
   ConfigPacket configure;
   ModePacket sleep, wake;
-  
+
 public:
   Magnetometer() : sleep(ModePacket::sleep), wake(ModePacket::continuous) { }
   void init() { configure(); wake(); }
-
-  MeasurementPacket measure;
   
-  inline const Vector& vector() { return measure.vector; }
+  MeasurementPacket measure;
 };
 
 #endif

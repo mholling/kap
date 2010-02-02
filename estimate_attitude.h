@@ -12,7 +12,6 @@ public:
   Quaternion result;
 
   EstimateAttitude() : Scheduler::Task(20), a1(1.0), a2(2.0) { }
-  
   void run();
 };
 

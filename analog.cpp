@@ -8,13 +8,6 @@ Analog::Analog() : yaw(0), pitch(1), roll(2), ref(3) {
   DIDR0 = _BV(ADC3D) | _BV(ADC2D) | _BV(ADC1D) | _BV(ADC0D);
 }
 
-void Analog::start_conversions() {
-  yaw.convert();
-  pitch.convert();
-  roll.convert();
-  ref.convert();
-}
-
 void Analog::Channel::convert() {
   CriticalSection cs;
   if (Queable<Channel>::enqueue()) // TODO: qualifier needed?

@@ -25,12 +25,12 @@ public:
   Magnetometer magnetometer;
   Accelerometer accelerometer;
   Timer timer;
-  // Analog analog;
+  Analog analog;
+  Spi spi;
+  ShiftRegister shift_register;
+  Gyros gyros;
   // Pwm pwm;
-  // Spi spi;
-  // ShiftRegister shift_register;
   // Motors motors;
-  // Gyros gyros;
   
   // Tasks:
   EstimateAttitude estimate_attitude;

@@ -7,8 +7,8 @@
 
 I2C::I2C() {
   PORTC |= _BV(PINC4) | _BV(PINC5); // set them high to enable pullups
-  TWSR &= ~(_BV(TWPS0) | _BV(TWPS1)); // set pre-scaler to 1
-  TWBR = ((F_CPU / 100000) - 16) / 2; // set bit-rate to 400 kbps
+  TWSR &= ~_BV(TWPS0) & ~_BV(TWPS1); // set pre-scaler to 1
+  TWBR = ((F_CPU / frequency) - 16) / 2; // set bit-rate to 400 kbps
   TWCR = _BV(TWEN) | _BV(TWIE) | _BV(TWINT);
 }
 
@@ -19,7 +19,7 @@ void I2C::Packet::operator ()(bool block) {
     if (at_head())
       start();
   }
-  for (bool done = !block; done; done = !pending()) { }
+  if (block) wait();
 }
 
 const void I2C::Packet::start() {

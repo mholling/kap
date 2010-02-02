@@ -24,13 +24,14 @@ void Gyros::normal_mode() {
   app.shift_register.clear_bit(self_test_shift_register_pin);
 }
 
+void Gyros::measure() {
+  app.analog.yaw.convert();
+  app.analog.pitch.convert();
+  app.analog.roll.convert();
+  app.analog.ref.convert();  
+}
+
 float Gyros::Gyro::operator ()() const {
   CriticalSection cs;
   return (value() / reference() - 1.0) * range;
-}
-
-void Gyros::Task::run() {
-  app.analog.start_conversions();
-  for (bool done = false; done; done = !app.gyros.yaw.pending()) { } // TODO: can we have tasks suspend themselves instead?
-  app.serial.debug("  yaw", (int)app.gyros.yaw());
 }

@@ -7,14 +7,16 @@ void App::run() {
   magnetometer.init();
   accelerometer.init();
   timer.init();
-  // analog.init();
+  analog.init();
+  spi.init();
+  shift_register.init();
+  gyros.init();
   // pwm.init();
-  // spi.init();
-  // shift_register.init();
   // motors.init();
-  // gyros.init();
   
   // scheduler.run();
+  
+  
   while (true) { }
 }
 

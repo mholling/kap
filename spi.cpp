@@ -14,7 +14,7 @@ void Spi::Packet::operator ()(bool block) {
     if (at_head())
       start();
   }
-  for (bool done = !block; done; done = !pending()) { }
+  if (block) wait();
 }
 
 void Spi::Packet::dequeue() {

@@ -5,13 +5,13 @@
 #include "serial.h"
 
 void EstimateAttitude::run() {
-  app.accelerometer.measure(true);
-  app.magnetometer.measure(true);
+  app.accelerometer.measure.wait();
+  app.magnetometer.measure.wait();
   
   do {
     TimedSection ts("estimate");
-    const Vector b1 = app.accelerometer.vector().normalised(); // gravity
-    const Vector b2 = (b1 * app.magnetometer.vector()).normalised(); // magnetic west
+    const Vector b1 = app.accelerometer.measure.vector.normalised(); // gravity
+    const Vector b2 = (b1 * app.magnetometer.measure.vector).normalised(); // magnetic west
     const Vector b3 = b1 * b2;
     
     // const Vector b1r1a1_plus_b2r2a2 = b1 * r1 * a1 + b2 * r2 * a2;
