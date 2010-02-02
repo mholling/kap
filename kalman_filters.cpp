@@ -10,33 +10,35 @@ KalmanFilters::Filter::Filter(const Gyros::Gyro& gyro, const float& measured) :
    measured(measured),
    x1(0.0), x2(0.0), x3(0.0),
    dt(1.0 / Timer::frequency),
-   q1(0.2 * dt), q2(0.2), q3(0.1),
+   q1(0.2 * dt), q2(0.2), q3(0.1), // TODO: values??
    q11(q1 * q1), q12(q1 * q2), q13(q1 * q3),
    q21(q2 * q1), q22(q2 * q2), q23(q2 * q3),
    q31(q3 * q1), q32(q3 * q2), q33(q3 * q3),
-   r11(), r22()
+   r11(), r22() // TODO: values???
 {
-     
-}  
+}
 
 void KalmanFilters::Filter::run() {
   z1 = gyro();
   z2 = measured;
   predict();
-  update();
+  correct();
 }
 
 void KalmanFilters::Filter::predict() {
+  // compute  x = A x + B u
   x2  = z1 - x3; // rate = gyro - bias
   x1 += dt * x2; // angle += dt * rate
   
+  // compute intermediate values for  A P A'
   float t1 = p11 - dt * p31;
   float t2 = p13 - dt * p33;
   float t3 = p31 - dt * p33;
   float t4 = p33;
   
+  // compute  P = A P A' + Q
   p11 = q11 + t1 - dt * t2;
-  p12 = q12 - t1;
+  p12 = q12 - t2;
   p13 = q13 + t2;
   p21 = q21 - t3;
   p22 = q22 + t4;
@@ -46,18 +48,21 @@ void KalmanFilters::Filter::predict() {
   p33 = q33 + t4;
 }
 
-void KalmanFilters::Filter::update() {
+void KalmanFilters::Filter::correct() {
+  // compute  H P H' + R
   float hphr11 = p22 + p32 + p23 + p33 + r11;
   float hphr12 = p21 + p31;
   float hphr21 = p12 + p13;
   float hphr22 = p11 + r22;
   
+  // compute  I / (H P H' + R)
   float d = hphr11 * hphr22 - hphr12 * hphr21;
   float t11 =  hphr22 / d;
   float t12 = -hphr12 / d;
   float t21 = -hphr21 / d;
   float t22 =  hphr11 / d;
   
+  // compute Kalman gain  K = P H' / (H P H' + R)
   float k11 = p11 * t21 + (p12 + p13) * t11;
   float k21 = p21 * t21 + (p22 + p23) * t11;
   float k31 = p31 * t21 + (p32 + p33) * t11;
@@ -65,13 +70,16 @@ void KalmanFilters::Filter::update() {
   float k22 = p21 * t22 + (p22 + p23) * t12;
   float k32 = p31 * t22 + (p32 + p33) * t12;
   
+  // compute  z - H x
   float i1 = z1 - x2 - x3;
-  float i2 = x1;
+  float i2 = z2 - x1;
   
+  // compute  x += K (z - H x)
   x1 += k11 * i1 + k12 * i2;
   x2 += k21 * i1 + k22 * i2;
   x3 += k31 * i1 + k32 * i2;
   
+  // compute  K H P
   float dp11 = k12 * p11 + k11 * (p21 + p31);
   float dp21 = k22 * p11 + k21 * (p21 + p31);
   float dp31 = k32 * p11 + k31 * (p21 + p31);
@@ -82,6 +90,7 @@ void KalmanFilters::Filter::update() {
   float dp23 = k22 * p13 + k21 * (p23 + p33);
   float dp33 = k32 * p13 + k31 * (p23 + p33);
   
+  // compute  P -= K H P
   p11 -= dp11;
   p21 -= dp21;
   p31 -= dp31;

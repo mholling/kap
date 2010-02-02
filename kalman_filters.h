@@ -19,7 +19,7 @@ private:
     const float r11, r22;
   
     void predict();
-    void update();
+    void correct();
 
   public:
     Filter(const Gyros::Gyro& gyro, const float& measured);
