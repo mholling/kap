@@ -15,7 +15,7 @@ void Timer::interrupt() {
   count++;
   
   if (count % (frequency * 1) == 0) {
-    app.attitude.estimate();
+    app.estimate_attitude();
   }
 
   // if (!app.gyros.task.pending() && (count % 35 == 0)) {

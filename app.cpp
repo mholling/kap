@@ -13,8 +13,6 @@ void App::run() {
   // shift_register.init();
   // motors.init();
   // gyros.init();
-  attitude.init();
-  // kalman.init();
   
   // scheduler.run();
   while (true) { }

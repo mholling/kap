@@ -13,11 +13,12 @@
 #include "shift_register.h"
 #include "motors.h"
 #include "gyros.h"
-#include "attitude.h"
+#include "estimate_attitude.h"
 #include "kalman.h"
 
 class App {  
 public:
+  // Hardware:
   Scheduler scheduler;
   Serial serial;
   I2C i2c;
@@ -30,7 +31,9 @@ public:
   // ShiftRegister shift_register;
   // Motors motors;
   // Gyros gyros;
-  Attitude attitude;
+  
+  // Tasks:
+  EstimateAttitude estimate_attitude;
   // Kalman kalman;
   
   void run();
