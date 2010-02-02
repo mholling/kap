@@ -59,16 +59,10 @@ public:
     return Quaternion(*this).normalise();
   }
   
-  const float yaw() {
-    return atan2(2 * (w * v.z + v.y * v.z), 1 - 2 * (v.y * v.y + v.z * v.z)) * 180.0 / M_PI;
-  }
-  
-  const float pitch() {
-    return asin(2 * (w * v.y - v.z * v.x)) * 180.0 / M_PI;
-  }
-  
-  const float roll() {
-    return atan2(2 * (w * v.x + v.y * v.z), 1 - 2 * (v.x * v.x + v.y * v.y)) * 180.0 / M_PI;
+  void get_euler_angles(float& yaw, float& pitch, float& roll) const {
+    yaw   = atan2(2 * (w * v.z + v.y * v.z), 1 - 2 * (v.y * v.y + v.z * v.z));
+    pitch =  asin(2 * (w * v.y - v.z * v.x));
+    roll  = atan2(2 * (w * v.x + v.y * v.z), 1 - 2 * (v.x * v.x + v.y * v.y));
   }
 };
 

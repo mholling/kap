@@ -16,7 +16,7 @@
 DEVICE     = atmega168
 CLOCK      = 8000000
 PROGRAMMER = -c arduino -P /dev/tty.usbserial-A800csBR -b 19200
-OBJECTS    = main.o i2c.o serial.o magnetometer.o app.o scheduler.o timer.o accelerometer.o analog.o spi.o shift_register.o gyros.o estimate_attitude.o timed_section.o
+OBJECTS    = main.o i2c.o serial.o magnetometer.o app.o scheduler.o timer.o accelerometer.o analog.o spi.o shift_register.o gyros.o estimate_attitude.o timed_section.o kalman_filters.o
 
 # Tune the lines below only if you know what you are doing:
 

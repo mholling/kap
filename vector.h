@@ -1,14 +1,9 @@
 #ifndef __VECTOR_H_
 #define __VECTOR_H_
 
-class App;
-extern App app;
-
 #include <math.h>
 
-
 // TODO: inline any of these functions?
-
 class Vector {
 public:
   float x;

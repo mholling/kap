@@ -1,7 +1,6 @@
 #include "timer.h"
 #include <avr/io.h>
 #include "app.h"
-#include "analog.h"
 
 Timer::Timer() {
   TCCR2A = _BV(WGM21); // CTC mode
@@ -11,15 +10,20 @@ Timer::Timer() {
 }
 
 void Timer::interrupt() {
+  app.magnetometer.measure();
+  app.accelerometer.measure();
+  app.gyros.measure();
+  app.estimate_attitude();
+  app.kalman_filters.yaw();
+  app.kalman_filters.pitch();
+  app.kalman_filters.roll();
+
   static unsigned int count = 0;
-  count++;
-  
-  if (count % (frequency * 1) == 0) {
-    app.magnetometer.measure();
-    app.accelerometer.measure();
-    app.gyros.measure();
-    app.estimate_attitude();
-    // app.kalman_filter();
+  count++;  
+  if (count % frequency == 0) {
+    app.serial.debug("yaw", app.kalman_filters.yaw.angle());
+    app.serial.debug("pitch", app.kalman_filters.yaw.angle());
+    app.serial.debug("roll", app.kalman_filters.yaw.angle());
   }
 
   // app.motors.yaw.set((float)(count % 250)/250.0);

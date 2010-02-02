@@ -1,9 +1,6 @@
 #ifndef __GYROS_H_
 #define __GYROS_H_
 
-class App;
-extern App app;
-
 #include "analog.h"
 #include "scheduler.h"
 
@@ -14,6 +11,17 @@ private:
   public:
     FakeChannel(float value) : Analog::Channel(0x0f) { data = 1024 * value; }
   } fixed;
+
+public:
+  Gyros();
+  void init();
+  
+  void disable();
+  void enable();
+  void normal_mode();
+  void test_mode();
+  
+  void measure();
   
   class Gyro {
   private:
@@ -27,17 +35,6 @@ private:
     bool pending() { CriticalSection cs; return value.pending() || reference.pending(); }
     void wait() { value.wait(); reference.wait(); }
   };
-
-public:
-  Gyros();
-  void init();
-  
-  void disable();
-  void enable();
-  void normal_mode();
-  void test_mode();
-  
-  void measure();
   
   Gyro yaw;
   Gyro pitch;

@@ -14,7 +14,7 @@
 #include "motors.h"
 #include "gyros.h"
 #include "estimate_attitude.h"
-#include "kalman.h"
+#include "kalman_filters.h"
 
 class App {  
 public:
@@ -34,7 +34,7 @@ public:
   
   // Tasks:
   EstimateAttitude estimate_attitude;
-  // Kalman kalman;
+  KalmanFilters kalman_filters;
   
   void run();
 };
