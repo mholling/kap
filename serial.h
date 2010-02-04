@@ -16,6 +16,8 @@ public:
   void debug_b(const char * const s, char b);
   void debug(const char * const s, float f);
   void debug(const char * const s, Vector v);
+  void debug(float f);
+  void debug(int i);
   void line();
 };
 

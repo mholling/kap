@@ -50,6 +50,16 @@ void Serial::debug(const char * const s, Vector v) {
   send();
 }
 
+void Serial::debug(float f) {
+  sprintf(buffer, "%+.4e ", (double)f);
+  send();
+}
+
+void Serial::debug(int i) {
+  sprintf(buffer, "%+05i ", i);
+  send();
+}
+
 void Serial::line() {
   sprintf(buffer, "\r\n");
   send();
