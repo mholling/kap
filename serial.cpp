@@ -45,8 +45,8 @@ void Serial::debug(const char * const s, float f) {
   send();
 }
 
-void Serial::debug(const char * const s, Vector v) {
-  sprintf(buffer, "%15s: (%.5g, %.5g, %.5g)\r\n", s, (double)v.x, (double)v.y, (double)v.z);
+void Serial::debug(const char * const s, const Vector v) {
+  sprintf(buffer, "%15s: (%.5g, %.5g, %.5g)\r\n", s, (double)v(0), (double)v(1), (double)v(2));
   send();
 }
 

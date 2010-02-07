@@ -1,82 +1,33 @@
 #ifndef __VECTOR_H_
 #define __VECTOR_H_
 
+#include "matrix.h"
 #include <math.h>
 
-// TODO: inline any of these functions?
-class Vector {
+class Vector : public Matrix<3, 1> {
 public:
-  float x;
-  float y;
-  float z;
+  inline Vector() : Matrix<3, 1>() { } // TODO: needed why?
+  inline Vector(Matrix<3, 1>) { }
+  inline Vector(float x, float y, float z) { data[0] = x; data[1] = y; data[2] = z; }
   
-  Vector() { }
-  Vector(float x, float y, float z) : x(x), y(y), z(z) { }
+  inline float& operator()(int m) { return data[m]; }
+  inline const float& operator()(int m) const { return data[m]; }
   
-  Vector& operator *=(const Vector& rhs) {
-    float _x = y * rhs.z - z * rhs.y;
-    float _y = z * rhs.x - x * rhs.z;
-    float _z = x * rhs.y - y * rhs.x;
-    x = _x;
-    y = _y;
-    z = _z;
-    return *this;
+  Vector cross(const Vector& rhs) const {
+    return Vector((*this)(1) * rhs(2) - (*this)(2) * rhs(1), (*this)(2) * rhs(0) - (*this)(0) * rhs(2), (*this)(0) * rhs(1) - (*this)(1) * rhs(0));
   }
   
-  const Vector operator *(const Vector& rhs) const {
-    return Vector(*this) *= rhs;
+  float dot(const Vector& rhs) const {
+    return (*this)(0) * rhs(0) + (*this)(1) * rhs(1) + (*this)(2) * rhs(2);
+    // return (t() * rhs)(0,0); // TODO: maybe a conversion from Matrix<1, 1> to float?
   }
   
-  Vector& operator +=(const Vector& rhs) {
-    x += rhs.x;
-    y += rhs.y;
-    z += rhs.z;
-    return *this;
-  }
-  
-  const Vector operator +(const Vector& rhs) const {
-    return Vector(*this) += rhs;
-  }
-
-  Vector& operator -=(const Vector& rhs) {
-    x -= rhs.x;
-    y -= rhs.y;
-    z -= rhs.z;
-    return *this;
-  }
-  
-  const Vector operator -(const Vector& rhs) const {
-    return Vector(*this) -= rhs;
-  }
-  
-  Vector& operator *=(float a) {
-    x *= a;
-    y *= a;
-    z *= a;
-    return *this;
-  }
-  
-  const Vector operator *(float rhs) const {
-    return Vector(*this) *= rhs;
-  }
-  
-  Vector& operator /=(float rhs) {
-    x /= rhs;
-    y /= rhs;
-    z /= rhs;
-    return *this;
-  }
-  
-  const Vector operator /(float rhs) const {
-    return Vector(*this) /= rhs;
-  }
-  
-  float operator %(const Vector& rhs) const { return x * rhs.x + y * rhs.y + z * rhs.z; }
-  float norm_squared() const { return (*this) % (*this); }
+  float norm_squared() const { return dot(*this); }
   float norm() const { return sqrt(norm_squared()); }
-  
+
   Vector& normalise() {
-    return *this /= norm();
+    *this /= norm();
+    return *this;
   }
   
   const Vector normalised() const {

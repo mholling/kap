@@ -5,6 +5,9 @@ template <int M, int N>
 class Matrix {
 public:
   float data[M * N];
+  
+  Matrix(float v = 0.0) { for (int i = 0; i < M * N; data[i++] = v) ; }
+  
   inline float& operator()(int m, int n) { return data[m * N + n]; }
   inline const float& operator()(int m, int n) const { return data[m * N + n]; }
   
@@ -32,33 +35,33 @@ public:
 
   Matrix<M, N>& operator *=(const Matrix<N, N>& rhs) { return (*this) = (*this) * rhs; }
   
-  Matrix<M, N>& invert();
-  const Matrix<M, N> inverse() const;
-  
+  Matrix<N, M>& invert();
+  const Matrix<N, M> inverse() const { return Matrix<N, M>(*this).invert(); }
+
   Matrix<M, N>& operator /=(const Matrix<N, N>& rhs) { return (*this) *= rhs.inverse(); }
-  const Matrix<M, N> operator /(const Matrix<N, N>& rhs) const { return Matrix<M, 2>(*this) /= rhs; }
+  const Matrix<M, N> operator /(const Matrix<N, N>& rhs) const { return Matrix<M, N>(*this) /= rhs; }
   
-  const Matrix<N, M> transpose() {
+  const Matrix<N, M> t() const {
     Matrix<N, M> result;
     for (int m = 0; m < M; m++)
       for (int n = 0; n < N; n++)
         result(n, m) = (*this)(m, n);
     return result;
   }
+  
+  template <int P>
+  const Matrix<M, N + P> operator <<(const Matrix<M, P>& rhs) const {
+    Matrix<M, N + P> result;
+    for (int m = 0; m < N; m++) {
+      for (int n = 0; n < N; n++)
+        result(m,n) = (*this)(m,n);
+      for (int p = 0; p < P; p++)
+        result(m,N + p) = rhs(m,p);
+    }
+    return result;
+  }
+  
+  const Matrix<M, N + 1> operator<<(float rhs) const { return (*this) << Matrix<M, 1>(rhs); }
 };
-
-template <>
-Matrix<2, 2>& Matrix<2, 2>::invert() {
-  const float determinant = data[0] * data[3] - data[1] * data[2];
-  const float temp = data[0];
-  data[1] = -data[1];
-  data[2] = -data[2];
-  data[0] = data[3];
-  data[3] = temp;
-  return (*this) /= determinant;
-}
-
-template <>
-const Matrix<2, 2> Matrix<2, 2>::inverse() const { return Matrix<2, 2>(*this).invert(); }
 
 #endif

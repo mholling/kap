@@ -58,9 +58,9 @@ private:
       // vector.z = -static_cast<float>(x());
       
       // for breadboard:
-      vector.x = -static_cast<float>(y());
-      vector.y = -static_cast<float>(z());
-      vector.z =  static_cast<float>(x());
+      vector(0) = -static_cast<float>(y());
+      vector(1) = -static_cast<float>(z());
+      vector(2) =  static_cast<float>(x());
     }
   public:
     MeasurementPacket() : I2C::ReadPacket(data, i2c_address, datax0_reg, 6) { }

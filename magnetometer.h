@@ -2,11 +2,10 @@
 #define __MAGNETOMETER_H_
 
 #include "i2c.h"
-#include "scheduler.h"
-#include "vector.h"
+#include "vector_sensor.h"
 #include <math.h>
 
-class Magnetometer {
+class Magnetometer : public VectorSensor {
 private:
   enum { i2c_address = 0x1e, config_registers = 0x00, mode_register = 0x02, measurement_registers = 0x03 };
 
@@ -32,9 +31,9 @@ private:
   protected:
     void dequeue() {
       I2C::ReadPacket::dequeue();
-      vector.x =  static_cast<float>(y());
-      vector.y = -static_cast<float>(z());
-      vector.z = -static_cast<float>(x());
+      vector(0) =  static_cast<float>(y());
+      vector(1) = -static_cast<float>(z());
+      vector(2) = -static_cast<float>(x());
     }
   public:
     MeasurementPacket() : I2C::ReadPacket(data, i2c_address, measurement_registers, 7) { }
@@ -47,10 +46,11 @@ private:
   ModePacket sleep, wake;
 
 public:
-  Magnetometer() : sleep(ModePacket::sleep), wake(ModePacket::continuous) { }
+  Magnetometer() : VectorSensor(1.0), sleep(ModePacket::sleep), wake(ModePacket::continuous) { }
   void init() { configure(); wake(); }
   
-  MeasurementPacket measure;
+  MeasurementPacket measure;  
+  inline const Vector& measured() const { return measure.vector; };
 };
 
 #endif
