@@ -6,8 +6,8 @@
 
 class Vector : public Matrix<3, 1> {
 public:
-  inline Vector() : Matrix<3, 1>() { } // TODO: needed why?
-  inline Vector(Matrix<3, 1>) { }
+  inline Vector(const Matrix<3, 1>& matrix) : Matrix<3, 1>(matrix) { }
+  inline Vector(float v = 0.0) : Matrix<3, 1>(v) { }
   inline Vector(float x, float y, float z) { data[0] = x; data[1] = y; data[2] = z; }
   
   inline float& operator()(int m) { return data[m]; }

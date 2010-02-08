@@ -3,14 +3,14 @@
 
 void App::run() {
   scheduler.init();
+  timer.init();
   i2c.init();
   magnetometer.init();
-  accelerometer.init();
-  timer.init();
-  analog.init();
-  spi.init();
-  shift_register.init();
-  gyros.init();
+  // accelerometer.init();
+  // analog.init();
+  // spi.init();
+  // shift_register.init();
+  // gyros.init();
   // pwm.init();
   // motors.init();
   

@@ -31,9 +31,14 @@ private:
   protected:
     void dequeue() {
       I2C::ReadPacket::dequeue();
-      vector(0) =  static_cast<float>(y());
+      // // for PCB
+      // vector(0) =  static_cast<float>(y());
+      // vector(1) = -static_cast<float>(z());
+      // vector(2) = -static_cast<float>(x());
+      // for breadboard
+      vector(0) = -static_cast<float>(y());
       vector(1) = -static_cast<float>(z());
-      vector(2) = -static_cast<float>(x());
+      vector(2) =  static_cast<float>(x());
     }
   public:
     MeasurementPacket() : I2C::ReadPacket(data, i2c_address, measurement_registers, 7) { }
@@ -46,7 +51,7 @@ private:
   ModePacket sleep, wake;
 
 public:
-  Magnetometer() : VectorSensor(1.0), sleep(ModePacket::sleep), wake(ModePacket::continuous) { }
+  Magnetometer() : VectorSensor(13215209.0), sleep(ModePacket::sleep), wake(ModePacket::continuous) { }
   void init() { configure(); wake(); }
   
   MeasurementPacket measure;  

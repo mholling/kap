@@ -21,20 +21,20 @@ public:
   // Hardware:
   Scheduler scheduler;
   Serial serial;
+  Timer timer;
   I2C i2c;
   Magnetometer magnetometer;
-  Accelerometer accelerometer;
-  Timer timer;
-  Analog analog;
-  Spi spi;
-  ShiftRegister shift_register;
-  Gyros gyros;
+  // Accelerometer accelerometer;
+  // Analog analog;
+  // Spi spi;
+  // ShiftRegister shift_register;
+  // Gyros gyros;
   // Pwm pwm;
   // Motors motors;
   
   // Tasks:
-  EstimateAttitude estimate_attitude;
-  KalmanFilters kalman_filters;
+  // EstimateAttitude estimate_attitude;
+  // KalmanFilters kalman_filters;
   
   void run();
 };

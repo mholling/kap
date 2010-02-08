@@ -3,9 +3,11 @@
 
 template <int M, int N>
 class Matrix {
-public:
+protected:
   float data[M * N];
   
+public:
+  Matrix(const Matrix& matrix) { for (int i = 0; i < M * N; i++) data[i] = matrix.data[i]; }
   Matrix(float v = 0.0) { for (int i = 0; i < M * N; data[i++] = v) ; }
   
   inline float& operator()(int m, int n) { return data[m * N + n]; }

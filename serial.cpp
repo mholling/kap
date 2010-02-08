@@ -60,6 +60,11 @@ void Serial::debug(int i) {
   send();
 }
 
+void Serial::debug(const Vector v) {
+  for (int n = 0; n < 3; n++)
+    debug(v(n));
+}
+
 void Serial::line() {
   sprintf(buffer, "\r\n");
   send();

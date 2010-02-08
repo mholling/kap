@@ -10,24 +10,17 @@ Timer::Timer() {
 }
 
 void Timer::interrupt() {
-  app.magnetometer.measure();
-  app.accelerometer.measure();
-  app.gyros.measure();
-  app.estimate_attitude();
-  app.kalman_filters.yaw();
-  app.kalman_filters.pitch();
-  app.kalman_filters.roll();
+  app.magnetometer.measure(true);
+  app.magnetometer.estimate();
 
   static unsigned int count = 0;
   count++;  
-  if (count % frequency == 0) {
-    app.serial.debug("yaw", app.kalman_filters.yaw.angle());
-    app.serial.debug("pitch", app.kalman_filters.yaw.angle());
-    app.serial.debug("roll", app.kalman_filters.yaw.angle());
+  if (count % (frequency / 10) == 0) {
+    app.serial.debug(app.magnetometer.measured());
+    app.serial.debug(app.magnetometer.bias());
+    app.serial.debug(app.magnetometer.field());
+    app.serial.line();
   }
-
-  // app.motors.yaw.set((float)(count % 250)/250.0);
-  // app.motors.pitch.set((float)(count % 250)/250.0);
 }
 
 ISR(TIMER2_COMPA_vect) {
