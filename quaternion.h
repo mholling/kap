@@ -1,9 +1,9 @@
 #ifndef __QUATERNION_H_
 #define __QUATERNION_H_
-
+ 
 #include "vector.h"
 #include <math.h>
-
+ 
 // TODO: convert to inherit from Matrix<4, 1>?
 class Quaternion {
 public:
@@ -48,12 +48,12 @@ public:
   const Quaternion operator /(const float rhs) {
     return Quaternion(*this) /= rhs;
   }
-
-  inline float norm_squared() const { return v.norm_squared() + w * w; }
-  inline float norm() const { return sqrt(norm_squared()); }
+ 
+  inline float sqabs() const { return v.sqabs() + w * w; }
+  inline float abs() const { return sqrt(sqabs()); }
   
   Quaternion& normalise() {
-    return *this /= norm();
+    return *this /= abs();
   }
   
   const Quaternion normalised() const {
@@ -66,12 +66,12 @@ public:
     roll  = atan2(2 * (w * v(0) + v(1) * v(2)), 1 - 2 * (v(0) * v(0) + v(1) * v(1)));
   }
 };
-
+ 
 #endif
-
-
-
-
+ 
+ 
+ 
+ 
 // 
 // #ifndef __QUATERNION_H_
 // #define __QUATERNION_H_
@@ -123,11 +123,11 @@ public:
 //     return Quaternion(*this) /= rhs;
 //   }
 // 
-//   inline float norm_squared() const { return v.norm_squared() + w * w; }
-//   inline float norm() const { return sqrt(norm_squared()); }
+//   inline float sqabs() const { return v.sqabs() + w * w; }
+//   inline float abs() const { return sqrt(sqabs()); }
 //   
 //   Quaternion& normalise() {
-//     return *this /= norm();
+//     return *this /= abs();
 //   }
 //   
 //   const Quaternion normalised() const {

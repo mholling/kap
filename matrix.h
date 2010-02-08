@@ -13,6 +13,9 @@ public:
   inline float& operator()(int m, int n) { return data[m * N + n]; }
   inline const float& operator()(int m, int n) const { return data[m * N + n]; }
   
+  inline float& operator()(int m) { return data[m]; }
+  inline const float& operator()(int m) const { return data[m]; }
+
   Matrix<M, N>& operator +=(const Matrix<M, N>& rhs) { for (int i = 0; i < M * N; i++) data[i] += rhs.data[i]; return *this; }
   const Matrix<M, N> operator +(const Matrix<M, N>& rhs) const { return Matrix<M, N>(*this) += rhs; }
 
@@ -52,7 +55,7 @@ public:
   }
   
   template <int P>
-  const Matrix<M, N + P> operator <<(const Matrix<M, P>& rhs) const {
+  Matrix<M, N + P> operator <<(const Matrix<M, P>& rhs) const {
     Matrix<M, N + P> result;
     for (int m = 0; m < N; m++) {
       for (int n = 0; n < N; n++)
@@ -64,6 +67,20 @@ public:
   }
   
   const Matrix<M, N + 1> operator<<(float rhs) const { return (*this) << Matrix<M, 1>(rhs); }
+  
+  template <int P>
+  Matrix<N, P> dot(const Matrix<M, P>& rhs) const { return t() * rhs; }
+  
+  // for Vectors only:
+  
+  float sqabs() const;
+  float abs() const;
+  Matrix(float x, float y, float z);
+  const Matrix<M, N> cross(const Matrix<M, N>& rhs) const;
+  
+  // for Matrix<1, 1> only:
+
+  operator double();
 };
 
 #endif

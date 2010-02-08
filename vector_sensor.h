@@ -1,9 +1,10 @@
 #ifndef __VECTOR_SENSOR_H_
 #define __VECTOR_SENSOR_H_
 
-#include "vector.h"
-#include "matrix.h"
 #include "scheduler.h"
+#include "matrix.h"
+#include "vector.h"
+#include "math.h"
 #include "timed_section.h"
 
 class VectorSensor {
@@ -28,7 +29,7 @@ protected:
     float field;
     
     void run() {
-      if (((Vector)(previous - vector_sensor.measured())).norm_squared() > 350.0*350.0) {
+      if (((Vector)(previous - vector_sensor.measured())).sqabs() > 350.0*350.0) {
         // TimedSection ts("rls update");
         // TODO: use buckets to pick update vectors
         // TODO: use symmetric matrices
@@ -36,12 +37,12 @@ protected:
         Matrix<1, 4> xt = vector_sensor.measured().t() * 2.0 << 1.0;
         Matrix<4, 1> Px = P * xt.t();
         Matrix<4, 1> K = Px / (lambda + (xt * Px)(0,0));
-        w += K * (vector_sensor.measured().norm_squared() - (xt * w)(0,0));
+        w += K * (vector_sensor.measured().sqabs() - (xt * w)(0,0));
         P -= K * xt * P;
         P /= lambda;
 
         bias = Vector(w(0,0), w(1,0), w(2,0));
-        field = sqrt(w(3,0) + bias.norm_squared());
+        field = sqrt(w(3,0) + bias.sqabs());
         previous = vector_sensor.measured();
       }
       vector = vector_sensor.measured() - bias;
