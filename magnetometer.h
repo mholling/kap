@@ -31,10 +31,12 @@ private:
   protected:
     void dequeue() {
       I2C::ReadPacket::dequeue();
+      
       // // for PCB
       // vector(0) =  static_cast<float>(y());
       // vector(1) = -static_cast<float>(z());
       // vector(2) = -static_cast<float>(x());
+      
       // for breadboard
       vector(0) = -static_cast<float>(y());
       vector(1) = -static_cast<float>(z());

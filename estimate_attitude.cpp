@@ -20,13 +20,13 @@ void EstimateAttitude::run() {
   const float beta = b3_plus_r3.dot(b1r1a1_plus_b2r2a2);
   const float gamma = sqrt(alpha * alpha + beta * beta);
 
-  Quaternion quaternion;
-  if (alpha >= 0) {
-    quaternion = Quaternion(b3r3 * (gamma + alpha) + b3_plus_r3 * beta, (gamma + alpha) * b3_dot_r3_plus_1);
-    quaternion /= 2 * sqrt(gamma * (gamma + alpha) * b3_dot_r3_plus_1);
-  } else {
-    quaternion = Quaternion(b3r3 * beta + b3_plus_r3 * (gamma - alpha), beta * b3_dot_r3_plus_1);
-    quaternion /= 2 * sqrt(gamma * (gamma - alpha) * b3_dot_r3_plus_1);
-  }
-  quaternion.get_euler_angles(yaw, pitch, roll);
+  // if (alpha >= 0) {
+  //   Quaternion quaternion(b3r3 * (gamma + alpha) + b3_plus_r3 * beta, (gamma + alpha) * b3_dot_r3_plus_1);
+  //   quaternion /= 2 * sqrt(gamma * (gamma + alpha) * b3_dot_r3_plus_1);
+  //   quaternion.get_euler_angles(yaw, pitch, roll);
+  // } else {
+  //   Quaternion quaternion(b3r3 * beta + b3_plus_r3 * (gamma - alpha), beta * b3_dot_r3_plus_1);
+  //   quaternion /= 2 * sqrt(gamma * (gamma - alpha) * b3_dot_r3_plus_1);
+  //   quaternion.get_euler_angles(yaw, pitch, roll);
+  // }
 }

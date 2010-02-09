@@ -16,7 +16,7 @@
 DEVICE     = atmega168
 CLOCK      = 8000000
 PROGRAMMER = -c arduino -P /dev/tty.usbserial-A800csBR -b 19200
-OBJECTS    = main.o app.o scheduler.o serial.o timer.o i2c.o magnetometer.o timed_section.o matrix.o
+OBJECTS    = main.o app.o scheduler.o serial.o timer.o i2c.o magnetometer.o timed_section.o matrix.o accelerometer.o estimate_attitude.o
 # OBJECTS    = main.o app.o scheduler.o serial.o timer.o i2c.o magnetometer.o timed_section.o matrix.o analog.o gyros.o spi.o shift_register.o motors.o accelerometer.o estimate_attitude.o kalman_filters.o
 
 # Tune the lines below only if you know what you are doing:
@@ -32,7 +32,7 @@ size:
 	ruby count.rb
 
 clear:
-	clear
+	clear; clear
 
 debug:
 	screen /dev/tty.usbserial-A800csBR 9600

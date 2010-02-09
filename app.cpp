@@ -6,7 +6,7 @@ void App::run() {
   timer.init();
   i2c.init();
   magnetometer.init();
-  // accelerometer.init();
+  accelerometer.init();
   // analog.init();
   // spi.init();
   // shift_register.init();

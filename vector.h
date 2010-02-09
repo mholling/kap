@@ -1,11 +1,25 @@
 #ifndef __VECTOR_H_
 #define __VECTOR_H_
 
-#include "matrix.h"
+#include "column.h"
+#include <math.h>
 
-typedef Matrix<3, 1> Vector;
+class Vector : public Column<3> {
+public:
+  Vector() { }
+  Vector(const Column<3>& column) : Column<3>(column) { }
+  Vector(float x, float y, float z) { data[0] = x; data[1] = y; data[2] = z; }
+  
+  using Column<3>::operator =;  
+  
+  const Vector cross(const Vector& rhs) const {
+    return Vector(data[1] * rhs(2) - data[2] * rhs(1), data[2] * rhs(0) - data[0] * rhs(2), data[0] * rhs(1) - data[1] * rhs(0));
+  }
+};
 
 #endif
+
+
 
 
 // #ifndef __VECTOR_H_

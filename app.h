@@ -24,7 +24,7 @@ public:
   Timer timer;
   I2C i2c;
   Magnetometer magnetometer;
-  // Accelerometer accelerometer;
+  Accelerometer accelerometer;
   // Analog analog;
   // Spi spi;
   // ShiftRegister shift_register;
@@ -33,7 +33,7 @@ public:
   // Motors motors;
   
   // Tasks:
-  // EstimateAttitude estimate_attitude;
+  EstimateAttitude estimate_attitude;
   // KalmanFilters kalman_filters;
   
   void run();

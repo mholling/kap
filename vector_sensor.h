@@ -29,12 +29,18 @@ protected:
     float field;
     
     void run() {
-      if (((Vector)(previous - vector_sensor.measured())).sqabs() > 350.0*350.0) {
+      Vector difference = (Vector)(Column<3>)(previous - vector_sensor.measured());
+      if (difference.sqabs() > 350.0*350.0) {
         // TimedSection ts("rls update");
         // TODO: use buckets to pick update vectors
         // TODO: use symmetric matrices
 
-        Matrix<1, 4> xt = vector_sensor.measured().t() * 2.0 << 1.0;
+        // Matrix<1, 4> xt = vector_sensor.measured().t() * 2.0 << 1.0;
+        Matrix<1, 4> xt;
+        xt(0,0) = 2.0 * vector_sensor.measured()(0);
+        xt(0,1) = 2.0 * vector_sensor.measured()(1);
+        xt(0,2) = 2.0 * vector_sensor.measured()(2);
+        xt(0,3) = 1.0;
         Matrix<4, 1> Px = P * xt.t();
         Matrix<4, 1> K = Px / (lambda + (xt * Px)(0,0));
         w += K * (vector_sensor.measured().sqabs() - (xt * w)(0,0));

@@ -10,15 +10,20 @@ Timer::Timer() {
 }
 
 void Timer::interrupt() {
-  app.magnetometer.measure(true);
+  app.accelerometer.measure();
+  app.magnetometer.measure();
+  app.estimate_attitude();
   app.magnetometer.estimate();
 
   static unsigned int count = 0;
   count++;  
   if (count % (frequency / 10) == 0) {
-    app.serial.debug(app.magnetometer.measured());
-    app.serial.debug(app.magnetometer.bias());
-    app.serial.debug(app.magnetometer.field());
+    // app.serial.debug(app.accelerometer.measure.vector);
+    // app.serial.debug(Vector(0.0, 0.0, 0.0));
+    // app.serial.debug(app.accelerometer.measure.vector.abs());
+    // app.serial.debug(app.magnetometer.measured());
+    // app.serial.debug(app.magnetometer.bias());
+    // app.serial.debug(app.magnetometer.field());
     app.serial.line();
   }
 }
