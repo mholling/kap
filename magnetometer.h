@@ -53,11 +53,10 @@ private:
   ModePacket sleep, wake;
 
 public:
-  Magnetometer() : VectorSensor(13215209.0), sleep(ModePacket::sleep), wake(ModePacket::continuous) { }
+  Magnetometer() : VectorSensor(measure.vector, 13215209.0), sleep(ModePacket::sleep), wake(ModePacket::continuous) { }
   void init() { configure(); wake(); }
   
   MeasurementPacket measure;  
-  inline const Vector& measured() const { return measure.vector; };
 };
 
 #endif
