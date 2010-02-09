@@ -11,13 +11,13 @@ Timer::Timer() {
 
 void Timer::interrupt() {
   app.magnetometer.measure(true);
-  app.magnetometer.estimate();
+  app.magnetometer.calibrate();
 
   static unsigned int count = 0;
   count++;  
   if (count % (frequency / 10) == 0) {
     app.serial.debug(app.magnetometer.measure.vector);
-    app.serial.debug(app.magnetometer.bias());
+    app.serial.debug(app.magnetometer.calibrate.bias);
     app.serial.line();
   }
 }

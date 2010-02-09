@@ -2,10 +2,10 @@
 #define __MAGNETOMETER_H_
 
 #include "i2c.h"
-#include "vector_sensor.h"
+#include "calibrate_task.h"
 #include <math.h>
 
-class Magnetometer : public VectorSensor {
+class Magnetometer {
 private:
   enum { i2c_address = 0x1e, config_registers = 0x00, mode_register = 0x02, measurement_registers = 0x03 };
 
@@ -53,10 +53,11 @@ private:
   ModePacket sleep, wake;
 
 public:
-  Magnetometer() : VectorSensor(measure.vector, 13215209.0), sleep(ModePacket::sleep), wake(ModePacket::continuous) { }
+  Magnetometer() : sleep(ModePacket::sleep), wake(ModePacket::continuous), calibrate(measure.vector, 13215209.0, 0.97) { }
   void init() { configure(); wake(); }
   
-  MeasurementPacket measure;  
+  MeasurementPacket measure;
+  CalibrateTask calibrate;
 };
 
 #endif
