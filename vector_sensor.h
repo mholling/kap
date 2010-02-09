@@ -29,13 +29,13 @@ protected:
     float field;
     
     void run() {
-      Vector difference = (Vector)(Column<3>)(previous - vector_sensor.measured());
-      if (difference.sqabs() > 350.0*350.0) {
+      if ((previous - vector_sensor.measured()).sqabs() > 350.0*350.0) {
         // TimedSection ts("rls update");
         // TODO: use buckets to pick update vectors
         // TODO: use symmetric matrices
 
         // Matrix<1, 4> xt = vector_sensor.measured().t() * 2.0 << 1.0;
+        // TODO: re-define << operator for use here?
         Matrix<1, 4> xt;
         xt(0,0) = 2.0 * vector_sensor.measured()(0);
         xt(0,1) = 2.0 * vector_sensor.measured()(1);

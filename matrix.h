@@ -1,6 +1,8 @@
 #ifndef __MATRIX_H_
 #define __MATRIX_H_
 
+#include <math.h>
+
 template <int M, int N>
 class Matrix {
 protected:
@@ -54,13 +56,30 @@ public:
         result(n, m) = (*this)(m, n);
     return result;
   }
-    
-  // TODO: should this be different? maybe in Vector instead?
-  const Matrix<M, N + 1> operator <<(float rhs) const;
   
+  // Vectors:
+  Matrix(float x, float y, float z) { data[0] = x; data[1] = y; data[2] = z; }
+  const Matrix<M, N> cross(const Matrix<M, N>& rhs) const;
+  inline float& operator()(int m) { return data[m]; }
+  inline const float& operator()(int m) const { return data[m]; }
+  float dot(const Matrix<M, N>& rhs) const { return (t() * rhs)(0); } 
+  float sqabs() const { return dot(*this); }
+  float abs() const { return sqrt(sqabs()); }
+  Matrix<M, N>& normalise() { *this /= abs(); return *this; }
+  const Matrix<M, N> normalised() const { return Matrix<M, N>(*this).normalise(); }
+
+  // Quaternions:
+  Matrix(const Matrix<3, 1>& v, float w) { data[0] = v(0); data[1] = v(1); data[2] = v(2); data[3] = w; }
   
-  // // Matrix<1, 1> methods:
-  // operator double() const;
+  void get_euler_angles(float& yaw, float& pitch, float& roll) const {
+    yaw   = atan2(2 * (data[3] * data[2] + data[1] * data[2]), 1 - 2 * (data[1] * data[1] + data[2] * data[2]));
+    pitch =  asin(2 * (data[3] * data[1] - data[2] * data[0]));
+    roll  = atan2(2 * (data[3] * data[0] + data[1] * data[2]), 1 - 2 * (data[0] * data[0] + data[1] * data[1]));
+  }
+  
 };
+
+typedef Matrix<3, 1> Vector;
+typedef Matrix<4, 1> Quaternion;
 
 #endif
