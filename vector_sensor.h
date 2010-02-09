@@ -5,7 +5,6 @@
 #include "matrix.h"
 #include "vector.h"
 #include "math.h"
-#include "timed_section.h"
 
 class VectorSensor {
 protected:
@@ -30,25 +29,24 @@ protected:
     
     void run() {
       if ((previous - vector_sensor.measured()).sqabs() > 350.0*350.0) {
-        // TimedSection ts("rls update");
         // TODO: use buckets to pick update vectors
         // TODO: use symmetric matrices
 
-        // Matrix<1, 4> xt = vector_sensor.measured().t() * 2.0 << 1.0;
-        // TODO: re-define << operator for use here?
         Matrix<1, 4> xt;
-        xt(0,0) = 2.0 * vector_sensor.measured()(0);
-        xt(0,1) = 2.0 * vector_sensor.measured()(1);
-        xt(0,2) = 2.0 * vector_sensor.measured()(2);
-        xt(0,3) = 1.0;
+        xt[0] = 2.0 * vector_sensor.measured()[0];
+        xt[1] = 2.0 * vector_sensor.measured()[1];
+        xt[2] = 2.0 * vector_sensor.measured()[2];
+        xt[3] = 1.0;
+        
         Matrix<4, 1> Px = P * xt.t();
         Matrix<4, 1> K = Px / (lambda + (xt * Px)(0,0));
+
         w += K * (vector_sensor.measured().sqabs() - (xt * w)(0,0));
         P -= K * xt * P;
         P /= lambda;
 
-        bias = Vector(w(0,0), w(1,0), w(2,0));
-        field = sqrt(w(3,0) + bias.sqabs());
+        bias = Vector(w[0], w[1], w[2]);
+        field = sqrt(w[3] + bias.sqabs()); // TODO: eventually not needed
         previous = vector_sensor.measured();
       }
       vector = vector_sensor.measured() - bias;
