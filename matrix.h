@@ -9,7 +9,7 @@ protected:
   float data[M * N];
   
 public:
-  Matrix() { } // TODO: correct? should we initialize the data elements to zero?  
+  Matrix() { for (int i = 0; i < M * N; i++) data[i] = 0.0; }
   Matrix(const Matrix<M, N>& matrix) { operator =(matrix); }
   
   const Matrix<M, N>& operator =(const Matrix<M, N>& rhs) { for (int i = 0; i < M * N; i++) data[i] = rhs[i]; return *this; }
