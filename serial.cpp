@@ -5,18 +5,22 @@
 #include "app.h"
 
 Serial::Serial() {
-  UBRR0 = F_CPU / 38400 / 16 - 1;     // 38.4k baud rate (0.2% error @ 8Mhz)
-	UCSR0C = (3 << UCSZ00);             // 8-bit characters
-	UCSR0B = _BV(UDRIE0) | _BV(TXEN0);  // enable transmitter and data-register-empty interrupts
+  UBRR0 = F_CPU / 38400 / 16 - 1;   // 38.4k baud rate (0.2% error @ 8Mhz)
+	UCSR0C = (3 << UCSZ00);           // 8-bit characters
+	UCSR0B = _BV(TXEN0);              // enable transmitter
 }
 
 void Serial::interrupt() {
-  if (buffer.any()) buffer >> reinterpret_cast<volatile char &>(UDR0);
+  if (buffer.empty())
+    UCSR0B = _BV(TXEN0);  // disable data-register-empty interrupts
+  else
+    buffer >> reinterpret_cast<volatile char &>(UDR0);
 }
 
 void Serial::send(const char *data) {
   CriticalSection cs;
   for (const char *c = data; *c != 0; buffer << *c++) ;
+	UCSR0B = _BV(UDRIE0) | _BV(TXEN0);  // enable transmitter and data-register-empty interrupts
 }
 
 void Serial::debug(const char * const s, char b) {

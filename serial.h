@@ -6,12 +6,12 @@
 
 class Serial {
 protected:
-  CircularBuffer<char, 64> buffer;
+  CircularBuffer<char, 128> buffer;
   
 public:
   Serial();
   
-  void interrupt();
+  inline void interrupt();
   
   void send(const char *data);
   void debug(const char * const s, char b);
