@@ -3,19 +3,15 @@
 
 void Scheduler::Task::operator ()() {
   CriticalSection cs;
-  if (PrioritisedQueable<Task>::enqueue()) // TODO: qualifier needed?
+  if (enqueue()) // TODO: qualifier needed?
     if (at_head())
       start();
 }
 
 void Scheduler::Task::start() {
-  if (!started) {
-    started = true;
-    sei();
-    run();
-    cli();
-    started = false;
-    PrioritisedQueable<Task>::dequeue();
-  }
+  sei();
+  run();
+  cli();
+  dequeue();
   if (any()) head().start();
 }

@@ -15,6 +15,7 @@
 #include "gyros.h"
 #include "estimate_attitude.h"
 #include "kalman_filters.h"
+#include "diagnostic_task.h"
 
 class App {  
 public:
@@ -35,6 +36,7 @@ public:
   // Tasks:
   // EstimateAttitude estimate_attitude;
   // KalmanFilters kalman_filters;
+  DiagnosticTask diagnostic;
   
   void run();
 };

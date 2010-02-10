@@ -24,14 +24,13 @@ private:
     
   class MeasurementPacket : public I2C::ReadPacket {
   private:
+    Vector& vector;
     volatile unsigned char data[7];
     inline int x() { return static_cast<int>((static_cast<unsigned int>(data[0]) << 8) | static_cast<unsigned int>(data[1])); }
     inline int y() { return static_cast<int>((static_cast<unsigned int>(data[2]) << 8) | static_cast<unsigned int>(data[3])); }
     inline int z() { return static_cast<int>((static_cast<unsigned int>(data[4]) << 8) | static_cast<unsigned int>(data[5])); }
   protected:
     void dequeue() {
-      I2C::ReadPacket::dequeue();
-      
       // // for PCB
       // vector[0] =  static_cast<float>(y());
       // vector[1] = -static_cast<float>(z());
@@ -41,10 +40,11 @@ private:
       vector[0] = -static_cast<float>(y());
       vector[1] = -static_cast<float>(z());
       vector[2] =  static_cast<float>(x());
+      
+      I2C::ReadPacket::dequeue();
     }
   public:
-    MeasurementPacket() : I2C::ReadPacket(data, i2c_address, measurement_registers, 7) { }
-    Vector vector;
+    MeasurementPacket(Vector& vector) : I2C::ReadPacket(data, i2c_address, measurement_registers, 7), vector(vector) { }
     inline bool ready() { return data[6] & 0x01; }
     inline char status() { return data[6]; }
   };
@@ -53,11 +53,13 @@ private:
   ModePacket sleep, wake;
 
 public:
-  Magnetometer() : sleep(ModePacket::sleep), wake(ModePacket::continuous), calibrate(measure.vector, 13215209.0, 0.97) { }
+  Magnetometer() : sleep(ModePacket::sleep), wake(ModePacket::continuous), measure(vector), calibrate(vector, 13215209.0, 0.97) { }
   void init() { configure(); wake(); }
   
   MeasurementPacket measure;
   CalibrateTask calibrate;
+  
+  Vector vector;
 };
 
 #endif

@@ -8,10 +8,9 @@ public:
   class Task : protected PrioritisedQueable<Task> {
   private:
     void start();
-    bool started;
     
   public:
-    Task(unsigned int level) : PrioritisedQueable<Task>(level), started(false) { }
+    Task(unsigned int level) : PrioritisedQueable<Task>(level) { }
     
     void operator ()();
     virtual void run() = 0;
