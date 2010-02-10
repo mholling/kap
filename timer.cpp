@@ -13,10 +13,11 @@ void Timer::interrupt() {
   static unsigned int count = 0;
   count++;
   
-  app.magnetometer.measure();
-  app.magnetometer.calibrate();
-  
-  if (count % (frequency) == 0) app.diagnostic();
+  // app.magnetometer.measure();
+  // app.magnetometer.calibrate();
+  // 
+  // if (count % (frequency) == 0) app.diagnostic();
+  if (count % frequency == 0) app.serial.send("hello world\r\n");
 }
 
 ISR(TIMER2_COMPA_vect) {
