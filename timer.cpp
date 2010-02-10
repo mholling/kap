@@ -25,8 +25,7 @@ void Timer::interrupt() {
 Timer::Diagnostic::Diagnostic(const char *message) : start(app.timer.timestamp()), message(message) { }
 
 Timer::Diagnostic::~Diagnostic() {
-  const unsigned long int finish = app.timer.timestamp();
-  app.serial.debug(message, static_cast<float>(finish - start) / (OCR2A * Timer::frequency));
+  app.serial.debug(message, static_cast<float>(app.timer.timestamp() - start) / (OCR2A * Timer::frequency));
 }
 
 ISR(TIMER2_COMPA_vect) {
