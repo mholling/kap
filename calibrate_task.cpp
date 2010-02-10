@@ -1,7 +1,7 @@
 #include "calibrate_task.h"
 #include "app.h"
 
-CalibrateTask::CalibrateTask(Vector& vector, float variance, float lambda) : Scheduler::Task(20), vector(vector), lambda(lambda) {
+CalibrateTask::CalibrateTask(const Vector& vector, float variance, float lambda) : Scheduler::Task(20), vector(vector), lambda(lambda) {
   P0[0] = P1[1] = P2[2] = P3[3] = 400.0 * variance;
   P1[0] = P2[0] = P2[1] = P3[0] = P3[1] = P3[2] = 0.0;
    w[0] =  w[1] =  w[2] =  w[3] = 0.0;
@@ -35,5 +35,5 @@ void CalibrateTask::run() {
     
     bias = Vector(w[0], w[1], w[2]);
   }
-  vector -= bias;
+  result = vector - bias;
 }

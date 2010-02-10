@@ -6,17 +6,18 @@
 
 class CalibrateTask : public Scheduler::Task {
 protected:
-  Vector& vector;
+  const Vector& vector;
   Vector previous;
   const float lambda;
   float P0[1], P1[2], P2[3], P3[4];
   float w[4];
   
 public:
-  CalibrateTask(Vector& vector, float variance, float lambda);
+  CalibrateTask(const Vector& vector, float variance, float lambda);
   void run();
   
   Vector bias;
+  Vector result;
 };
 
 #endif
