@@ -35,7 +35,7 @@ clear:
 	clear; clear
 
 debug:
-	screen /dev/tty.usbserial-A800csBR 9600
+	screen /dev/tty.usbserial-A800csBR 38400
 	
 .c.o:
 	$(COMPILE) -c $< -o $@

@@ -5,10 +5,9 @@
 #include "app.h"
 
 Serial::Serial() {
-  UBRR0 = F_CPU / 9600 / 16 - 1;      // 9600 baud rate // TODO: bump this up once working!
+  UBRR0 = F_CPU / 38400 / 16 - 1;     // 38.4k baud rate (0.2% error @ 8Mhz)
 	UCSR0C = (3 << UCSZ00);             // 8-bit characters
 	UCSR0B = _BV(UDRIE0) | _BV(TXEN0);  // enable transmitter and data-register-empty interrupts
-	
 }
 
 void Serial::interrupt() {
