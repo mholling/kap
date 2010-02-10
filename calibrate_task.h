@@ -10,7 +10,8 @@ protected:
   Vector previous;
   const float lambda;
   float P0[1], P1[2], P2[3], P3[4];
-  float w[4];
+  float w3;
+  float h2, b2;
   
 public:
   CalibrateTask(const Vector& vector, float variance, float lambda);

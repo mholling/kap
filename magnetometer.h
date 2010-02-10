@@ -58,8 +58,6 @@ public:
   
   MeasurementPacket measure;
   CalibrateTask calibrate;
-  // 
-  // Vector vector;
 };
 
 #endif
