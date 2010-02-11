@@ -20,7 +20,7 @@ public:
     void operator ()(bool block = false);
     
     inline bool pending() { return Queable<Packet>::pending(); }
-    inline void wait() { return Queable<Packet>::wait(); }
+    inline void wait() { Queable<Packet>::wait(); }
     inline static Packet& head() { return Queable<Packet>::head(); }
 
   private:

@@ -8,7 +8,7 @@ public:
   Eeprom() { }
   inline void init() { }
   
-  class Packet : public Queable<Packet> {
+  class Packet : protected Queable<Packet> {
   public:
     enum operation_value { reading, writing };
 
@@ -18,6 +18,10 @@ public:
     
     inline void write(bool block = false) { (*this)(writing, block); }
     inline void  read(bool block = false) { (*this)(reading, block); }
+    
+    inline bool pending() { return Queable<Packet>::pending(); }
+    inline void wait() { Queable<Packet>::wait(); }
+    inline static Packet& head() { return Queable<Packet>::head(); }
     
     template <typename T>
     Packet& operator <<(const T& t) { // TODO: disallow if pending?

@@ -26,7 +26,7 @@ public:
     inline float operator ()() { return static_cast<float>(data) / 1024; }
 
     inline bool pending() { return Queable<Channel>::pending(); }
-    inline void wait() { return Queable<Channel>::wait(); }
+    inline void wait() { Queable<Channel>::wait(); }
     inline static Channel& head() { return Queable<Channel>::head(); }
   };
   

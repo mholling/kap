@@ -6,7 +6,7 @@
 
 class Serial {
 protected:
-  CircularBuffer<char, 256> buffer; // TODO: drop buffer size
+  CircularBuffer<char, 128> buffer; // TODO: drop buffer size?
   
 public:
   Serial();

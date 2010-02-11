@@ -21,12 +21,12 @@ void App::run() {
   
   int x1 = 0,  x2 = 0,  x3 = 0;
   r.read();
+  r.wait();
+  // int p = (int)r.next;
 
-  for (volatile int m = 0; m < 100; m++)
-    for (volatile int n = 0; n < 32000; n++)
-      ;
   r >> x1 >> x2 >> x3;
   
+  // app.serial.debug("p", p);
   app.serial.debug("1", (char)x1);
   app.serial.debug("2", (char)x2);
   app.serial.debug("3", (char)x3);
