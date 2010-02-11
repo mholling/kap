@@ -13,11 +13,12 @@ I2C::I2C() {
 }
 
 void I2C::Packet::operator ()(bool block) {
-  CriticalSection cs;
-  if (Queable<Packet>::enqueue()) { // TODO: qualifier needed?
-    index = 0;
-    if (at_head())
-      start();
+  {
+    CriticalSection cs;
+    if (Queable<Packet>::enqueue()) { // TODO: qualifier needed?
+      index = 0;
+      if (at_head()) start();
+    }
   }
   if (block) wait();
 }
@@ -44,7 +45,6 @@ const void I2C::Packet::release() {
 }
 
 void I2C::Packet::interrupt() {
-  // app.serial.debug("TW_STATUS", (char)TW_STATUS);
   switch (TW_STATUS) {
     case TW_START:     // sent start condition
       TWDR = TW_WRITE | (address << 1);

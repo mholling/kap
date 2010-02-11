@@ -11,8 +11,7 @@ Analog::Analog() : yaw(0), pitch(1), roll(2), ref(3) {
 void Analog::Channel::convert() {
   CriticalSection cs;
   if (Queable<Channel>::enqueue()) // TODO: qualifier needed?
-    if (at_head())
-      start();
+    if (at_head()) start();
 }
 
 void Analog::Channel::dequeue() {

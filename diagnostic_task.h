@@ -2,6 +2,7 @@
 #define __DIAGNOSTIC_TASK_H_
 
 #include "scheduler.h"
+#include "Eeprom.h"
 
 class DiagnosticTask : public Scheduler::Task {
 public:

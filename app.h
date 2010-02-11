@@ -7,6 +7,7 @@
 #include "magnetometer.h"
 #include "accelerometer.h"
 #include "timer.h"
+#include "eeprom.h"
 #include "analog.h"
 #include "pwm.h"
 #include "spi.h"
@@ -23,6 +24,7 @@ public:
   Scheduler scheduler;
   Serial serial;
   Timer timer;
+  Eeprom eeprom;
   I2C i2c;
   Magnetometer magnetometer;
   // Accelerometer accelerometer;
@@ -47,5 +49,17 @@ extern App app;
 
 extern "C" void __cxa_pure_virtual(void);
 extern "C" void atexit(void);
+
+
+  
+class EepromTest : public Eeprom::Packet {
+public:
+  char data[6];
+  
+public:
+  EepromTest(unsigned int address) : Eeprom::Packet(address, data, 6) { }
+};
+
+
 
 #endif
