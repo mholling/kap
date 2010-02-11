@@ -4,13 +4,13 @@
 #include "app.h"
 
 void Eeprom::Packet::operator ()(operation_value op, bool block) {
-  // wait();
+  wait();
   {
     CriticalSection cs;
     operation = op;
     Queable<Packet>::enqueue(); // TODO: qualifier needed?
     if (at_head()) start();
-    // volatile int m = 20000; // TODO: enable this line to fix obscure bug...
+    volatile int m = 20000; // TODO: fix volatiles to remove this...
   }
   if (block) wait();
 }
