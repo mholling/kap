@@ -2,9 +2,11 @@
 #include "app.h"
 #include "timer.h"
 
-KalmanFilters::KalmanFilters() : yaw(app.gyros.yaw, app.estimate_attitude.yaw), pitch(app.gyros.pitch, app.estimate_attitude.pitch), roll(app.gyros.roll, app.estimate_attitude.roll) { }
+// TODO: improve the way vectors and floats are passed around between tasks/packets...
 
-KalmanFilters::Filter::Filter(const Gyros::Gyro& gyro, const float& measured) :
+KalmanFilters::KalmanFilters() : yaw(app.gyros.yaw, const_cast<float&>(app.estimate_attitude.yaw)), pitch(app.gyros.pitch, const_cast<float&>(app.estimate_attitude.pitch)), roll(app.gyros.roll, const_cast<float&>(app.estimate_attitude.roll)) { }
+
+KalmanFilters::Filter::Filter(const volatile Gyros::Gyro& gyro, const float& measured) :
    Scheduler::Task(20),
    gyro(gyro),
    measured(measured),

@@ -11,14 +11,14 @@ private:
   enum { i2c_address = 0x1d, bw_rate_reg = 0x2c, power_ctl_reg = 0x2d, int_enable_reg = 0x2e, data_format_reg = 0x31, datax0_reg = 0x32 };
   
   class ModePacket : public I2C::WritePacket {
-    volatile unsigned char data[1];
+    unsigned char data[1];
   public:
     enum mode_value { standby = 0x00, measure = 0x08 };
     ModePacket(mode_value mode) : I2C::WritePacket(data, i2c_address, power_ctl_reg, 1) { data[0] = mode; }
   };
 
   class RatePacket : public I2C::WritePacket {
-    volatile unsigned char data[1];
+    unsigned char data[1];
   public:
     enum rate_value { hz12 = 0x07, hz_25, hz_50, hz_100, hz_200, hz_400,hz_800 };
     RatePacket(rate_value rate) : I2C::WritePacket(data, i2c_address, bw_rate_reg, 1) { data[0] = rate; }
@@ -67,16 +67,17 @@ private:
     Vector vector;
   };
     
-  RatePacket set_rate;
-  ModePacket standby, wake;
-  InterruptConfigPacket configure_interrupt;
-  DataFormatPacket set_data_format;
+  volatile RatePacket set_rate;
+  volatile ModePacket standby;
+  volatile ModePacket wake;
+  volatile InterruptConfigPacket configure_interrupt;
+  volatile DataFormatPacket set_data_format;
 
 public:
   Accelerometer() : set_rate(RatePacket::hz_50), standby(ModePacket::standby), wake(ModePacket::measure) { }
-  void init() { set_rate(); set_data_format(); configure_interrupt(); wake(); }
+  void init() volatile { set_rate(); set_data_format(); configure_interrupt(); wake(); }
   
-  MeasurementPacket measure;
+  volatile MeasurementPacket measure;
 };
 
 #endif

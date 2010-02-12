@@ -1,6 +1,5 @@
 #include "analog.h"
 #include <avr/io.h>
-#include "scheduler.h"
 #include "app.h"
 
 Analog::Analog() : yaw(0), pitch(1), roll(2), ref(3) {
@@ -9,19 +8,17 @@ Analog::Analog() : yaw(0), pitch(1), roll(2), ref(3) {
 }
 
 void Analog::Channel::convert() {
-  CriticalSection cs;
-  if (Queable<Channel>::enqueue()) // TODO: qualifier needed?
+  if (enqueue())
     if (at_head()) start();
 }
 
 void Analog::Channel::dequeue() {
-  CriticalSection cs;
   Queable<Channel>::dequeue();
-  if (any()) head().start();
+  if (any()) const_cast<Channel&>(head()).start();
 }
 
 void Analog::Channel::start() {
-  ADMUX = _BV(REFS0) | (channel & 0x0f);
+  ADMUX = _BV(REFS0) | (number & 0x0f);
   ADCSRA |= _BV(ADSC);
 }
 

@@ -1,6 +1,8 @@
 #ifndef __CIRCULAR_BUFFER_H_
 #define __CIRCULAR_BUFFER_H_
 
+#include "safe.h"
+
 template <typename T, int N>
 class CircularBuffer {
 private:
@@ -13,14 +15,14 @@ public:
   inline bool empty() const { return start == end; }
   inline bool any() const { return start != end; }
 
-  const CircularBuffer<T, N>& operator <<(const T& t) {
+  CircularBuffer& operator <<(const T& t) {
     buffer[end] = t;
     ++end %= N;
     if (end == start) ++start %= N;
     return *this;
   }
-  
-  const CircularBuffer<T, N>& operator >>(volatile T& t) {
+    
+  CircularBuffer& operator >>(volatile T& t) {
     if (empty())
       t = 0;
     else {

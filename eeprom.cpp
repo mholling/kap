@@ -1,24 +1,24 @@
 #include "eeprom.h"
-#include "critical_section.h"
 #include <avr/io.h>
 #include "app.h"
+#include "safe.h"
 
-void Eeprom::Packet::operator ()(operation_value op, bool block) {
+void Eeprom::Packet::operator ()(operation_value op, bool block) volatile {
   wait();
-  {
-    CriticalSection cs;
-    operation = op;
-    Queable<Packet>::enqueue(); // TODO: qualifier needed?
-    if (at_head()) start();
-    volatile int m = 20000; // TODO: fix volatiles to remove this...
-  }
+  { Safe<Packet>(this)()(op); }
   if (block) wait();
 }
 
+void Eeprom::Packet::operator ()(operation_value op) {
+  operation = op;
+  enqueue();
+  if (at_head()) start();
+  // volatile int m = 20000; // TODO: fix volatiles to remove this...
+}
+
 void Eeprom::Packet::dequeue() {
-  CriticalSection cs;
   Queable<Packet>::dequeue();
-  if (any()) head().start();
+  if (any()) const_cast<Packet&>(head()).start();
 }
 
 void Eeprom::Packet::start() {

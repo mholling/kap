@@ -20,25 +20,30 @@
 
 class App {  
 public:
+  // TODO: any better way than using const_cast?
+  App() : estimate_attitude(const_cast<Vector&>(accelerometer.measure.vector), const_cast<Vector&>(magnetometer.measure.vector)) { }
+  
   // Hardware:
-  Scheduler scheduler;
-  Serial serial;
-  Timer timer;
-  Eeprom eeprom;
-  I2C i2c;
-  Magnetometer magnetometer;
-  // Accelerometer accelerometer;
-  // Analog analog;
-  // Spi spi;
-  // ShiftRegister shift_register;
-  // Gyros gyros;
-  // Pwm pwm;
-  // Motors motors;
+  volatile Scheduler scheduler;
+  volatile Serial serial;
+  volatile Timer timer;
+  volatile Eeprom eeprom;
+  volatile I2C i2c;
+  volatile Magnetometer magnetometer;
+  volatile Accelerometer accelerometer;
+  volatile Analog analog;
+  volatile Spi spi;
+  volatile ShiftRegister shift_register;
+  volatile Gyros gyros;
+  volatile Pwm pwm;
+  volatile Motors motors;
   
   // Tasks:
-  // EstimateAttitude estimate_attitude;
-  // KalmanFilters kalman_filters;
-  DiagnosticTask diagnostic;
+
+  volatile EstimateAttitude estimate_attitude;
+  volatile KalmanFilters kalman_filters;
+
+  volatile DiagnosticTask diagnostic;
   
   void run();
 };
@@ -46,6 +51,7 @@ public:
 // void toggle_led();
 
 extern App app;
+// TODO: maybe just have the entire app be volatile instead of all its members?
 
 extern "C" void __cxa_pure_virtual(void);
 extern "C" void atexit(void);

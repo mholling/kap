@@ -29,6 +29,6 @@ Timer::Diagnostic::~Diagnostic() {
 }
 
 ISR(TIMER2_COMPA_vect) {
-  app.timer.interrupt();
+  const_cast<Timer&>(app.timer).interrupt();
 }
 

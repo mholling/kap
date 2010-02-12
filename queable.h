@@ -1,7 +1,7 @@
 #ifndef __QUEABLE_H_
 #define __QUEABLE_H_
 
-#include "critical_section.h"
+#include "safe.h"
 
 template <typename T>
 class Queable {
@@ -12,12 +12,6 @@ protected:
   Queable* prev;
   Queable* next;
   static Queable* first;
-  
-  void insert_before(Queable* t) {
-    prev = t->prev;
-    next = t;
-    prev->next = next->prev = this;
-  }
   
   bool enqueue() {
     if (pending()) return false;
@@ -35,18 +29,23 @@ protected:
       next = prev = 0;
     }
   }
+
+  void insert_before(Queable* t) {
+    prev = t->prev;
+    next = t;
+    prev->next = next->prev = this;
+  }
   
 public:
   Queable() : prev(0), next(0) { }
 
   inline bool pending() { return next != 0; }
-  inline void wait() { for (bool done = false; done; done = pending()) ; }
   inline bool at_head() { return first == this; }
 
-  inline static T& head() { return *static_cast<T*>(first); }
+  inline static T& head() { return *static_cast<T*>(first); } // TODO: static methods volatile?
 
-  static bool empty() { return first == 0; }
-  static bool any() { return first != 0; }
+  inline static bool empty() { return first == 0; } // TODO: static methods volatile?
+  inline static bool any() { return first != 0; } // TODO: static methods volatile?
 };
 
 template <typename T> Queable<T>* Queable<T>::first(0);

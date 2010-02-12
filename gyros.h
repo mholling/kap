@@ -14,25 +14,25 @@ private:
 
 public:
   Gyros();
-  void init();
+  inline void init() volatile { normal_mode(); enable(); }
   
-  void disable();
-  void enable();
-  void normal_mode();
-  void test_mode();
+  void disable() volatile;
+  void enable() volatile;
+  void normal_mode() volatile;
+  void test_mode() volatile;
   
   void measure();
   
   class Gyro {
   private:
-    Analog::Channel& value;
-    Analog::Channel& reference;
+    volatile Analog::Channel& value;
+    volatile Analog::Channel& reference;
     const float range;
     
   public:
-    Gyro(Analog::Channel& value, Analog::Channel& reference, unsigned int range) : value(value), reference(reference), range(range) { }
-    float operator ()() const;
-    bool pending() { CriticalSection cs; return value.pending() || reference.pending(); }
+    Gyro(volatile Analog::Channel& value, volatile Analog::Channel& reference, unsigned int range) : value(value), reference(reference), range(range) { }
+    float operator ()() const volatile;
+    // bool pending() { return value.pending() || reference.pending(); }
     void wait() { value.wait(); reference.wait(); }
   };
   

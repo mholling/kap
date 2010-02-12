@@ -7,8 +7,8 @@ void EstimateAttitude::run() {
   app.accelerometer.measure.wait();
   app.magnetometer.measure.wait();
   
-  const Vector b1 = app.accelerometer.measure.vector.normalised(); // gravity
-  const Vector b2 = b1.cross(app.magnetometer.measure.vector).normalised(); // magnetic west
+  const Vector b1 = gravity.normalised();  // gravity
+  const Vector b2 = b1.cross(magnetism).normalised(); // magnetic west
   const Vector b3 = b1.cross(b2);
   
   const Vector b1r1a1_plus_b2r2a2(a2 * b2[2] - a1 * b1[1], a1 * b1[0], -a2 * b2[0]);

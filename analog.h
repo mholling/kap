@@ -2,38 +2,37 @@
 #define __ADC_H_
 
 #include "queable.h"
+#include "safe.h"
 
 class Analog {
 public:
   Analog();
-  inline void init() { }
-  const void interrupt();
+  inline void init() volatile { }
     
-  class Channel : protected Queable<Channel> {
+  class Channel : public Queable<Channel> {
   protected:
-    const unsigned int channel;
-    volatile unsigned int data;
+    const unsigned int number;
+    unsigned int data;
 
     void dequeue();
     void start();
     
   public:
-    Channel(unsigned int channel) : channel(channel) { }
+    Channel(unsigned int number) : number(number) { }
     
     void interrupt();
+    inline void convert() volatile { Safe<Channel>(this)().convert(); }
     void convert();
     
-    inline float operator ()() { return static_cast<float>(data) / 1024; }
+    inline float operator ()() volatile { return static_cast<float>(data) / 1024; }
 
-    inline bool pending() { return Queable<Channel>::pending(); }
-    inline void wait() { Queable<Channel>::wait(); }
-    inline static Channel& head() { return Queable<Channel>::head(); }
+    inline void wait() volatile { do { } while (next != 0); }
   };
   
-  Channel yaw;
-  Channel pitch;
-  Channel roll;
-  Channel ref;
+  volatile Channel yaw;
+  volatile Channel pitch;
+  volatile Channel roll;
+  volatile Channel ref;
 };
 
 #endif

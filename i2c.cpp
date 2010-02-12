@@ -3,7 +3,7 @@
 #include <avr/io.h>
 #include <util/twi.h>
 #include "serial.h"
-#include "critical_section.h"
+#include "safe.h"
 
 I2C::I2C() {
   PORTC |= _BV(PINC4) | _BV(PINC5); // set them high to enable pullups
@@ -12,15 +12,16 @@ I2C::I2C() {
   TWCR = _BV(TWEN) | _BV(TWIE) | _BV(TWINT);
 }
 
-void I2C::Packet::operator ()(bool block) {
-  {
-    CriticalSection cs;
-    if (Queable<Packet>::enqueue()) { // TODO: qualifier needed?
-      index = 0;
-      if (at_head()) start();
-    }
-  }
+void I2C::Packet::operator ()(bool block) volatile {
+  { Safe<Packet>(this)()(); }
   if (block) wait();
+}
+
+void I2C::Packet::operator()() {
+  if (enqueue()) {
+    index = 0;
+    if (at_head()) start();
+  }
 }
 
 const void I2C::Packet::start() {
@@ -97,7 +98,6 @@ void I2C::Packet::interrupt() {
 }
 
 void I2C::Packet::dequeue() {
-  CriticalSection cs;
   Queable<Packet>::dequeue();
   if (any()) head().start();
 }

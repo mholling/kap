@@ -8,8 +8,8 @@ class KalmanFilters {
 private:
   class Filter : public Scheduler::Task {
   private:
-    const Gyros::Gyro& gyro;
-    const volatile float& measured;
+    const volatile Gyros::Gyro& gyro;
+    const float& measured;
   
     float z1, z2;     // measured rate, angle
     float x1, x2, x3; // estimated angle, rate, bias
@@ -22,7 +22,7 @@ private:
     void correct();
 
   public:
-    Filter(const Gyros::Gyro& gyro, const float& measured);
+    Filter(const volatile Gyros::Gyro& gyro, const float& measured);
     void run();
     
     float angle() const { return x1; }

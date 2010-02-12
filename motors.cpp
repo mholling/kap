@@ -1,22 +1,17 @@
 #include "motors.h"
-#include "pwm.h"
-#include "app.h"
 #include <avr/io.h>
+#include "app.h"
 
 Motors::Motors() : yaw(OCR1A, PORTD, PIND7, PORTB, PINB0, false), pitch(OCR1B, PORTD, PIND5, PORTD, PIND4, false) {
   DDRD |= _BV(DDD4) | _BV(DDD5) | _BV(DDD7);
   DDRB |= _BV(DDB0);
 }
 
-void Motors::init() {
-  disable();
-}
-
-void Motors::disable() {
+void Motors::disable() volatile {
   app.shift_register.clear_bit(standby_shift_register_bit);
 }
 
-void Motors::enable() {
+void Motors::enable() volatile {
   app.shift_register.set_bit(standby_shift_register_bit);
 }
 
@@ -30,6 +25,9 @@ void Motors::Motor::set(float value) {
   }
   const float absolute_value = value < 0.0 ? -value : value;
   const float clamped_value = absolute_value > 1.0 ? 1.0 : absolute_value;
-  CriticalSection cs;
-  pwm_reg = Pwm::resolution * clamped_value;
+  const unsigned int top = Pwm::resolution * clamped_value;
+  const unsigned char sreg = SREG;
+  cli();
+  pwm_reg = top;
+  SREG = sreg;
 }

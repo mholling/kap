@@ -2,28 +2,30 @@
 #define __SERIAL_H_
 
 #include "circular_buffer.h"
+#include "safe.h"
 #include "vector.h"
 
 class Serial {
 protected:
-  CircularBuffer<char, 128> buffer; // TODO: drop buffer size?
+  CircularBuffer<char, 128> buffer;
   
 public:
   Serial();
   
   inline void interrupt();
   
+  inline void send(const char *data) volatile { Safe<Serial>(this)().send(data); }
   void send(const char *data);
-  void debug(const char * const s, char b);
-  void debug(const char * const s, bool b);
-  void debug(const char * const s, int b);
-  void debug_b(const char * const s, char b);
-  void debug(const char * const s, float f);
-  void debug(const char * const s, const Vector v);
-  void debug(float f);
-  void debug(int i);
-  void debug(const Vector v);
-  void line();
+  void debug(const char * const s, char b) volatile;
+  void debug(const char * const s, bool b) volatile;
+  void debug(const char * const s, int b) volatile;
+  void debug_b(const char * const s, char b) volatile;
+  void debug(const char * const s, float f) volatile;
+  void debug(const char * const s, const Vector v) volatile;
+  void debug(float f) volatile;
+  void debug(int i) volatile;
+  void debug(const Vector v) volatile;
+  void line() volatile;
 };
 
 #endif

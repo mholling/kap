@@ -10,13 +10,13 @@ private:
   enum { i2c_address = 0x1e, config_registers = 0x00, mode_register = 0x02, measurement_registers = 0x03 };
 
   class ConfigPacket : public I2C::WritePacket {
-    volatile unsigned char data[2];
+    unsigned char data[2];
   public:
     ConfigPacket(unsigned char a = 0x10, unsigned char b = 0x20) : I2C::WritePacket(data, i2c_address, config_registers, 2) { data[0] = a; data[1] = b; }
   };
   
   class ModePacket : public I2C::WritePacket {
-    volatile unsigned char data[1];
+    unsigned char data[1];
   public:
     enum mode_value { sleep = 0x03, idle = 0x02, single_shot = 0x01, continuous = 0x00 };
     ModePacket(mode_value mode) : I2C::WritePacket(data, i2c_address, mode_register, 1) { data[0] = mode; }
@@ -24,7 +24,7 @@ private:
     
   class MeasurementPacket : public I2C::ReadPacket {
   private:
-    volatile unsigned char data[7];
+    unsigned char data[7];
     inline int x() { return static_cast<int>((static_cast<unsigned int>(data[0]) << 8) | static_cast<unsigned int>(data[1])); }
     inline int y() { return static_cast<int>((static_cast<unsigned int>(data[2]) << 8) | static_cast<unsigned int>(data[3])); }
     inline int z() { return static_cast<int>((static_cast<unsigned int>(data[4]) << 8) | static_cast<unsigned int>(data[5])); }
@@ -49,15 +49,17 @@ private:
     inline char status() { return data[6]; }
   };
     
-  ConfigPacket configure;
-  ModePacket sleep, wake;
+  volatile ConfigPacket configure;
+  volatile ModePacket sleep;
+  volatile ModePacket wake;
 
 public:
-  Magnetometer() : sleep(ModePacket::sleep), wake(ModePacket::continuous), calibrate(measure.vector, 13215209.0, 0.97) { }
-  void init() { configure(); wake(); }
+  Magnetometer() : sleep(ModePacket::sleep), wake(ModePacket::continuous), calibrate(const_cast<Vector&>(measure.vector), 13215209.0, 0.97) { }
+  // TODO: const_cast the best way to go?
+  inline void init() volatile { configure(); wake(); }
   
-  MeasurementPacket measure;
-  CalibrateTask calibrate;
+  volatile MeasurementPacket measure;
+  volatile CalibrateTask calibrate;
 };
 
 #endif

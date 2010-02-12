@@ -2,13 +2,14 @@
 #define __EEPROM_H_
 
 #include "queable.h"
+#include "safe.h"
 
 class Eeprom {
 public:
   Eeprom() { }
-  inline void init() { }
+  inline void init() volatile { }
   
-  class Packet : protected Queable<Packet> {
+  class Packet : public Queable<Packet> {
   public:
     enum operation_value { reading, writing };
 
@@ -16,13 +17,14 @@ public:
     
     void interrupt();
     
-    inline void write(bool block = false) { (*this)(writing, block); }
-    inline void  read(bool block = false) { (*this)(reading, block); }
+    inline void write(bool block = false) volatile { (*this)(writing, block); }
+    inline void  read(bool block = false) volatile { (*this)(reading, block); }
     
-    inline bool pending() { return Queable<Packet>::pending(); }
-    inline void wait() { Queable<Packet>::wait(); }
-    inline static Packet& head() { return Queable<Packet>::head(); }
+    inline void wait() volatile { do { } while (next); }
     
+    template <typename T>
+    inline Packet& operator <<(const T& t) volatile { return Safe<Packet>(this)() << t; }
+      
     template <typename T>
     Packet& operator <<(const T& t) { // TODO: disallow if pending?
       const char * c = reinterpret_cast<const char *>(&t);
@@ -31,6 +33,9 @@ public:
       return *this;
     }
 
+    template <typename T>
+    inline Packet& operator >>(T& t) volatile { return Safe<Packet>(this)() >> t; }
+    
     template <typename T>
     Packet& operator >>(T& t) { // TODO: disallow if pending?
       char * c = reinterpret_cast<char *>(&t);
@@ -51,7 +56,8 @@ public:
     operation_value operation;
     int unsigned index;
 
-    void operator ()(operation_value op, bool block);
+    void operator ()(operation_value op, bool block) volatile;
+    void operator ()(operation_value op);
   };
 };
 

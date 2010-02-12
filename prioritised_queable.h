@@ -2,7 +2,6 @@
 #define __PRIORITISED_QUEABLE_H_
 
 #include "queable.h"
-#include "critical_section.h"
 
 template <typename T>
 class PrioritisedQueable : public Queable<T> {

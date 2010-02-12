@@ -8,10 +8,10 @@ class Motors {
   
 public:
   Motors();
-  void init();
+  inline void init() volatile { disable(); }
   
-  void disable();
-  void enable();
+  void disable() volatile;
+  void enable() volatile;
   
   class Motor {
   private:

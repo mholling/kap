@@ -2,24 +2,28 @@
 #define __SCHEDULER_H_
 
 #include "prioritised_queable.h"
+#include "safe.h"
+#include <avr/interrupt.h>
 
 class Scheduler {
 public:
   class Task : protected PrioritisedQueable<Task> {
   private:
     void start();
+    void dequeue();
     
   public:
     Task(unsigned int level) : PrioritisedQueable<Task>(level) { }
     
+    inline void operator ()() volatile { Safe<Task>(this)()(); }
     void operator ()();
     virtual void run() = 0;
     
-    inline bool pending() { return PrioritisedQueable<Task>::pending(); }
-    inline static Task& head() { return PrioritisedQueable<Task>::head(); }
+    inline void wait() volatile { do { } while (next != 0); }
+    // inline static volatile Task& head() { return PrioritisedQueable<Task>::head(); }
   };
 
-  inline void init() { sei(); }
+  inline void init() volatile { sei(); }
 };
 
 #endif

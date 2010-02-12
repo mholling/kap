@@ -10,9 +10,9 @@ protected:
   
 public:
   Matrix() { for (int i = 0; i < M * N; i++) data[i] = 0.0; }
-  Matrix(const Matrix<M, N>& matrix) { operator =(matrix); }
+  Matrix(const Matrix& matrix) { operator =(matrix); }
   
-  const Matrix<M, N>& operator =(const Matrix<M, N>& rhs) { for (int i = 0; i < M * N; i++) data[i] = rhs[i]; return *this; }
+  const Matrix& operator =(const Matrix& rhs) { for (int i = 0; i < M * N; i++) data[i] = rhs[i]; return *this; }
   
   inline float& operator ()(int m, int n) { return data[m * N + n]; }
   inline const float& operator ()(int m, int n) const { return data[m * N + n]; }
@@ -20,17 +20,17 @@ public:
   inline float& operator [](int m) { return data[m]; }
   inline const float& operator [](int m) const { return data[m]; }
 
-  const Matrix<M, N>& operator +=(const Matrix<M, N>& rhs) { for (int i = 0; i < M * N; i++) data[i] += rhs[i]; return *this; }
-  const Matrix<M, N> operator +(const Matrix<M, N>& rhs) const { return Matrix<M, N>(*this) += rhs; }
+  const Matrix& operator +=(const Matrix& rhs) { for (int i = 0; i < M * N; i++) data[i] += rhs[i]; return *this; }
+  const Matrix operator +(const Matrix& rhs) const { return Matrix(*this) += rhs; }
 
-  const Matrix<M, N>& operator -=(const Matrix<M, N>& rhs) { for (int i = 0; i < M * N; i++) data[i] -= rhs[i]; return *this; }
-  const Matrix<M, N> operator -(const Matrix<M, N>& rhs) const { return Matrix<M, N>(*this) -= rhs; }
+  const Matrix& operator -=(const Matrix& rhs) { for (int i = 0; i < M * N; i++) data[i] -= rhs[i]; return *this; }
+  const Matrix operator -(const Matrix& rhs) const { return Matrix(*this) -= rhs; }
   
-  const Matrix<M, N>& operator *=(float k) { for (int i = 0; i < M * N; i++) data[i] *= k; return *this; }
-  const Matrix<M, N> operator *(float k) const { return Matrix<M, N>(*this) *= k; }
+  const Matrix& operator *=(float k) { for (int i = 0; i < M * N; i++) data[i] *= k; return *this; }
+  const Matrix operator *(float k) const { return Matrix(*this) *= k; }
   
-  const Matrix<M, N>& operator /=(float k) { for (int i = 0; i < M * N; i++) data[i] /= k; return *this; }
-  const Matrix<M, N> operator /(float k) const { return Matrix<M, N>(*this) /= k; }
+  const Matrix& operator /=(float k) { for (int i = 0; i < M * N; i++) data[i] /= k; return *this; }
+  const Matrix operator /(float k) const { return Matrix(*this) /= k; }
 
   template <int P>
   const Matrix<M, P> operator *(const Matrix<N, P>& rhs) const {
@@ -42,13 +42,13 @@ public:
     return result;
   }
 
-  const Matrix<M, N>& operator *=(const Matrix<N, N>& rhs) { return (*this) = (*this) * rhs; }
+  const Matrix& operator *=(const Matrix<N, N>& rhs) { return (*this) = (*this) * rhs; }
   
   const Matrix<N, M>& invert();
   const Matrix<N, M> inverse() const { return Matrix<N, M>(*this).invert(); }
 
-  const Matrix<M, N>& operator /=(const Matrix<N, N>& rhs) { return (*this) *= rhs.inverse(); }
-  const Matrix<M, N> operator /(const Matrix<N, N>& rhs) const { return Matrix<M, N>(*this) /= rhs; }
+  const Matrix& operator /=(const Matrix<N, N>& rhs) { return (*this) *= rhs.inverse(); }
+  const Matrix operator /(const Matrix<N, N>& rhs) const { return Matrix(*this) /= rhs; }
   
   const Matrix<N, M> t() const {
     Matrix<N, M> result;
@@ -59,12 +59,12 @@ public:
   }
   
   // Columns:
-  const Matrix<M, N> cross(const Matrix<M, N>& rhs) const;
-  float dot(const Matrix<M, N>& rhs) const { return (t() * rhs)[0]; } 
+  const Matrix cross(const Matrix& rhs) const;
+  float dot(const Matrix& rhs) const { return (t() * rhs)[0]; } 
   float sqabs() const { return dot(*this); }
   float abs() const { return sqrt(sqabs()); }
-  Matrix<M, N>& normalise() { *this /= abs(); return *this; }
-  const Matrix<M, N> normalised() const { return Matrix<M, N>(*this).normalise(); }
+  Matrix& normalise() { *this /= abs(); return *this; }
+  const Matrix normalised() const { return Matrix(*this).normalise(); }
 
   // Vectors:
   Matrix(float x, float y, float z) { data[0] = x; data[1] = y; data[2] = z; }  

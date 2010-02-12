@@ -1,9 +1,7 @@
 #include "scheduler.h"
-#include "critical_section.h"
 
 void Scheduler::Task::operator ()() {
-  CriticalSection cs;
-  if (enqueue()) // TODO: qualifier needed?
+  if (enqueue())
     if (at_head()) start();
 }
 
@@ -12,5 +10,9 @@ void Scheduler::Task::start() {
   run();
   cli();
   dequeue();
-  if (any()) head().start();
+}
+
+void Scheduler::Task::dequeue() {
+  PrioritisedQueable<Task>::dequeue();
+  if (any()) const_cast<Task&>(head()).start();
 }
