@@ -5,49 +5,34 @@
 
 void Eeprom::Packet::operator ()(operation_value op, bool block) volatile {
   wait();
-  { Safe<Packet>(this)()(op); }
-  if (block) wait();
-}
-
-void Eeprom::Packet::operator ()(operation_value op) {
   operation = op;
-  enqueue();
-  if (at_head()) start();
-  // volatile int m = 20000; // TODO: fix volatiles to remove this...
+  enqueue(block);
 }
 
-void Eeprom::Packet::dequeue() {
-  Queable<Packet>::dequeue();
-  if (any()) const_cast<Packet&>(head()).start();
-}
-
-void Eeprom::Packet::start() {
+void Eeprom::Packet::initiate() {
   index = 0;
   EECR |= _BV(EERIE);
 }
 
-void Eeprom::Packet::stop() {
+void Eeprom::Packet::terminate() {
   index = 0;
   EECR &= ~_BV(EERIE);
 }
 
-void Eeprom::Packet::interrupt() {
+bool Eeprom::Packet::process() {
+  if (index >= length) return true;
   EEAR = address + index;
-  if (index < length) {
-    switch (operation) {
-      case reading:
-        EECR |= _BV(EERE);
-        buffer[index++] = EEDR;
-        break;
-      case writing:
-        EEDR = buffer[index++];
-        EECR |= _BV(EEMPE);
-        EECR |= _BV(EEPE);
-    }
-  } else {
-    stop();
-    dequeue();
+  switch (operation) {
+    case reading:
+      EECR |= _BV(EERE);
+      buffer[index++] = EEDR;
+      break;
+    case writing:
+      EEDR = buffer[index++];
+      EECR |= _BV(EEMPE);
+      EECR |= _BV(EEPE);
   }
+  return false;
 }
 
 ISR(EE_READY_vect) {

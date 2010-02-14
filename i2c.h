@@ -1,27 +1,31 @@
 #ifndef __I2C_H_
 #define __I2C_H_
 
-#include "queable.h"
+// TODO: reviews inlines everywhere
 
-class I2C {  
+#include "interrupt_driven.h"
+
+class I2C : public InterruptDriven {  
 public:
   enum { frequency = 300000 }; // cannot use 400000 as TWSTO doesn't get released and a hang results
   
   I2C();
-  inline void init() volatile { }
   
-  class Packet : public Queable<Packet> {
+  class Packet : public Item {
   protected:
     enum read_write_value { read, write };
-    inline void dequeue() volatile { Safe<Packet>(this)().dequeue(); }
-    void dequeue();
-    inline static const void start();
-    inline static const void stop();
-    inline static const void ack();
-    inline static const void nack();
-    inline static const void release();
+    
+    void initiate();
+    bool process();
+    void terminate();
 
   private:
+    static const void start();
+    static const void stop();
+    static const void ack();
+    static const void nack();
+    static const void release();
+    
     unsigned char * const buffer;
     const unsigned int length;
     const read_write_value read_write;
@@ -32,11 +36,7 @@ public:
   public:    
     Packet(unsigned char * buffer, unsigned char address, unsigned char reg, unsigned int length, read_write_value read_write) : buffer(buffer), length(length), read_write(read_write), index(0), address(address), reg(reg) { }
     
-    void interrupt();
-    void operator ()(bool block = false) volatile;
-    void operator ()();
-    
-    inline void wait() volatile { do { } while (next != 0); }
+    void operator ()(bool block = false) volatile { wait(); enqueue(block); }
   };
   
   class ReadPacket : public Packet {

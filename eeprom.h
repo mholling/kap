@@ -1,27 +1,21 @@
 #ifndef __EEPROM_H_
 #define __EEPROM_H_
 
-#include "queable.h"
-#include "safe.h"
+#include "interrupt_driven.h"
 
-class Eeprom {
+class Eeprom : public InterruptDriven {
 public:
   Eeprom() { }
-  inline void init() volatile { }
   
-  class Packet : public Queable<Packet> {
+  class Packet : public Item {
   public:
     enum operation_value { reading, writing };
 
     Packet(unsigned int address, char * buffer, unsigned int length) : address(address), buffer(buffer), length(length), operation(reading), index(0) { }
     
-    void interrupt();
-    
     inline void write(bool block = false) volatile { (*this)(writing, block); }
     inline void  read(bool block = false) volatile { (*this)(reading, block); }
-    
-    inline void wait() volatile { do { } while (next); }
-    
+        
     template <typename T>
     inline Packet& operator <<(const T& t) volatile { return Safe<Packet>(this)() << t; }
       
@@ -45,9 +39,9 @@ public:
     }
 
   protected:
-    void dequeue();
-    void start();
-    void stop();
+    void initiate();
+    bool process();
+    void terminate();
     
   private:
     const unsigned int address;
@@ -57,7 +51,6 @@ public:
     int unsigned index;
 
     void operator ()(operation_value op, bool block) volatile;
-    void operator ()(operation_value op);
   };
 };
 

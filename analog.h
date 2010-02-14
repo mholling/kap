@@ -1,32 +1,26 @@
 #ifndef __ADC_H_
 #define __ADC_H_
 
-#include "queable.h"
-#include "safe.h"
+#include "interrupt_driven.h"
 
-class Analog {
+class Analog : public InterruptDriven {
 public:
   Analog();
-  inline void init() volatile { }
     
-  class Channel : public Queable<Channel> {
+  class Channel : public Item {
   protected:
     const unsigned int number;
     unsigned int data;
 
-    void dequeue();
-    void start();
+    void initiate();
+    bool process();
+    void terminate();
     
   public:
     Channel(unsigned int number) : number(number) { }
     
-    void interrupt();
-    inline void convert() volatile { Safe<Channel>(this)().convert(); }
-    void convert();
-    
+    inline void convert(bool block = false) volatile { wait(); enqueue(block); }    
     inline float operator ()() volatile { return static_cast<float>(data) / 1024; }
-
-    inline void wait() volatile { do { } while (next != 0); }
   };
   
   volatile Channel yaw;

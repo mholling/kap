@@ -7,24 +7,17 @@ Analog::Analog() : yaw(0), pitch(1), roll(2), ref(3) {
   DIDR0 = _BV(ADC3D) | _BV(ADC2D) | _BV(ADC1D) | _BV(ADC0D);
 }
 
-void Analog::Channel::convert() {
-  if (enqueue())
-    if (at_head()) start();
-}
-
-void Analog::Channel::dequeue() {
-  Queable<Channel>::dequeue();
-  if (any()) const_cast<Channel&>(head()).start();
-}
-
-void Analog::Channel::start() {
+inline void Analog::Channel::initiate() {
   ADMUX = _BV(REFS0) | (number & 0x0f);
   ADCSRA |= _BV(ADSC);
 }
 
-void Analog::Channel::interrupt() {
+inline bool Analog::Channel::process() {
+  return true;
+}
+
+inline void Analog::Channel::terminate() {
   data = ADCL + (ADCH << 8);
-  dequeue();
 }
 
 ISR(ADC_vect) {

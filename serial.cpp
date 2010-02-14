@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include "app.h"
 
+// TODO: reduce temp buffer sizes in these methods!
+
 Serial::Serial() {
   UBRR0 = F_CPU / 38400 / 16 - 1;   // 38.4k baud rate (0.2% error @ 8Mhz)
 	UCSR0C = (3 << UCSZ00);           // 8-bit characters
@@ -62,13 +64,13 @@ void Serial::debug(const char * const s, const Vector v) volatile {
 }
 
 void Serial::debug(float f) volatile {
-  char temp[64];
+  char temp[13];
   sprintf(temp, "%+.4e ", (double)f);
   send(temp);
 }
 
 void Serial::debug(int i) volatile {
-  char temp[64];
+  char temp[8];
   sprintf(temp, "%+05i ", i);
   send(temp);
 }

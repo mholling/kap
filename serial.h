@@ -7,7 +7,7 @@
 
 class Serial {
 protected:
-  CircularBuffer<char, 128> buffer;
+  CircularBuffer<char, 64> buffer;
   
 public:
   Serial();

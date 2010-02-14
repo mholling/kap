@@ -21,7 +21,7 @@
 class App {  
 public:
   // TODO: any better way than using const_cast?
-  App() : estimate_attitude(const_cast<Vector&>(accelerometer.measure.vector), const_cast<Vector&>(magnetometer.measure.vector)) { }
+  // App() : estimate_attitude(const_cast<Vector&>(accelerometer.measure.vector), const_cast<Vector&>(magnetometer.measure.vector)) { }
   
   // Hardware:
   volatile Scheduler scheduler;
@@ -30,18 +30,19 @@ public:
   volatile Eeprom eeprom;
   volatile I2C i2c;
   volatile Magnetometer magnetometer;
+
   volatile Accelerometer accelerometer;
   volatile Analog analog;
-  volatile Spi spi;
-  volatile ShiftRegister shift_register;
   volatile Gyros gyros;
-  volatile Pwm pwm;
-  volatile Motors motors;
+  // volatile Spi spi;
+  // volatile ShiftRegister shift_register;
+  // volatile Pwm pwm;
+  // volatile Motors motors;
   
   // Tasks:
 
-  volatile EstimateAttitude estimate_attitude;
-  volatile KalmanFilters kalman_filters;
+  // volatile EstimateAttitude estimate_attitude;
+  // volatile KalmanFilters kalman_filters;
 
   volatile DiagnosticTask diagnostic;
   
@@ -57,15 +58,13 @@ extern "C" void __cxa_pure_virtual(void);
 extern "C" void atexit(void);
 
 
-  
-class EepromTest : public Eeprom::Packet {
-public:
-  char data[6];
-  
-public:
-  EepromTest(unsigned int address) : Eeprom::Packet(address, data, 6) { }
-};
-
+// class EepromTest : public Eeprom::Packet {
+// public:
+//   char data[6];
+//   
+// public:
+//   EepromTest(unsigned int address) : Eeprom::Packet(address, data, 6) { }
+// };
 
 
 #endif

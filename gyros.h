@@ -21,7 +21,7 @@ public:
   void normal_mode() volatile;
   void test_mode() volatile;
   
-  void measure();
+  void measure() volatile;
   
   class Gyro {
   private:
@@ -33,7 +33,7 @@ public:
     Gyro(volatile Analog::Channel& value, volatile Analog::Channel& reference, unsigned int range) : value(value), reference(reference), range(range) { }
     float operator ()() const volatile;
     // bool pending() { return value.pending() || reference.pending(); }
-    void wait() { value.wait(); reference.wait(); }
+    // void wait() { value.wait(); reference.wait(); }
   };
   
   Gyro yaw;

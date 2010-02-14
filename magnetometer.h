@@ -29,7 +29,9 @@ private:
     inline int y() { return static_cast<int>((static_cast<unsigned int>(data[2]) << 8) | static_cast<unsigned int>(data[3])); }
     inline int z() { return static_cast<int>((static_cast<unsigned int>(data[4]) << 8) | static_cast<unsigned int>(data[5])); }
   protected:
-    void dequeue() {
+    void terminate() {
+      I2C::ReadPacket::terminate();
+      
       // // for PCB
       // vector[0] =  static_cast<float>(y());
       // vector[1] = -static_cast<float>(z());
@@ -39,8 +41,6 @@ private:
       vector[0] = -static_cast<float>(y());
       vector[1] = -static_cast<float>(z());
       vector[2] =  static_cast<float>(x());
-      
-      I2C::ReadPacket::dequeue();
     }
   public:
     MeasurementPacket() : I2C::ReadPacket(data, i2c_address, measurement_registers, 7) { }

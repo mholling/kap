@@ -6,6 +6,8 @@
 #include "vector.h"
 #include <math.h>
 
+// TODO: add a calibration task for the accelerometer as well?
+
 class Accelerometer {
 private:
   enum { i2c_address = 0x1d, bw_rate_reg = 0x2c, power_ctl_reg = 0x2d, int_enable_reg = 0x2e, data_format_reg = 0x31, datax0_reg = 0x32 };
@@ -49,8 +51,8 @@ private:
     inline int y() { return reinterpret_cast<int *>(data)[1]; }
     inline int z() { return reinterpret_cast<int *>(data)[2]; }
   protected:
-    void dequeue() {
-      I2C::ReadPacket::dequeue();
+    void terminate() {
+      I2C::ReadPacket::terminate();
       
       // // for PCB:
       // vector.x =  static_cast<float>(y());
