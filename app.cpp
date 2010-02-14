@@ -10,9 +10,9 @@ void App::run() {
   accelerometer.init();
   analog.init();
   gyros.init();
+  spi.init();
+  shift_register.init();
   
-  // spi.init();
-  // shift_register.init();
   // pwm.init();
   // motors.init();
   

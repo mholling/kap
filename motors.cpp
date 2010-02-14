@@ -29,5 +29,5 @@ void Motors::Motor::set(float value) {
   const unsigned char sreg = SREG;
   cli();
   pwm_reg = top;
-  SREG = sreg;
+  SREG = sreg; // TODO: replace this 16-bit register access with a use of Safe<> template?
 }

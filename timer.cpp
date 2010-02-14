@@ -16,10 +16,9 @@ unsigned long int Timer::timestamp() {
 void Timer::interrupt() {
   count++;
   
-  if (count % (frequency / 2) == 0) app.diagnostic();
+  if (count % (frequency / 10) == 0) app.diagnostic();
 
   // app.gyros.measure();
-  
   // app.magnetometer.measure();
   // app.magnetometer.calibrate();
   // app.accelerometer.measure();

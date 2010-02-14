@@ -20,8 +20,9 @@
 
 class App {  
 public:
-  // TODO: any better way than using const_cast?
-  // App() : estimate_attitude(const_cast<Vector&>(accelerometer.measure.vector), const_cast<Vector&>(magnetometer.measure.vector)) { }
+  // TODO: any better way than using const_cast? (i.e. review use of volatile at this level)
+  
+  App() : estimate_attitude(const_cast<Vector&>(accelerometer.measure.vector), const_cast<Vector&>(magnetometer.measure.vector)) { }
   
   // Hardware:
   volatile Scheduler scheduler;
@@ -30,20 +31,18 @@ public:
   volatile Eeprom eeprom;
   volatile I2C i2c;
   volatile Magnetometer magnetometer;
-
   volatile Accelerometer accelerometer;
   volatile Analog analog;
   volatile Gyros gyros;
-  // volatile Spi spi;
-  // volatile ShiftRegister shift_register;
-  // volatile Pwm pwm;
-  // volatile Motors motors;
+  volatile Spi spi;
+  volatile ShiftRegister shift_register;  
+  volatile Pwm pwm;
+  volatile Motors motors;
   
   // Tasks:
 
-  // volatile EstimateAttitude estimate_attitude;
-  // volatile KalmanFilters kalman_filters;
-
+  volatile EstimateAttitude estimate_attitude;
+  volatile KalmanFilters kalman_filters;
   volatile DiagnosticTask diagnostic;
   
   void run();

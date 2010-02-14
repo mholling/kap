@@ -9,23 +9,20 @@ public:
   ShiftRegister();
   void init() volatile { send_data(); };
   
-  void set_bit(unsigned char n) volatile { Safe<ShiftRegister>(this)().set_bit(n); }
-  void clear_bit(unsigned char n) volatile { Safe<ShiftRegister>(this)().clear_bit(n); }
-  
-  void set_bit(unsigned char n);
-  void clear_bit(unsigned char n);
+  void set_bit(unsigned char n) volatile;
+  void clear_bit(unsigned char n) volatile;
   
 private:
   unsigned char data;
   
   class SendData : public Spi::WritePacket {
   private:
-    const void toggle_select();
+    void toggle_select();
   public:
     SendData(const unsigned char& data) : Spi::WritePacket(&data, 1) { }
   };
   
-  SendData send_data;
+  volatile SendData send_data;
 };
 
 #endif

@@ -1,26 +1,22 @@
 #ifndef __SPI_H_
 #define __SPI_H_
 
-#include "queable.h"
+#include "interrupt_driven.h"
 
-class Spi {
+class Spi : public InterruptDriven {
 public:
   Spi();
-  inline void init() volatile { }
   
-  class Packet : public Queable<Packet> {
+  class Packet : public Item {
   protected:
-    void dequeue();
-    void start();    
+    void initiate();
+    bool process();
+    void terminate();
 
   public:
     Packet(const unsigned char *tx_buffer, unsigned int tx_length, unsigned char *rx_buffer, unsigned int rx_length) : tx_buffer(tx_buffer), tx_length(tx_length), rx_buffer(rx_buffer), rx_length(rx_length) { }
     
-    void interrupt();
-    void operator ()(bool block = false) volatile;
-    void operator ()();
-    
-    inline void wait() volatile { do { } while (next != 0); }
+    void operator ()(bool block = false) volatile { wait(); enqueue(block); }
 
   private:
     const unsigned char * const tx_buffer;
@@ -28,7 +24,7 @@ public:
     unsigned char * const rx_buffer;
     const unsigned int rx_length;
     unsigned int index;
-    virtual const void toggle_select() = 0;    
+    virtual void toggle_select() = 0;    
   };
   
   class ReadPacket : public Packet {
