@@ -11,10 +11,13 @@ public:
   public:
     enum operation_value { reading, writing };
 
-    Packet(unsigned int address, char * buffer, unsigned int length) : address(address), buffer(buffer), length(length), operation(reading), index(0) { }
+    Packet(unsigned int address, char * buffer, unsigned int length) : address(address), buffer(buffer), length(length), operation(reading), index(0), checksum(0) { }
     
     inline void write(bool block = false) volatile { (*this)(writing, block); }
     inline void  read(bool block = false) volatile { (*this)(reading, block); }
+    
+    inline bool valid() volatile { return Safe<Packet>(this)().valid(); }
+    bool valid();
         
     template <typename T>
     inline Packet& operator <<(const T& t) volatile { return Safe<Packet>(this)() << t; }
@@ -23,7 +26,7 @@ public:
     Packet& operator <<(const T& t) { // TODO: disallow if pending?
       const char * c = reinterpret_cast<const char *>(&t);
       for (unsigned int n = 0; n < sizeof(T); n++, c++)
-        buffer[index++] = *c;
+        checksum ^= (buffer[index++] = *c);
       return *this;
     }
 
@@ -49,8 +52,9 @@ public:
     const unsigned int length;
     operation_value operation;
     int unsigned index;
+    char checksum;
 
-    void operator ()(operation_value op, bool block) volatile;
+    void operator ()(operation_value op, bool block) volatile; // TODO: need non-volatile version?
   };
 };
 
