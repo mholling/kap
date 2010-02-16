@@ -22,7 +22,7 @@ public:
     
     inline void convert(bool block = false) volatile { enqueue(block); }
     
-    inline float operator ()() volatile { return Safe<Channel>(this)()(); }
+    inline float operator ()() volatile { return (*Safe<Channel>(this))(); }
     inline float operator ()() { return static_cast<float>(data) / 1024; }
   };
 };

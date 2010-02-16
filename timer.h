@@ -12,7 +12,7 @@ public:
   Timer();
   inline void init() volatile { }
   void interrupt();
-  unsigned long int timestamp() volatile { return Safe<Timer>(this)().timestamp(); }
+  unsigned long int timestamp() volatile { return Safe<Timer>(this)->timestamp(); }
   unsigned long int timestamp();
   
   class Diagnostic {

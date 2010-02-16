@@ -27,7 +27,7 @@ void Gyros::measure() {
   ref_channel.convert();
 }
 
-float Gyros::Gyro::operator ()() const volatile { return Safe<const Gyro>(this)()(); }
+float Gyros::Gyro::operator ()() const volatile { return (*Safe<const Gyro>(this))(); }
 
 float Gyros::Gyro::operator ()() const {
   return (value() / reference() - 1.0) * range;

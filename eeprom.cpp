@@ -11,7 +11,7 @@ bool Eeprom::Packet::valid() {
 }
 
 bool Eeprom::Packet::operator ()(operation_value op, bool block) volatile {
-  if (Safe<Packet>(this)()(op)) {
+  if ((*Safe<Packet>(this))(op)) {
     if (block) wait();
     return true;
   } else return false;

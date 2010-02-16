@@ -16,7 +16,7 @@ public:
   
   inline void interrupt();
   
-  void send(const char *data) volatile { Safe<Serial>(this)().send(data); }
+  void send(const char *data) volatile { Safe<Serial>(this)->send(data); }
   void debug(const char * const s, char b) volatile;
   void debug(const char * const s, bool b) volatile;
   void debug(const char * const s, int b) volatile;

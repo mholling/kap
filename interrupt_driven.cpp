@@ -2,8 +2,7 @@
 #include "safe.h"
 
 bool InterruptDriven::Item::enqueue(bool block) volatile {
-  bool success;
-  { success = Safe<Item>(this)().enqueue(); }
+  bool success = Safe<Item>(this)->enqueue();
   if (success && block) wait();
   return success;
 }

@@ -10,15 +10,16 @@ private:
   Safe(const Safe&);
   Safe& operator =(const Safe&);
   
-  T& t;
+  T * const t;
   const unsigned char sreg;
   
 public:
-  inline Safe(volatile T& t) : t(const_cast<T&>(t)), sreg(SREG) { cli(); }
-  inline Safe(volatile T* t) : t(*const_cast<T*>(t)), sreg(SREG) { cli(); }
+  inline Safe(volatile T& t) : t(const_cast<T*>(&t)), sreg(SREG) { cli(); }
+  inline Safe(volatile T* t) : t(const_cast<T*>(t)), sreg(SREG) { cli(); }
   inline ~Safe() { SREG = sreg; }
   
-  inline T& operator ()() { return t; }
+  inline T* operator ->() { return t; }
+  inline T& operator *() { return *t; }
 };
 
 #endif

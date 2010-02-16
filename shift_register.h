@@ -9,8 +9,8 @@ public:
   ShiftRegister();
   void init() volatile { send_data(); };
   
-  void set_bit(unsigned char n) volatile { Safe<ShiftRegister>(this)().set_bit(n); }
-  void clear_bit(unsigned char n) volatile { Safe<ShiftRegister>(this)().clear_bit(n); }
+  void set_bit(unsigned char n) volatile { Safe<ShiftRegister>(this)->set_bit(n); }
+  void clear_bit(unsigned char n) volatile { Safe<ShiftRegister>(this)->clear_bit(n); }
 
   void set_bit(unsigned char n);
   void clear_bit(unsigned char n);

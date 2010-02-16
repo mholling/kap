@@ -20,11 +20,11 @@ public:
     inline bool write(bool block = false) volatile { return (*this)(writing, block); }
     inline bool  read(bool block = false) volatile { return (*this)(reading, block); }
     
-    inline bool valid() volatile { return Safe<Packet>(this)().valid(); }
+    inline bool valid() volatile { return Safe<Packet>(this)->valid(); }
     bool valid();
         
     template <typename T>
-    inline Packet& operator <<(const T& t) volatile { return Safe<Packet>(this)() << t; }
+    inline Packet& operator <<(const T& t) volatile { return *Safe<Packet>(this) << t; }
       
     template <typename T>
     Packet& operator <<(const T& t) { // TODO: disallow if pending?
@@ -35,7 +35,7 @@ public:
     }
 
     template <typename T>
-    inline Packet& operator >>(T& t) volatile { return Safe<Packet>(this)() >> t; }
+    inline Packet& operator >>(T& t) volatile { return *Safe<Packet>(this) >> t; }
     
     template <typename T>
     Packet& operator >>(T& t) { // TODO: disallow if pending?
