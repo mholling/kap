@@ -4,9 +4,9 @@
 
 // TODO: improve the way vectors and floats are passed around between tasks/packets...
 
-KalmanFilters::KalmanFilters() : yaw(app.gyros.yaw, const_cast<float&>(app.estimate_attitude.yaw)), pitch(app.gyros.pitch, const_cast<float&>(app.estimate_attitude.pitch)), roll(app.gyros.roll, const_cast<float&>(app.estimate_attitude.roll)) { }
+KalmanFilters::KalmanFilters() : yaw(app.gyros.yaw, app.estimate_attitude.yaw), pitch(app.gyros.pitch, app.estimate_attitude.pitch), roll(app.gyros.roll, app.estimate_attitude.roll) { }
 
-KalmanFilters::Filter::Filter(const volatile Gyros::Gyro& gyro, const float& measured) :
+KalmanFilters::Filter::Filter(const volatile Gyros::Gyro& gyro, const volatile float& measured) :
    Scheduler::Task(20),
    gyro(gyro),
    measured(measured),
@@ -18,6 +18,10 @@ KalmanFilters::Filter::Filter(const volatile Gyros::Gyro& gyro, const float& mea
    q31(q3 * q1), q32(q3 * q2), q33(q3 * q3),
    r11(), r22() // TODO: values???
 {
+}
+
+void KalmanFilters::Filter::run() volatile {
+  const_cast<Filter&>(*this).run();
 }
 
 void KalmanFilters::Filter::run() {

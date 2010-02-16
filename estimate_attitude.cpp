@@ -3,10 +3,13 @@
 #include "quaternion.h"
 #include "serial.h"
 
-void EstimateAttitude::run() {
+void EstimateAttitude::run() volatile {
   app.accelerometer.measure.wait();
   app.magnetometer.measure.wait();
-  
+  const_cast<EstimateAttitude&>(*this).run();
+}
+
+void EstimateAttitude::run() {
   const Vector b1 = gravity.normalised();  // gravity
   const Vector b2 = b1.cross(magnetism).normalised(); // magnetic west
   const Vector b3 = b1.cross(b2);

@@ -4,12 +4,14 @@
 #include "scheduler.h"
 #include "gyros.h"
 
+// TODO: move these tasks into the Gyro class!
+
 class KalmanFilters {
 private:
   class Filter : public Scheduler::Task {
   private:
     const volatile Gyros::Gyro& gyro;
-    const float& measured;
+    const volatile float& measured; // encapsulate in a class?
   
     float z1, z2;     // measured rate, angle
     float x1, x2, x3; // estimated angle, rate, bias
@@ -22,7 +24,8 @@ private:
     void correct();
 
   public:
-    Filter(const volatile Gyros::Gyro& gyro, const float& measured);
+    Filter(const volatile Gyros::Gyro& gyro, const volatile float& measured);
+    void run() volatile;
     void run();
     
     float angle() const { return x1; }

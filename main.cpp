@@ -1,6 +1,6 @@
 #include "app.h"
 
-App app;
+volatile App app;
 
 int main(void) {
   app.run();

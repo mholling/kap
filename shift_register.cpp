@@ -6,12 +6,12 @@ ShiftRegister::ShiftRegister() : data(0), send_data(data) {
   PORTD |= _BV(PIND4);
 }
 
-void ShiftRegister::set_bit(unsigned char n) volatile {
+void ShiftRegister::set_bit(unsigned char n) {
   data |= (1 << n);
   send_data(true);
 }
 
-void ShiftRegister::clear_bit(unsigned char n) volatile {
+void ShiftRegister::clear_bit(unsigned char n) {
   data &= ~(1 << n);
   send_data(true);
 }

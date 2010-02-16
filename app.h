@@ -20,50 +20,49 @@
 
 class App {  
 public:
-  // TODO: any better way than using const_cast? (i.e. review use of volatile at this level)
+  // TODO: any better way than using const_cast? (i.e. review use of at this level)
   
   App() : estimate_attitude(const_cast<Vector&>(accelerometer.measure.vector), const_cast<Vector&>(magnetometer.measure.vector)) { }
   
   // Hardware:
-  volatile Scheduler scheduler;
-  volatile Serial serial;
-  volatile Timer timer;
-  volatile Eeprom eeprom;
-  volatile I2C i2c;
-  volatile Magnetometer magnetometer;
-  volatile Accelerometer accelerometer;
-  volatile Analog analog;
-  volatile Gyros gyros;
-  volatile Spi spi;
-  volatile ShiftRegister shift_register;  
-  volatile Pwm pwm;
-  volatile Motors motors;
+  Scheduler scheduler;
+  Serial serial;
+  Timer timer;
+  Eeprom eeprom;
+  I2C i2c;
+  Magnetometer magnetometer;
+  Accelerometer accelerometer;
+  Analog analog;
+  Gyros gyros;
+  Spi spi;
+  ShiftRegister shift_register;  
+  Pwm pwm;
+  Motors motors;
   
   // Tasks:
 
-  volatile EstimateAttitude estimate_attitude;
-  volatile KalmanFilters kalman_filters;
-  volatile DiagnosticTask diagnostic;
+  EstimateAttitude estimate_attitude;
+  KalmanFilters kalman_filters;
+  DiagnosticTask diagnostic;
   
-  void run();
+  void run() volatile;
 };
 
 // void toggle_led();
 
-extern App app;
-// TODO: maybe just have the entire app be volatile instead of all its members?
+extern volatile App app;
 
 extern "C" void __cxa_pure_virtual(void);
 extern "C" void atexit(void);
 
 
-// class EepromTest : public Eeprom::Packet {
-// public:
-//   char data[6];
-//   
-// public:
-//   EepromTest(unsigned int address) : Eeprom::Packet(address, data, 6) { }
-// };
+class EepromTest : public Eeprom::Packet {
+public:
+  char data[6];
+  
+public:
+  EepromTest(unsigned int address) : Eeprom::Packet(address, data, 6) { }
+};
 
 
 #endif

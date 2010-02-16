@@ -93,5 +93,5 @@ inline const void I2C::Packet::release() {
 }
 
 ISR(TWI_vect) {
-  I2C::Packet::head().interrupt();
+  const_cast<App&>(app).i2c.interrupt();
 }

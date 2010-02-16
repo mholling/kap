@@ -1,9 +1,11 @@
 #include "interrupt_driven.h"
 #include "safe.h"
 
-void InterruptDriven::Item::enqueue(bool block) volatile {
-  { Safe<Item>(this)().enqueue(); }
-  if (block) wait();
+bool InterruptDriven::Item::enqueue(bool block) volatile {
+  bool success;
+  { success = Safe<Item>(this)().enqueue(); }
+  if (success && block) wait();
+  return success;
 }
 
 bool InterruptDriven::Item::enqueue() {
@@ -17,6 +19,10 @@ void InterruptDriven::Item::interrupt() {
     terminate();
     dequeue();
   }
+}
+
+void InterruptDriven::interrupt() {
+  Item::head().interrupt();
 }
 
 void InterruptDriven::Item::dequeue() {

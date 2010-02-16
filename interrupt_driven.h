@@ -11,7 +11,8 @@ public:
   class Item : public Queable<Item> {
   public:
     Item() { }
-    void enqueue(bool block = false) volatile;
+    bool enqueue(bool block = false) volatile;
+    bool enqueue();
     void interrupt();
     
     inline void wait() volatile { do { } while (next); }
@@ -22,9 +23,10 @@ public:
     virtual void terminate() = 0;
   
   private:
-    bool enqueue();
     void dequeue();
   };
+  
+  void interrupt();
 };
 
 #endif

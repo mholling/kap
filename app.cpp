@@ -1,7 +1,7 @@
 #include "app.h"
 #include <avr/io.h>
 
-void App::run() {
+void App::run() volatile {
   scheduler.init();
   timer.init();
   eeprom.init();
@@ -11,11 +11,10 @@ void App::run() {
   analog.init();
   gyros.init();
   spi.init();
-  shift_register.init();
-  
-  // pwm.init();
-  // motors.init();
-  
+  shift_register.init();  
+  pwm.init();
+  motors.init();
+    
   // scheduler.run();
       
   while (true) { }

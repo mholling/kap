@@ -15,12 +15,10 @@ public:
   public:
     Task(unsigned int level) : PrioritisedQueable<Task>(level) { }
     
-    inline void operator ()() volatile { Safe<Task>(this)()(); }
     void operator ()();
-    virtual void run() = 0;
+    virtual void run() volatile = 0;
     
-    inline void wait() volatile { do { } while (next != 0); }
-    // inline static volatile Task& head() { return PrioritisedQueable<Task>::head(); }
+    inline void wait() { do { } while (next != 0); }
   };
 
   inline void init() volatile { sei(); }

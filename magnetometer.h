@@ -49,17 +49,17 @@ private:
     inline char status() { return data[6]; }
   };
     
-  volatile ConfigPacket configure;
-  volatile ModePacket sleep;
-  volatile ModePacket wake;
+  ConfigPacket configure;
+  ModePacket sleep;
+  ModePacket wake;
 
 public:
   Magnetometer() : sleep(ModePacket::sleep), wake(ModePacket::continuous), calibrate(const_cast<Vector&>(measure.vector), 13215209.0, 0.97) { }
   // TODO: const_cast the best way to go?
   inline void init() volatile { configure(); wake(); }
   
-  volatile MeasurementPacket measure;
-  volatile CalibrateTask calibrate;
+  MeasurementPacket measure;
+  CalibrateTask calibrate;
 };
 
 #endif

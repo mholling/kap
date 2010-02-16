@@ -16,7 +16,7 @@ unsigned long int Timer::timestamp() {
 void Timer::interrupt() {
   count++;
   
-  if (count % (frequency / 10) == 0) app.diagnostic();
+  // if (count % (frequency / 10) == 0) app.diagnostic();
 
   // app.gyros.measure();
   // app.magnetometer.measure();
@@ -32,6 +32,6 @@ Timer::Diagnostic::~Diagnostic() {
 }
 
 ISR(TIMER2_COMPA_vect) {
-  const_cast<Timer&>(app.timer).interrupt();
+  const_cast<App&>(app).timer.interrupt();
 }
 

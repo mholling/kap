@@ -1,4 +1,5 @@
 #include "scheduler.h"
+#include "unsafe.h"
 
 void Scheduler::Task::operator ()() {
   if (enqueue())
@@ -6,9 +7,7 @@ void Scheduler::Task::operator ()() {
 }
 
 void Scheduler::Task::start() {
-  sei();
-  run();
-  cli();
+  Unsafe<Task>(this)().run();
   dequeue();
 }
 

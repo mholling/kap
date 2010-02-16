@@ -2,6 +2,10 @@
 #define __EEPROM_H_
 
 #include "interrupt_driven.h"
+#include "safe.h"
+
+
+// TODO: make address changeable
 
 class Eeprom : public InterruptDriven {
 public:
@@ -13,8 +17,8 @@ public:
 
     Packet(unsigned int address, char * buffer, unsigned int length) : address(address), buffer(buffer), length(length), operation(reading), index(0), checksum(0) { }
     
-    inline void write(bool block = false) volatile { (*this)(writing, block); }
-    inline void  read(bool block = false) volatile { (*this)(reading, block); }
+    inline bool write(bool block = false) volatile { return (*this)(writing, block); }
+    inline bool  read(bool block = false) volatile { return (*this)(reading, block); }
     
     inline bool valid() volatile { return Safe<Packet>(this)().valid(); }
     bool valid();
@@ -54,7 +58,8 @@ public:
     int unsigned index;
     char checksum;
 
-    void operator ()(operation_value op, bool block) volatile; // TODO: need non-volatile version?
+    bool operator ()(operation_value op, bool block) volatile;
+    bool operator ()(operation_value op);
   };
 };
 

@@ -15,6 +15,7 @@ protected:
   
 public:
   CalibrateTask(const Vector& vector, float variance, float lambda);
+  void run() volatile;
   void run();
   
   Vector bias;

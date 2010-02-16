@@ -7,7 +7,7 @@
 class DiagnosticTask : public Scheduler::Task {
 public:
   DiagnosticTask() : Scheduler::Task(0) {}
-  void run();
+  void run() volatile;
 };
 
 #endif

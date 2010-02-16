@@ -1,5 +1,6 @@
 #include "serial.h"
 #include <avr/io.h>
+#include "safe.h"
 #include <stdio.h>
 #include "app.h"
 
@@ -85,5 +86,5 @@ void Serial::line() volatile {
 }
 
 ISR(USART_UDRE_vect) {
-  const_cast<Serial&>(app.serial).interrupt();
+  const_cast<App&>(app).serial.interrupt();
 }

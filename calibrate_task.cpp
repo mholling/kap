@@ -9,9 +9,12 @@ CalibrateTask::CalibrateTask(const Vector& vector, float variance, float lambda)
   w3 = h2 = b2 = 0.0;
 }
 
-void CalibrateTask::run() {
+void CalibrateTask::run() volatile {
   app.magnetometer.measure.wait();
-  
+  const_cast<CalibrateTask&>(*this).run();
+}
+
+void CalibrateTask::run() {
   if (b2 > 0.5 * h2 || (previous - vector).sqabs() > 0.4 * h2) { // TODO: adjust these fractions...
     previous = vector;
   

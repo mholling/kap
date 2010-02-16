@@ -1,7 +1,7 @@
 #include "diagnostic_task.h"
 #include "app.h"
 
-void DiagnosticTask::run() {
+void DiagnosticTask::run() volatile {
   // app.serial.debug(const_cast<Vector&>(app.accelerometer.measure.vector));
   // app.serial.debug(const_cast<Vector&>(app.accelerometer.measure.vector));    
   

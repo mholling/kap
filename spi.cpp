@@ -1,5 +1,6 @@
 #include "spi.h"
 #include <avr/io.h>
+#include "app.h"
 
 Spi::Spi() {
   SPCR = _BV(SPIE) | _BV(SPE) | _BV(MSTR);  // enable SPI in master mode with interrupts, SCK freq = F_CPU/4
@@ -26,5 +27,5 @@ bool Spi::Packet::process() {
 }
 
 ISR(SPI_STC_vect) {
-  Spi::Packet::head().interrupt();
+  const_cast<App&>(app).spi.interrupt();
 }
