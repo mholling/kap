@@ -3,26 +3,22 @@
 
 #include "scheduler.h"
 #include "serial.h"
+#include "timer.h"
+#include "eeprom.h"
 #include "i2c.h"
 #include "magnetometer.h"
 #include "accelerometer.h"
-#include "timer.h"
-#include "eeprom.h"
 #include "analog.h"
-#include "pwm.h"
+#include "gyros.h"
 #include "spi.h"
 #include "shift_register.h"
+#include "pwm.h"
 #include "motors.h"
-#include "gyros.h"
-#include "estimate_attitude.h"
-#include "kalman_filters.h"
-#include "diagnostic_task.h"
+#include "attitude.h"
 
 class App {  
 public:
-  // TODO: any better way than using const_cast? (i.e. review use of at this level)
-  
-  App() : estimate_attitude(const_cast<Vector&>(accelerometer.measure.vector), const_cast<Vector&>(magnetometer.measure.vector)) { }
+  App() { }
   
   // Hardware:
   Scheduler scheduler;
@@ -39,11 +35,8 @@ public:
   Pwm pwm;
   Motors motors;
   
-  // Tasks:
-
-  EstimateAttitude estimate_attitude;
-  KalmanFilters kalman_filters;
-  DiagnosticTask diagnostic;
+  // Calculations:
+  Attitude attitude;
   
   void run() volatile;
 };
@@ -56,13 +49,13 @@ extern "C" void __cxa_pure_virtual(void);
 extern "C" void atexit(void);
 
 
-class EepromTest : public Eeprom::Packet {
-public:
-  char data[6];
-  
-public:
-  EepromTest(unsigned int address) : Eeprom::Packet(address, data, 6) { }
-};
+// class EepromTest : public Eeprom::Packet {
+// public:
+//   char data[6];
+//   
+// public:
+//   EepromTest(unsigned int address) : Eeprom::Packet(address, data, 6) { }
+// };
 
 
 #endif

@@ -54,8 +54,7 @@ private:
   ModePacket wake;
 
 public:
-  Magnetometer() : sleep(ModePacket::sleep), wake(ModePacket::continuous), calibrate(const_cast<Vector&>(measure.vector), 13215209.0, 0.97) { }
-  // TODO: const_cast the best way to go?
+  Magnetometer() : sleep(ModePacket::sleep), wake(ModePacket::continuous), calibrate(measure.vector, 13215209.0, 0.97) { }
   inline void init() volatile { configure(); wake(); }
   
   MeasurementPacket measure;

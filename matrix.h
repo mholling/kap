@@ -71,7 +71,9 @@ public:
   
   // Quaternions:
   Matrix(const Matrix<3, 1>& v, float w) { data[0] = v[0]; data[1] = v[1]; data[2] = v[2]; data[3] = w; }  
-  void get_euler_angles(float& yaw, float& pitch, float& roll) const;
+  float yaw() const;
+  float pitch() const;
+  float roll() const;
   
 };
 
@@ -101,11 +103,27 @@ inline const Quaternion Quaternion::cross(const Quaternion& rhs) const {
 
 // Quaternion angles:
 template <>
-inline void Quaternion::get_euler_angles(float& yaw, float& pitch, float& roll) const {
-  yaw   = atan2(2 * (data[3] * data[2] + data[1] * data[2]), 1 - 2 * (data[1] * data[1] + data[2] * data[2]));
-  pitch =  asin(2 * (data[3] * data[1] - data[2] * data[0]));
-  roll  = atan2(2 * (data[3] * data[0] + data[1] * data[2]), 1 - 2 * (data[0] * data[0] + data[1] * data[1]));
+inline float Quaternion::yaw() const {
+  return atan2(2 * (data[3] * data[2] + data[1] * data[2]), 1 - 2 * (data[1] * data[1] + data[2] * data[2]));
 }
+
+template <>
+inline float Quaternion::pitch() const {
+  return asin(2 * (data[3] * data[1] - data[2] * data[0]));
+}
+
+template <>
+inline float Quaternion::roll() const {
+  return atan2(2 * (data[3] * data[0] + data[1] * data[2]), 1 - 2 * (data[0] * data[0] + data[1] * data[1]));
+}
+
+// template <>
+// inline void Quaternion::get_euler_angles(float& yaw, float& pitch, float& roll) const {
+//   yaw   = atan2(2 * (data[3] * data[2] + data[1] * data[2]), 1 - 2 * (data[1] * data[1] + data[2] * data[2]));
+//   pitch =  asin(2 * (data[3] * data[1] - data[2] * data[0]));
+//   roll  = atan2(2 * (data[3] * data[0] + data[1] * data[2]), 1 - 2 * (data[0] * data[0] + data[1] * data[1]));
+// }
+
 
 // 2 x 2 matrix inverse:
 template <>

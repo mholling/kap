@@ -14,6 +14,7 @@ void App::run() volatile {
   shift_register.init();  
   pwm.init();
   motors.init();
+  attitude.init();
     
   // scheduler.run();
       

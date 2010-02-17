@@ -1,19 +1,30 @@
 #ifndef __TIMER_H_
 #define __TIMER_H_
 
-class App;
-
+#include "scheduler.h"
 #include "safe.h"
+#include "diagnostic_task.h"
 
 class Timer {
 private:
   unsigned long int count;
   
+  class Task : public Scheduler::Task {
+  private:
+    unsigned int count;
+  
+    DiagnosticTask diagnostic;
+    
+  public:
+    Task() : Scheduler::Task(0), count(0) { }
+    void run() volatile;
+  } task;
+  
 public:
   enum { frequency = 35 };
   Timer();
   inline void init() volatile { }
-  void interrupt(App& app);
+  void interrupt();
   unsigned long int timestamp() volatile { return Safe<Timer>(this)->timestamp(); }
   unsigned long int timestamp();
   

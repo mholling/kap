@@ -19,7 +19,7 @@ public:
     void operator ()();
     virtual void run() volatile = 0;
     
-    inline void wait() { do { } while (next != 0); }
+    inline void wait() volatile { do { } while (next != 0); }
   };
 
   inline void init() volatile { sei(); }

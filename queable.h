@@ -6,7 +6,8 @@
 template <typename T>
 class Queable {
 private:
-  Queable& operator=(const Queable&);
+  Queable(const Queable&);
+  Queable& operator =(const Queable&);
   
 protected:
   Queable* prev;
