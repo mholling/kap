@@ -27,5 +27,5 @@ bool Spi::Packet::process() {
 }
 
 ISR(SPI_STC_vect) {
-  const_cast<App&>(app).spi.interrupt();
+  app.spi.interrupt();
 }

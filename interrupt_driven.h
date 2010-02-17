@@ -6,7 +6,7 @@
 class InterruptDriven {
 public:
   InterruptDriven() { }
-  inline void init() volatile { }
+  inline void init() { }
   
   class Item : public Queable<Item> {
   public:

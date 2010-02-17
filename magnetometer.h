@@ -48,17 +48,17 @@ private:
     inline bool ready() { return data[6] & 0x01; }
     inline char status() { return data[6]; }
   };
-    
-  ConfigPacket configure;
-  ModePacket sleep;
-  ModePacket wake;
+  
+  volatile ConfigPacket configure;
+  volatile ModePacket sleep;
+  volatile ModePacket wake;
 
 public:
   Magnetometer() : sleep(ModePacket::sleep), wake(ModePacket::continuous), calibrate(measure.vector, 13215209.0, 0.97) { }
-  inline void init() volatile { configure(); wake(); }
+  inline void init() { configure(); wake(); }
   
-  MeasurementPacket measure;
-  CalibrateTask calibrate;
+  volatile MeasurementPacket measure;
+  volatile CalibrateTask calibrate;
 };
 
 #endif

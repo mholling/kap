@@ -21,25 +21,25 @@ private:
 
 public:
   Gyros();
-  inline void init() volatile { normal_mode(); enable(); }
+  inline void init() { normal_mode(); enable(); }
   
-  void disable() volatile;
-  void enable() volatile;
-  void normal_mode() volatile;
-  void test_mode() volatile;
+  void disable();
+  void enable();
+  void normal_mode();
+  void test_mode();
   
-  void measure() volatile;
+  void measure();
   
   class Gyro {
   private:
-    Analog::Channel& value;
-    Analog::Channel& reference;
+    const volatile Analog::Channel& value;
+    const volatile Analog::Channel& reference;
     const float range;
     
     class Estimate : public Scheduler::Task {
     private:
-      const volatile Gyros::Gyro& gyro;
-      const volatile Angle& measured; // encapsulate in a class?
+      const Gyros::Gyro& gyro;
+      const Angle& measured;
 
       float z1, z2;     // measured rate, angle
       float x1, x2, x3; // estimated angle, rate, bias
@@ -48,11 +48,11 @@ public:
       const float q1, q2, q3, q11, q12, q13, q21, q22, q23, q31, q32, q33;
       const float r11, r22;
 
-      void predict() volatile;
-      void correct() volatile;
+      void predict();
+      void correct();
 
     public:
-      Estimate(const volatile Gyros::Gyro& gyro, const volatile Angle& measured);
+      Estimate(const Gyro& gyro, const volatile Angle& measured);
       void run();
 
       float angle() const { return x1; }
@@ -61,12 +61,11 @@ public:
     };
     
   public:
-    Gyro(Analog::Channel& value, Analog::Channel& reference, unsigned int range, const volatile Angle& measured) : value(value), reference(reference), range(range), estimate(*this, measured) { }
+    Gyro(volatile Analog::Channel& value, volatile Analog::Channel& reference, unsigned int range, const volatile Angle& measured) : value(value), reference(reference), range(range), estimate(*this, measured) { }
     
-    float operator ()() const volatile;
     float operator ()() const;
     
-    Estimate estimate;
+    volatile Estimate estimate;
   };
   
   Gyro yaw;

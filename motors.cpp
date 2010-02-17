@@ -7,11 +7,11 @@ Motors::Motors() : yaw(OCR1A, PORTD, PIND7, PORTB, PINB0, false), pitch(OCR1B, P
   DDRB |= _BV(DDB0);
 }
 
-void Motors::disable() volatile {
+void Motors::disable() {
   app.shift_register.clear_bit(standby_shift_register_bit);
 }
 
-void Motors::enable() volatile {
+void Motors::enable() {
   app.shift_register.set_bit(standby_shift_register_bit);
 }
 
@@ -26,8 +26,6 @@ void Motors::Motor::set(float value) {
   const float absolute_value = value < 0.0 ? -value : value;
   const float clamped_value = absolute_value > 1.0 ? 1.0 : absolute_value;
   const unsigned int top = Pwm::resolution * clamped_value;
-  const unsigned char sreg = SREG;
-  cli();
+  
   pwm_reg = top;
-  SREG = sreg; // TODO: replace this 16-bit register access with a use of Safe<> template?
 }

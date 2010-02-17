@@ -22,8 +22,8 @@ public:
     
     inline void convert(bool block = false) volatile { enqueue(block); }
     
-    inline float operator ()() volatile { return (*Safe<Channel>(this))(); }
-    inline float operator ()() { return static_cast<float>(data) / 1024; }
+    inline float operator ()() const volatile { return (*Safe<const Channel>(this))(); }
+    inline float operator ()() const { return static_cast<float>(data) / 1024; }
   };
 };
 

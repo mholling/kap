@@ -52,5 +52,5 @@ bool Eeprom::Packet::process() {
 
 
 ISR(EE_READY_vect) {
-  const_cast<App&>(app).eeprom.interrupt();
+  app.eeprom.interrupt();
 }

@@ -35,6 +35,6 @@ Timer::Diagnostic::~Diagnostic() {
 }
 
 ISR(TIMER2_COMPA_vect) {
-  const_cast<App&>(app).timer.interrupt();
+  Safe<Timer>(app.timer)->interrupt();
 }
 

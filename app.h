@@ -22,8 +22,8 @@ public:
   
   // Hardware:
   Scheduler scheduler;
-  Serial serial;
-  Timer timer;
+  volatile Serial serial;
+  volatile Timer timer;
   Eeprom eeprom;
   I2C i2c;
   Magnetometer magnetometer;
@@ -31,19 +31,19 @@ public:
   Analog analog;
   Gyros gyros;
   Spi spi;
-  ShiftRegister shift_register;  
+  volatile ShiftRegister shift_register;  
   Pwm pwm;
   Motors motors;
   
   // Calculations:
   Attitude attitude;
   
-  void run() volatile;
+  void run();
 };
 
 // void toggle_led();
 
-extern volatile App app;
+extern App app;
 
 extern "C" void __cxa_pure_virtual(void);
 extern "C" void atexit(void);

@@ -12,19 +12,24 @@ private:
   class Task : public Scheduler::Task {
   private:
     unsigned int count;
-  
-    DiagnosticTask diagnostic;
+    
+    volatile DiagnosticTask diagnostic;
     
   public:
     Task() : Scheduler::Task(0), count(0) { }
     void run();
-  } task;
+  };
+  
+  volatile Task task;
   
 public:
   enum { frequency = 35 };
+  
   Timer();
   inline void init() volatile { }
+  
   void interrupt();
+  
   unsigned long int timestamp() volatile { return Safe<Timer>(this)->timestamp(); }
   unsigned long int timestamp();
   

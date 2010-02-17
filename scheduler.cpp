@@ -1,4 +1,5 @@
 #include "scheduler.h"
+#include <avr/io.h>
 
 void Scheduler::Task::operator ()() {
   if (enqueue())

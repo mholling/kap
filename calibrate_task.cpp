@@ -4,7 +4,7 @@
 
 // TODO: have the settings persist to EEPROM.
 
-CalibrateTask::CalibrateTask(const Vector& measured, float variance, float lambda) : Scheduler::Task(20), measured(measured), lambda(lambda) {
+CalibrateTask::CalibrateTask(const volatile Vector& measured, float variance, float lambda) : Scheduler::Task(20), measured(const_cast<Vector&>(measured)), lambda(lambda) {
   P0[0] = P1[1] = P2[2] = P3[3] = 400.0 * variance;
   P1[0] = P2[0] = P2[1] = P3[0] = P3[1] = P3[2] = 0.0;
   w3 = h2 = b2 = 0.0;

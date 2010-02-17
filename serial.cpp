@@ -24,6 +24,10 @@ void Serial::send(const char *data) {
 	UCSR0B = _BV(UDRIE0) | _BV(TXEN0);  // enable transmitter and data-register-empty interrupts
 }
 
+void Serial::send(const char *data) volatile {
+  Safe<Serial>(this)->send(data);
+}
+
 void Serial::debug(const char * const s, char b) volatile {
   char temp[64];
   sprintf(temp, "%15s: 0x%02x\r\n", s, b);
@@ -86,5 +90,5 @@ void Serial::line() volatile {
 }
 
 ISR(USART_UDRE_vect) {
-  const_cast<App&>(app).serial.interrupt();
+  Safe<Serial>(app.serial)->interrupt();
 }

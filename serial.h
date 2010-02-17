@@ -5,18 +5,19 @@
 #include "vector.h"
 
 class Serial {
-protected:
-  CircularBuffer<char, 64> buffer;
-  
 private:
+  CircularBuffer<char, 64> buffer;
+
   void send(const char *data);
-  
+    
 public:
   Serial();
   
+  void init() volatile { }
+  
   inline void interrupt();
   
-  void send(const char *data) volatile { Safe<Serial>(this)->send(data); }
+  void send(const char *data) volatile;
   void debug(const char * const s, char b) volatile;
   void debug(const char * const s, bool b) volatile;
   void debug(const char * const s, int b) volatile;

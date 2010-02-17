@@ -1,8 +1,9 @@
 #include "app.h"
 #include <avr/io.h>
 
-void App::run() volatile {
+void App::run() {
   scheduler.init();
+  serial.init();
   timer.init();
   eeprom.init();
   i2c.init();

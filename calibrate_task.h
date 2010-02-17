@@ -14,7 +14,7 @@ protected:
   float h2, b2;
   
 public:
-  CalibrateTask(const Vector& measured, float variance, float lambda);
+  CalibrateTask(const volatile Vector& measured, float variance, float lambda);
   void run();
   
   Vector bias;

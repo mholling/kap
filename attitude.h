@@ -39,11 +39,11 @@ private:
   
 public:
   Attitude();
-  void init() volatile { }
+  void init() { }
   
-  Initiate initiate;
-  Measure measure;
-  Estimate estimate;
+  volatile Initiate initiate;
+  volatile Measure measure;
+  volatile Estimate estimate;
 };
 
 #endif

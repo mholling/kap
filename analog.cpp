@@ -21,5 +21,5 @@ inline void Analog::Channel::terminate() {
 }
 
 ISR(ADC_vect) {
-  const_cast<App&>(app).analog.interrupt();
+  app.analog.interrupt();
 }

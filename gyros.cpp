@@ -4,39 +4,37 @@
 
 Gyros::Gyros() : yaw_channel(0), pitch_channel(1), roll_channel(2), ref_channel(3), fixed_channel(0.5), yaw(yaw_channel, fixed_channel, 300.0, app.attitude.measure.yaw), pitch(pitch_channel, ref_channel, 400.0, app.attitude.measure.pitch), roll(roll_channel, ref_channel, 400.0, app.attitude.measure.roll) { }
 
-void Gyros::disable() volatile {
+void Gyros::disable() {
   app.shift_register.set_bit(power_down_shift_register_bit);
 }
 
-void Gyros::enable() volatile {
+void Gyros::enable() {
   app.shift_register.clear_bit(power_down_shift_register_bit);
 }
 
-void Gyros::test_mode() volatile {
+void Gyros::test_mode() {
   app.shift_register.set_bit(self_test_shift_register_pin);
 }
 
-void Gyros::normal_mode() volatile {
+void Gyros::normal_mode() {
   app.shift_register.clear_bit(self_test_shift_register_pin);
 }
 
-void Gyros::measure() volatile {
+void Gyros::measure() {
   yaw_channel.convert();
   pitch_channel.convert();
   roll_channel.convert();
   ref_channel.convert();
 }
 
-float Gyros::Gyro::operator ()() const volatile { return (*Safe<const Gyro>(this))(); }
-
 float Gyros::Gyro::operator ()() const {
   return (value() / reference() - 1.0) * range;
 }
 
-Gyros::Gyro::Estimate::Estimate(const volatile Gyros::Gyro& gyro, const volatile Angle& measured) :
+Gyros::Gyro::Estimate::Estimate(const Gyro& gyro, const volatile Angle& measured) :
    Scheduler::Task(20),
    gyro(gyro),
-   measured(measured),
+   measured(const_cast<Angle&>(measured)),
    x1(0.0), x2(0.0), x3(0.0),
    dt(1.0 / Timer::frequency),
    q1(0.2 * dt), q2(0.2), q3(0.1), // TODO: values??
@@ -54,7 +52,7 @@ void Gyros::Gyro::Estimate::run() {
   correct();
 }
 
-void Gyros::Gyro::Estimate::predict() volatile {
+void Gyros::Gyro::Estimate::predict() {
   // compute  x = A x + B u
   x2  = z1 - x3; // rate = gyro - bias
   x1 += dt * x2; // angle += dt * rate
@@ -77,7 +75,7 @@ void Gyros::Gyro::Estimate::predict() volatile {
   p33 = q33 + t4;
 }
 
-void Gyros::Gyro::Estimate::correct() volatile {
+void Gyros::Gyro::Estimate::correct() {
   // compute  H P H' + R
   float hphr11 = p22 + p32 + p23 + p33 + r11;
   float hphr12 = p21 + p31;
