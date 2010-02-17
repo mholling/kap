@@ -7,11 +7,11 @@ void Scheduler::Task::operator ()() {
 }
 
 void Scheduler::Task::start() {
-  Unsafe<Task>(this)().run();
+  Unsafe<Task>(this)->run();
   dequeue();
 }
 
 void Scheduler::Task::dequeue() {
   PrioritisedQueable<Task>::dequeue();
-  if (any()) const_cast<Task&>(head()).start();
+  if (any()) head().start();
 }

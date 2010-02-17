@@ -10,15 +10,16 @@ private:
   Unsafe(const Unsafe&);
   Unsafe& operator =(const Unsafe&);
   
-  volatile T& t;
+  volatile T * const t;
   const unsigned char sreg;
   
 public:
-  inline Unsafe(T& t) : t(const_cast<volatile T&>(t)), sreg(SREG) { sei(); }
-  inline Unsafe(T* t) : t(*const_cast<volatile T*>(t)), sreg(SREG) { sei(); }
+  inline Unsafe(T& t) : t(const_cast<volatile T*>(&t)), sreg(SREG) { sei(); }
+  inline Unsafe(T* t) : t(const_cast<volatile T*>(t)), sreg(SREG) { sei(); }
   inline ~Unsafe() { SREG = sreg; }
   
-  inline volatile T& operator ()() { return t; }
+  inline volatile T* operator ->() { return t; }
+  inline volatile T& operator *() { return *t; }
 };
 
 #endif

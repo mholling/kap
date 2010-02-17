@@ -15,6 +15,7 @@ public:
   public:
     Task(unsigned int level) : PrioritisedQueable<Task>(level) { }
     
+    void operator ()() volatile { (*Safe<Task>(this))(); }
     void operator ()();
     virtual void run() volatile = 0;
     

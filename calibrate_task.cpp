@@ -11,7 +11,7 @@ CalibrateTask::CalibrateTask(const Vector& vector, float variance, float lambda)
 
 void CalibrateTask::run() volatile {
   app.magnetometer.measure.wait();
-  const_cast<CalibrateTask&>(*this).run();
+  const_cast<CalibrateTask&>(*this).run();  // TODO: not an ideal solution!
 }
 
 void CalibrateTask::run() {

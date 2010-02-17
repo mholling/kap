@@ -13,15 +13,16 @@ unsigned long int Timer::timestamp() {
   return count * OCR2A + TCNT2;
 }
 
-void Timer::interrupt() {
+void Timer::interrupt(App& app) {
   count++;
   
-  // if (count % (frequency / 10) == 0) app.diagnostic();
+  if (count % (frequency / 10) == 0) app.diagnostic();
 
-  // app.gyros.measure();
-  // app.magnetometer.measure();
-  // app.magnetometer.calibrate();
-  // app.accelerometer.measure();
+  app.gyros.measure();
+  app.accelerometer.measure();
+  app.magnetometer.measure();
+  app.magnetometer.calibrate();
+  app.accelerometer.measure();
   
 }
 
@@ -32,6 +33,7 @@ Timer::Diagnostic::~Diagnostic() {
 }
 
 ISR(TIMER2_COMPA_vect) {
-  const_cast<App&>(app).timer.interrupt();
+  App& safe_app = const_cast<App&>(app);
+  safe_app.timer.interrupt(safe_app);
 }
 
