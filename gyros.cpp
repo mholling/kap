@@ -47,7 +47,7 @@ Gyros::Gyro::Estimate::Estimate(const volatile Gyros::Gyro& gyro, const volatile
 {
 }
 
-void Gyros::Gyro::Estimate::run() volatile {
+void Gyros::Gyro::Estimate::run() {
   z1 = gyro();
   z2 = measured();
   predict();

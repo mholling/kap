@@ -2,7 +2,7 @@
 #include "app.h"
 #include "safe.h"
 
-void DiagnosticTask::run() volatile {
+void DiagnosticTask::run() {
   app.serial.debug(*Safe<Vector>(app.accelerometer.measure.vector));
   app.serial.debug(*Safe<Vector>(app.accelerometer.measure.vector));    
   

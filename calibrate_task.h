@@ -6,7 +6,7 @@
 
 class CalibrateTask : public Scheduler::Task {
 protected:
-  const volatile Vector& measured;
+  const Vector& measured;
   Vector previous;
   const float lambda;
   float P0[1], P1[2], P2[3], P3[4];
@@ -15,7 +15,6 @@ protected:
   
 public:
   CalibrateTask(const Vector& measured, float variance, float lambda);
-  void run() volatile;
   void run();
   
   Vector bias;

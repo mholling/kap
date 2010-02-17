@@ -18,7 +18,7 @@ void Timer::interrupt() {
   task();
 }
 
-void Timer::Task::run() volatile {
+void Timer::Task::run() {
   count++;
   
   app.attitude.initiate();

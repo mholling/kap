@@ -17,7 +17,7 @@ private:
     
   public:
     Task() : Scheduler::Task(0), count(0) { }
-    void run() volatile;
+    void run();
   } task;
   
 public:

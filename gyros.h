@@ -53,7 +53,7 @@ public:
 
     public:
       Estimate(const volatile Gyros::Gyro& gyro, const volatile Angle& measured);
-      void run() volatile;
+      void run();
 
       float angle() const { return x1; }
       float rate() const { return x2; }

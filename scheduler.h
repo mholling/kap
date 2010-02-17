@@ -17,7 +17,7 @@ public:
     
     void operator ()() volatile { (*Safe<Task>(this))(); }
     void operator ()();
-    virtual void run() volatile = 0;
+    virtual void run() = 0;
     
     inline void wait() volatile { do { } while (next != 0); }
   };

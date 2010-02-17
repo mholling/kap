@@ -6,13 +6,13 @@
 
 Attitude::Attitude() : measure(app.accelerometer.measure.vector, app.magnetometer.calibrate.vector), estimate() { }
 
-void Attitude::Initiate::run() volatile {
+void Attitude::Initiate::run() {
   app.magnetometer.measure();
   app.accelerometer.measure();
   app.gyros.measure();  
 }
 
-void Attitude::Measure::run() volatile {
+void Attitude::Measure::run() {
   app.magnetometer.calibrate();
 
   const Vector b1 = Safe<const Vector>(gravity)->normalised();  // gravity
@@ -39,7 +39,7 @@ void Attitude::Measure::run() volatile {
   }
 }
 
-void Attitude::Estimate::run() volatile {
+void Attitude::Estimate::run() {
   // wait for analog conversions here..
   app.gyros.yaw.estimate();
   app.gyros.pitch.estimate();

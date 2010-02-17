@@ -11,20 +11,20 @@ private:
   class Initiate : public Scheduler::Task {
   public:
     Initiate() : Scheduler::Task(20) { }
-    void run() volatile;  
+    void run();  
   };
   
   class Measure : public Scheduler::Task {
   private:
-    const volatile Vector& gravity;
-    const volatile Vector& magnetism;
+    const Vector& gravity;
+    const Vector& magnetism;
     const float a1, a2; // TODO: normalise these weights around a1?
     
     Quaternion quaternion;
     
   public:
-    Measure(const volatile Vector& gravity, const volatile Vector& magnetism) : Scheduler::Task(20), gravity(gravity), magnetism(magnetism), a1(1.0), a2(2.0), yaw(quaternion, &Quaternion::yaw), pitch(quaternion, &Quaternion::pitch), roll(quaternion, &Quaternion::roll) { }
-    void run() volatile;
+    Measure(const volatile Vector& gravity, const volatile Vector& magnetism) : Scheduler::Task(20), gravity(const_cast<Vector&>(gravity)), magnetism(const_cast<Vector&>(magnetism)), a1(1.0), a2(2.0), yaw(quaternion, &Quaternion::yaw), pitch(quaternion, &Quaternion::pitch), roll(quaternion, &Quaternion::roll) { }
+    void run();
   
     Angle yaw, pitch, roll;
   };
@@ -34,7 +34,7 @@ private:
     
   public:
     Estimate() : Scheduler::Task(20) { }
-    void run() volatile;
+    void run();
   };
   
 public:

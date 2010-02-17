@@ -1,5 +1,4 @@
 #include "scheduler.h"
-#include "unsafe.h"
 
 void Scheduler::Task::operator ()() {
   if (enqueue())
@@ -7,7 +6,10 @@ void Scheduler::Task::operator ()() {
 }
 
 void Scheduler::Task::start() {
-  Unsafe<Task>(this)->run();
+  const unsigned char sreg = SREG;
+  sei();
+  run();
+  SREG = sreg;
   dequeue();
 }
 
