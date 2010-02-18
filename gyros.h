@@ -2,12 +2,13 @@
 #define __GYROS_H_
 
 #include "analog.h"
+#include "shift_register.h"
 #include "scheduler.h"
 #include "angle.h"
 
 class Gyros {
 private:
-  enum { power_down_shift_register_bit = 0, self_test_shift_register_pin = 5 };
+  enum { power_down_shift_register_pin = 0, self_test_shift_register_pin = 5 };
   
   Analog::Channel yaw_channel;
   Analog::Channel pitch_channel;
@@ -21,12 +22,12 @@ private:
 
 public:
   Gyros();
-  inline void init() { normal_mode(); enable(); }
+  inline void init() { normal_mode(true); enable(true); }
   
-  void disable();
-  void enable();
-  void normal_mode();
-  void test_mode();
+  volatile ShiftRegister::Bit disable;
+  volatile ShiftRegister::Bit enable;
+  volatile ShiftRegister::Bit test_mode;
+  volatile ShiftRegister::Bit normal_mode;
   
   void measure();
   

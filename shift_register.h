@@ -7,26 +7,23 @@
 class ShiftRegister {
 public:
   ShiftRegister();
-  void init() volatile { send_data(); };
-
-  void set_bit(unsigned char n) volatile;
-  void clear_bit(unsigned char n) volatile;
+  void init() volatile;
   
-  void set_bit(unsigned char n);
-  void clear_bit(unsigned char n);
+  unsigned char bits;
   
-private:
-  unsigned char data; // TODO: not currently thread-safe?
-  // TODO: maybe rework so that data is inside packet?
-  
-  class SendData : public Spi::WritePacket {
+  class Bit : public Spi::WritePacket {
   private:
+    unsigned char data;
+    const unsigned char mask;
+    const bool set;
+    
+  protected:
     void toggle_select();
+    void after_enqueue();
+    
   public:
-    SendData(const unsigned char& data) : Spi::WritePacket(&data, 1) { }
+    Bit(unsigned int bit, bool set) : Spi::WritePacket(&data, 1), mask(1 << bit), set(set) { }
   };
-  
-  volatile SendData send_data;
 };
 
 #endif

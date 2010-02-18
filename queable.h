@@ -43,10 +43,10 @@ public:
   inline bool pending() { return next != 0; }
   inline bool at_head() { return first == this; }
 
-  inline static T& head() { return *static_cast<T*>(first); } // TODO: static methods?
+  inline static T& head() { return *static_cast<T*>(first); }
 
-  inline static bool empty() { return first == 0; } // TODO: static methods?
-  inline static bool any() { return first != 0; } // TODO: static methods?
+  inline static bool empty() { return first == 0; }
+  inline static bool any() { return first != 0; }
 };
 
 template <typename T> Queable<T>* Queable<T>::first(0);

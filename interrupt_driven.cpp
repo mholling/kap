@@ -8,9 +8,10 @@ bool InterruptDriven::Item::enqueue(bool block) volatile {
 }
 
 bool InterruptDriven::Item::enqueue() {
-  bool success = Queable<Item>::enqueue();
-  if (success && at_head()) initiate();
-  return success;
+  if (!Queable<Item>::enqueue()) return false;
+  after_enqueue();
+  if (at_head()) initiate();
+  return true;
 }
 
 void InterruptDriven::Item::interrupt() {

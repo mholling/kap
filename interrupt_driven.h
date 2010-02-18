@@ -21,6 +21,7 @@ public:
     virtual void initiate()  = 0;
     virtual bool process()   = 0;  // return true if interrupt sequence for the item is complete
     virtual void terminate() = 0;
+    virtual void after_enqueue() { }
   
   private:
     void dequeue();

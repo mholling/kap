@@ -1,18 +1,19 @@
 #ifndef __MOTOR_H_
 #define __MOTOR_H_
 
+#include "shift_register.h"
 #include "safe.h"
 #include <avr/io.h>
 
 class Motors {
-  enum { standby_shift_register_bit = 1, yaw_polarity = +1, pitch_polarity = +1 };
+  enum { standby_shift_register_pin = 1, yaw_polarity = +1, pitch_polarity = +1 };
   
 public:
   Motors();
-  inline void init() { disable(); }
+  inline void init() { disable(true); }
   
-  void disable();
-  void enable();
+  volatile ShiftRegister::Bit disable;
+  volatile ShiftRegister::Bit enable;
   
   class Motor {
   private:

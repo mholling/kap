@@ -2,24 +2,20 @@
 #include "app.h"
 #include "safe.h"
 
-Gyros::Gyros() : yaw_channel(0), pitch_channel(1), roll_channel(2), ref_channel(3), fixed_channel(0.5), yaw(yaw_channel, fixed_channel, 300.0, app.attitude.measure.yaw), pitch(pitch_channel, ref_channel, 400.0, app.attitude.measure.pitch), roll(roll_channel, ref_channel, 400.0, app.attitude.measure.roll) { }
-
-void Gyros::disable() {
-  app.shift_register.set_bit(power_down_shift_register_bit);
-}
-
-void Gyros::enable() {
-  app.shift_register.clear_bit(power_down_shift_register_bit);
-}
-
-void Gyros::test_mode() {
-  app.shift_register.set_bit(self_test_shift_register_pin);
-}
-
-void Gyros::normal_mode() {
-  app.shift_register.clear_bit(self_test_shift_register_pin);
-}
-
+Gyros::Gyros() :
+  yaw_channel(0),
+  pitch_channel(1),
+  roll_channel(2),
+  ref_channel(3),
+  fixed_channel(0.5),
+  disable(power_down_shift_register_pin, true),
+  enable(power_down_shift_register_pin, false),
+  test_mode(self_test_shift_register_pin, true),
+  normal_mode(self_test_shift_register_pin, false),
+  yaw(yaw_channel, fixed_channel, 300.0, app.attitude.measure.yaw),
+  pitch(pitch_channel, ref_channel, 400.0, app.attitude.measure.pitch),
+  roll(roll_channel, ref_channel, 400.0, app.attitude.measure.roll) { }
+  
 void Gyros::measure() {
   yaw_channel.convert();
   pitch_channel.convert();
