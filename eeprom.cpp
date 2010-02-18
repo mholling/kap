@@ -7,7 +7,7 @@ bool Eeprom::Packet::valid() {
   char test = checksum;
   for (unsigned int n = 0; n < length; test ^= buffer[n++]) ;
   return test == 0;
-  // TODO: use a better checksum algorithm?
+  // TODO: use a better checksum algorithm? (e.g. CRC)
 }
 
 void Eeprom::Packet::initiate() {

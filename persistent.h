@@ -17,7 +17,7 @@ public:
   void init() { if (!restore()) T::defaults(); }
   
   bool restore() {
-    if (!read(true)) return false;
+    if (!read()) return false;
     read >> static_cast<T&>(*this);
     return true;
   }
