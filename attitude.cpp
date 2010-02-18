@@ -13,6 +13,7 @@ void Attitude::Initiate::run() {
 }
 
 void Attitude::Measure::run() {
+  app.magnetometer.measure.wait();
   app.magnetometer.calibrate();
 
   const Vector b1 = Safe<const Vector>(gravity)->normalised();  // gravity

@@ -7,7 +7,7 @@
 
 class Magnetometer {
 private:
-  enum { i2c_address = 0x1e, config_registers = 0x00, mode_register = 0x02, measurement_registers = 0x03 };
+  enum { i2c_address = 0x1e, config_registers = 0x00, mode_register = 0x02, measurement_registers = 0x03, calibration_address = 0x100 };
 
   class ConfigPacket : public I2C::WritePacket {
     unsigned char data[2];
@@ -54,8 +54,8 @@ private:
   volatile ModePacket wake;
 
 public:
-  Magnetometer() : sleep(ModePacket::sleep), wake(ModePacket::continuous), calibrate(measure.vector, 13215209.0, 0.97) { }
-  inline void init() { configure(); wake(); }
+  Magnetometer() : sleep(ModePacket::sleep), wake(ModePacket::continuous), calibrate(measure.vector, calibration_address, 0.97) { }
+  inline void init() { configure(); wake(); calibrate.init(); }
   
   volatile MeasurementPacket measure;
   volatile CalibrateTask calibrate;

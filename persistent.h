@@ -2,6 +2,7 @@
 #define __PERSISTENT_H_
 
 #include "eeprom.h"
+#include "safe.h"
 
 template <typename T>
 class Persistent : public T {
@@ -14,16 +15,16 @@ public:
     read( address, reinterpret_cast<char *>(static_cast<T*>(this)), sizeof(T)),
     write(address, reinterpret_cast<char *>(static_cast<T*>(this)), sizeof(T)) { }
   
-  void init() { if (!restore()) T::defaults(); }
-  
-  bool restore() {
+  void init() volatile { if (!restore()) Safe<T>(this)->defaults(); }
+
+  bool restore() volatile {
     if (!read()) return false;
-    read >> static_cast<T&>(*this);
+    read >> static_cast<volatile T&>(*this);
     return true;
   }
   
-  void store() {
-    write << static_cast<T&>(*this);
+  void store() volatile {
+    write << static_cast<volatile T&>(*this);
     write();
   }
 };
