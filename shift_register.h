@@ -17,6 +17,7 @@ public:
   
 private:
   unsigned char data; // TODO: not currently thread-safe?
+  // TODO: maybe rework so that data is inside packet?
   
   class SendData : public Spi::WritePacket {
   private:

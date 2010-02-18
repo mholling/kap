@@ -30,8 +30,6 @@ private:
   };
   
   class Estimate : public Scheduler::Task {
-  private:
-    
   public:
     Estimate() : Scheduler::Task(20) { }
     void run();
