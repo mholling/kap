@@ -2,6 +2,7 @@
 #include <avr/io.h>
 #include "safe.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include "app.h"
 
 // TODO: reduce temp buffer sizes in these methods!
@@ -56,22 +57,38 @@ void Serial::debug_b(const char * const s, char b) volatile {
   send(temp);
 }
 
-void Serial::debug(const char * const s, float f) volatile {
-  char temp[64];
-  sprintf(temp, "%15s: %.3g\r\n", s, (double)f);
-  send(temp);
-}
+// void Serial::debug(const char * const s, float f) volatile {
+//   char temp[64];
+//   sprintf(temp, "%15s: %.3g\r\n", s, (double)f);
+//   send(temp);
+// }
+// 
+// void Serial::debug(const char * const s, const Vector v) volatile {
+//   char temp[64];
+//   sprintf(temp, "%15s: (%.5g, %.5g, %.5g)\r\n", s, (double)v[0], (double)v[1], (double)v[2]);
+//   send(temp);
+// }
+// 
+// void Serial::debug(float f) volatile {
+//   char temp[13];
+//   sprintf(temp, "%+.4e ", (double)f);
+//   send(temp);
+// }
 
-void Serial::debug(const char * const s, const Vector v) volatile {
-  char temp[64];
-  sprintf(temp, "%15s: (%.5g, %.5g, %.5g)\r\n", s, (double)v[0], (double)v[1], (double)v[2]);
+void Serial::debug(const char * const s, float f) volatile {
+  char temp[18];
+  sprintf(temp, "%15s: ", s);
   send(temp);
+  dtostre((double)f, temp, 4, DTOSTR_PLUS_SIGN);
+  send(temp);
+  send("\r\n");
 }
 
 void Serial::debug(float f) volatile {
-  char temp[13];
-  sprintf(temp, "%+.4e ", (double)f);
+  char temp[12];
+  dtostre((double)f, temp, 4, DTOSTR_PLUS_SIGN);
   send(temp);
+  send(" ");
 }
 
 void Serial::debug(int i) volatile {
