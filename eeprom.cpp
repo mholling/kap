@@ -10,19 +10,6 @@ bool Eeprom::Packet::valid() {
   // TODO: use a better checksum algorithm?
 }
 
-bool Eeprom::Packet::operator ()(operation_value op, bool block) volatile {
-  if ((*Safe<Packet>(this))(op)) {
-    if (block) wait();
-    return true;
-  } else return false;
-}
-
-bool Eeprom::Packet::operator ()(operation_value op) {
-  if (pending()) return false;
-  operation = op;
-  return enqueue();
-}
-
 void Eeprom::Packet::initiate() {
   index = 0;
   EECR |= _BV(EERIE);

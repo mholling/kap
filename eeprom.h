@@ -4,22 +4,14 @@
 #include "interrupt_driven.h"
 #include "safe.h"
 
-
-// TODO: make address changeable
-
 class Eeprom : public InterruptDriven {
-public:
-  Eeprom() { }
-  
+protected:
   class Packet : public Item {
   public:
     enum operation_value { reading, writing };
 
-    Packet(unsigned int address, char * buffer, unsigned int length) : address(address), buffer(buffer), length(length), operation(reading), index(0), checksum(0) { }
-    
-    inline bool write(bool block = false) volatile { return (*this)(writing, block); }
-    inline bool  read(bool block = false) volatile { return (*this)(reading, block); }
-    
+    Packet(unsigned int address, char * buffer, unsigned int length, operation_value operation) : address(address), buffer(buffer), length(length), operation(operation), index(0), checksum(0) { }
+        
     inline bool valid() volatile { return Safe<Packet>(this)->valid(); }
     bool valid();
         
@@ -45,6 +37,8 @@ public:
       return *this;
     }
 
+    inline bool operator ()(bool block = false) volatile { return enqueue(block); }
+
   protected:
     void initiate();
     bool process();
@@ -54,12 +48,22 @@ public:
     const unsigned int address;
     char * const buffer;
     const unsigned int length;
-    operation_value operation;
+    const operation_value operation;
     int unsigned index;
     char checksum;
-
-    bool operator ()(operation_value op, bool block) volatile;
-    bool operator ()(operation_value op);
+  };
+  
+public:
+  Eeprom() { }
+  
+  class ReadPacket : public Packet {
+  public:
+    ReadPacket(unsigned int address, char * buffer, unsigned int length) : Packet(address, buffer, length, reading) { }
+  };
+  
+  class WritePacket : public Packet {
+  public:
+    WritePacket(unsigned int address, char * buffer, unsigned int length) : Packet(address, buffer, length, writing) { }
   };
 };
 
