@@ -23,6 +23,8 @@ void Gyros::measure() {
 }
 
 float Gyros::Gyro::operator ()() const {
+  value.wait();
+  reference.wait();
   return (value() / reference() - 1.0) * range;
 }
 

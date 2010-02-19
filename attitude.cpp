@@ -38,7 +38,6 @@ void Attitude::Measure::run() {
 }
 
 void Attitude::Estimate::run() {
-  // TODO: wait for analog conversions here?
   app.gyros.yaw.estimate();
   app.gyros.pitch.estimate();
   app.gyros.roll.estimate();

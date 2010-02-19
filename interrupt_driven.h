@@ -13,7 +13,7 @@ public:
     Item() { }
     void interrupt();
     
-    inline void wait() { do { } while (const_cast<volatile Queable<Item>*>(next)); }
+    inline void wait() const { do { } while (const_cast<volatile Queable<Item>*>(next)); }
     
   protected:
     bool enqueue(bool block = false);

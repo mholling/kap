@@ -8,7 +8,7 @@ private:
   Queable& operator =(const Queable&);
   
 protected:
-  Queable* prev; // TODO: make these volatile?
+  Queable* prev;
   Queable* next;
   static Queable* first;
   
