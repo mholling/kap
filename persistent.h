@@ -3,6 +3,7 @@
 
 #include "eeprom.h"
 #include "safe.h"
+#include "timer.h"
 
 template <typename T>
 class Persistent : public T {
@@ -22,11 +23,14 @@ public:
     read >> static_cast<volatile T&>(*this);
     return true;
   }
-  
+    
   void store() volatile {
     write << static_cast<volatile T&>(*this);
     write();
+    stored();
   }
+
+  Timer::Stamp stored;
 };
 
 #endif

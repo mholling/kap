@@ -35,7 +35,7 @@ void CalibrateTask::run() {
     state.h2 = state.w3 + state.b2;
   }
   
-  // TODO: periodical store state to eeprom
+  if (!state.stored.since(600)) state.store(); // save calibration data every 5 minutes
   
   vector = measured - state.bias;
 }

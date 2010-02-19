@@ -30,8 +30,23 @@ public:
   
   void interrupt();
   
-  unsigned long int timestamp() volatile { return Safe<Timer>(this)->timestamp(); }
-  unsigned long int timestamp();
+  class Stamp {
+  private:
+    unsigned long int value;
+    
+  public:
+    Stamp();
+    void operator ()() volatile;
+    long int seconds() const volatile;
+    long int seconds_ago() const volatile;
+    bool since(long int duration_in_seconds) const volatile;
+
+    inline bool operator >(const Stamp& rhs) const volatile { return value > rhs.value; }
+    inline bool operator <(const Stamp& rhs) const volatile { return value < rhs.value; }
+  };
+
+  unsigned long int stamp() volatile { return Safe<Timer>(this)->stamp(); }
+  unsigned long int stamp();
   
   class Diagnostic {
   private:
