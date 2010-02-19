@@ -9,7 +9,7 @@ class Motors {
   
 public:
   Motors();
-  inline void init() { disable(true); }
+  void init() { disable(true); }
   
   ShiftRegister::Bit disable;
   ShiftRegister::Bit enable;

@@ -20,7 +20,7 @@ public:
     virtual void run() = 0;
   };
 
-  inline void init() { sei(); }
+  void init() { sei(); }
 };
 
 #endif

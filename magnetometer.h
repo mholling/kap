@@ -25,9 +25,9 @@ private:
   class MeasurementPacket : public I2C::ReadPacket {
   private:
     unsigned char data[7];
-    inline int x() { return static_cast<int>((static_cast<unsigned int>(data[0]) << 8) | static_cast<unsigned int>(data[1])); }
-    inline int y() { return static_cast<int>((static_cast<unsigned int>(data[2]) << 8) | static_cast<unsigned int>(data[3])); }
-    inline int z() { return static_cast<int>((static_cast<unsigned int>(data[4]) << 8) | static_cast<unsigned int>(data[5])); }
+    int x() { return static_cast<int>((static_cast<unsigned int>(data[0]) << 8) | static_cast<unsigned int>(data[1])); }
+    int y() { return static_cast<int>((static_cast<unsigned int>(data[2]) << 8) | static_cast<unsigned int>(data[3])); }
+    int z() { return static_cast<int>((static_cast<unsigned int>(data[4]) << 8) | static_cast<unsigned int>(data[5])); }
   protected:
     void terminate() {
       I2C::ReadPacket::terminate();
@@ -45,8 +45,8 @@ private:
   public:
     MeasurementPacket() : I2C::ReadPacket(data, i2c_address, measurement_registers, 7) { }
     Vector vector;
-    inline bool ready() { return data[6] & 0x01; }
-    inline char status() { return data[6]; }
+    bool ready() { return data[6] & 0x01; }
+    char status() { return data[6]; }
   };
   
   ConfigPacket configure;
@@ -55,7 +55,7 @@ private:
 
 public:
   Magnetometer() : sleep(ModePacket::sleep), wake(ModePacket::continuous), calibrate(measure.vector, calibration_address, 0.97) { }
-  inline void init() { configure(); wake(); calibrate.init(); }
+  void init() { configure(); wake(); calibrate.init(); }
   
   MeasurementPacket measure;
   CalibrateTask calibrate;

@@ -1,8 +1,6 @@
 #ifndef __I2C_H_
 #define __I2C_H_
 
-// TODO: reviews inlines everywhere
-
 #include "interrupt_driven.h"
 
 class I2C : public InterruptDriven<I2C> {  

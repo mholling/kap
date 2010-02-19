@@ -12,8 +12,8 @@ private:
   const unsigned char sreg;
   
 public:
-  inline CriticalSection() : sreg(SREG) { cli(); }
-  inline ~CriticalSection() { SREG = sreg; }
+  CriticalSection() : sreg(SREG) { cli(); }
+  ~CriticalSection() { SREG = sreg; }
 };
 
 #endif

@@ -49,7 +49,7 @@ public:
   class ReadPacket : public Packet {
   public:
     ReadPacket(unsigned int address, char * buffer, unsigned int length) : Packet(address, buffer, length, reading) { }
-    inline bool operator ()() { return Packet::operator()(true) && valid(); }
+    bool operator ()() { return Packet::operator()(true) && valid(); }
   };
   
   class WritePacket : public Packet {

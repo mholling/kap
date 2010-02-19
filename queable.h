@@ -38,13 +38,13 @@ protected:
 public:
   Queable() : prev(0), next(0) { }
 
-  inline bool pending() { return next != 0; }
-  inline bool at_head() { return first == this; }
+  bool pending() { return next != 0; }
+  bool at_head() { return first == this; }
 
-  inline static T& head() { return *static_cast<T*>(first); }
+  static T& head() { return *static_cast<T*>(first); }
 
-  inline static bool empty() { return first == 0; }
-  inline static bool any() { return first != 0; }
+  static bool empty() { return first == 0; }
+  static bool any() { return first != 0; }
 };
 
 template <typename T> Queable<T>* Queable<T>::first(0);

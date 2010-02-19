@@ -7,7 +7,7 @@ public:
   enum { frequency = 4000, resolution = F_CPU / frequency / 2 };
   
   Pwm();
-  inline void init() { }
+  void init() { }
 };
 
 #endif

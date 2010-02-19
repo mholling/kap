@@ -47,9 +47,9 @@ private:
   class MeasurementPacket : public I2C::ReadPacket {
   private:
     unsigned char data[6];
-    inline int x() { return reinterpret_cast<int *>(data)[0]; }
-    inline int y() { return reinterpret_cast<int *>(data)[1]; }
-    inline int z() { return reinterpret_cast<int *>(data)[2]; }
+    int x() { return reinterpret_cast<int *>(data)[0]; }
+    int y() { return reinterpret_cast<int *>(data)[1]; }
+    int z() { return reinterpret_cast<int *>(data)[2]; }
   protected:
     void terminate() {
       I2C::ReadPacket::terminate();

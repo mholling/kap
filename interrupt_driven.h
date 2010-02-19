@@ -8,7 +8,7 @@ template <typename T>
 class InterruptDriven {
 public:
   InterruptDriven() { }
-  inline void init() { }
+  void init() { }
   
   class Item : protected Queable<Item> {
   public:

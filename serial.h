@@ -13,7 +13,7 @@ public:
   
   void init() { }
   
-  inline void interrupt();
+  void interrupt();
   
   void send(const char *data);
   void debug(const char * const s, char b);

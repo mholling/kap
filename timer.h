@@ -25,7 +25,7 @@ public:
   enum { frequency = 35 };
   
   Timer();
-  inline void init() { }
+  void init() { }
   
   void interrupt();
   
@@ -40,8 +40,8 @@ public:
     long int seconds_ago() const;
     bool since(long int duration_in_seconds) const;
 
-    inline bool operator >(const Stamp& rhs) const { return value > rhs.value; }
-    inline bool operator <(const Stamp& rhs) const { return value < rhs.value; }
+    bool operator >(const Stamp& rhs) const { return value > rhs.value; }
+    bool operator <(const Stamp& rhs) const { return value < rhs.value; }
   };
 
   unsigned long int stamp();

@@ -7,16 +7,16 @@ Analog::Analog() {
   DIDR0 = _BV(ADC3D) | _BV(ADC2D) | _BV(ADC1D) | _BV(ADC0D);
 }
 
-inline void Analog::Channel::initiate() {
+void Analog::Channel::initiate() {
   ADMUX = _BV(REFS0) | (number & 0x0f);
   ADCSRA |= _BV(ADSC);
 }
 
-inline bool Analog::Channel::process() {
+bool Analog::Channel::process() {
   return true;
 }
 
-inline void Analog::Channel::terminate() {
+void Analog::Channel::terminate() {
   data = ADCL + (ADCH << 8);
 }
 

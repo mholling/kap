@@ -11,12 +11,12 @@ I2C::I2C() {
   TWCR = _BV(TWEN) | _BV(TWIE) | _BV(TWINT);
 }
 
-inline void I2C::Packet::initiate() {
+void I2C::Packet::initiate() {
   index = 0;
   start();
 }
 
-inline void I2C::Packet::terminate() {
+void I2C::Packet::terminate() {
   stop();
 }
 
@@ -70,24 +70,24 @@ bool I2C::Packet::process() {
   return complete;
 }
 
-inline const void I2C::Packet::start() {
+const void I2C::Packet::start() {
   TWCR = _BV(TWEN) | _BV(TWIE) | _BV(TWINT) | _BV(TWEA) | _BV(TWSTA);
 }
 
-inline const void I2C::Packet::stop() {
+const void I2C::Packet::stop() {
   TWCR = _BV(TWEN) | _BV(TWIE) | _BV(TWINT) | _BV(TWEA) | _BV(TWSTO);
   while (TWCR & _BV(TWSTO)) ;
 }
 
-inline const void I2C::Packet::ack() {
+const void I2C::Packet::ack() {
   TWCR = _BV(TWEN) | _BV(TWIE) | _BV(TWINT) | _BV(TWEA);
 }
 
-inline const void I2C::Packet::nack() {
+const void I2C::Packet::nack() {
   TWCR = _BV(TWEN) | _BV(TWIE) | _BV(TWINT);
 }
 
-inline const void I2C::Packet::release() {
+const void I2C::Packet::release() {
   TWCR = _BV(TWEN) | _BV(TWIE) | _BV(TWINT) | _BV(TWEA);
 }
 

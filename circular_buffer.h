@@ -10,8 +10,8 @@ private:
 public:
   CircularBuffer() : start(0), end(0) { }
   
-  inline bool empty() const { return start == end; }
-  inline bool any() const { return start != end; }
+  bool empty() const { return start == end; }
+  bool any() const { return start != end; }
 
   CircularBuffer& operator <<(const T& t) {
     buffer[end] = t;

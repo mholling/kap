@@ -14,11 +14,11 @@ public:
   
   const Matrix& operator =(const Matrix& rhs) { for (int i = 0; i < M * N; i++) data[i] = rhs[i]; return *this; }
   
-  inline float& operator ()(int m, int n) { return data[m * N + n]; }
-  inline const float& operator ()(int m, int n) const { return data[m * N + n]; }
+  float& operator ()(int m, int n) { return data[m * N + n]; }
+  const float& operator ()(int m, int n) const { return data[m * N + n]; }
 
-  inline float& operator [](int m) { return data[m]; }
-  inline const float& operator [](int m) const { return data[m]; }
+  float& operator [](int m) { return data[m]; }
+  const float& operator [](int m) const { return data[m]; }
 
   const Matrix& operator +=(const Matrix& rhs) { for (int i = 0; i < M * N; i++) data[i] += rhs[i]; return *this; }
   const Matrix operator +(const Matrix& rhs) const { return Matrix(*this) += rhs; }

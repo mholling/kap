@@ -22,7 +22,7 @@ private:
 
 public:
   Gyros();
-  inline void init() { normal_mode(true); enable(true); }
+  void init() { normal_mode(true); enable(true); }
   
    ShiftRegister::Bit disable;
    ShiftRegister::Bit enable;

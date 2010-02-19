@@ -13,7 +13,7 @@ void Spi::Packet::initiate() {
   SPDR = index < tx_length ? tx_buffer[index] : 0;
 }
 
-inline void Spi::Packet::terminate() {
+void Spi::Packet::terminate() {
   toggle_select();
 }
 
