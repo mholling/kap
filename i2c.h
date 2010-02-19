@@ -5,7 +5,7 @@
 
 #include "interrupt_driven.h"
 
-class I2C : public InterruptDriven {  
+class I2C : public InterruptDriven<I2C> {  
 public:
   enum { frequency = 300000 }; // cannot use 400000 as TWSTO doesn't get released and a hang results
   
@@ -35,8 +35,6 @@ public:
 
   public:    
     Packet(unsigned char * buffer, unsigned char address, unsigned char reg, unsigned int length, read_write_value read_write) : buffer(buffer), length(length), read_write(read_write), index(0), address(address), reg(reg) { }
-    
-    bool operator ()(bool block = false) { return enqueue(block); }
   };
   
   class ReadPacket : public Packet {

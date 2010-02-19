@@ -4,7 +4,7 @@
 #include "interrupt_driven.h"
 #include "critical_section.h"
 
-class Analog : public InterruptDriven {
+class Analog : public InterruptDriven<Analog> {
 public:
   Analog();
     
@@ -20,7 +20,7 @@ public:
   public:
     Channel(unsigned int number) : number(number) { }
     
-    inline void convert(bool block = false) { enqueue(block); }    
+    inline void convert(bool block = false) { Item::operator ()(block); }    
     inline float operator ()() const { CriticalSection cs; return static_cast<float>(data) / 1024; }
   };
 };

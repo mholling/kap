@@ -3,7 +3,7 @@
 
 #include "interrupt_driven.h"
 
-class Eeprom : public InterruptDriven {
+class Eeprom : public InterruptDriven<Eeprom> {
 protected:
   class Packet : public Item {
   public:
@@ -12,8 +12,6 @@ protected:
     Packet(unsigned int address, char * buffer, unsigned int length, operation_value operation) : address(address), buffer(buffer), length(length), operation(operation), index(0), checksum(0) { }
         
     bool valid();
-    
-    inline bool operator ()(bool block = false) { return enqueue(block); }
     
     template <typename T>
     Packet& operator <<(const T& t) { // TODO: disallow if pending?
