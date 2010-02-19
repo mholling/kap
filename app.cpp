@@ -27,5 +27,7 @@ void App::run() {
 //   PORTB ^= _BV(5); 
 // }
 
+App app;
+
 void __cxa_pure_virtual(void) { }
 void atexit(void) { }
