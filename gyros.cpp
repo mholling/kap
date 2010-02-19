@@ -1,6 +1,5 @@
 #include "gyros.h"
 #include "app.h"
-#include "safe.h"
 
 Gyros::Gyros() :
   yaw_channel(0),
@@ -27,7 +26,7 @@ float Gyros::Gyro::operator ()() const {
   return (value() / reference() - 1.0) * range;
 }
 
-Gyros::Gyro::Estimate::Estimate(const Gyro& gyro, const volatile Angle& measured) :
+Gyros::Gyro::Estimate::Estimate(const Gyro& gyro, const Angle& measured) :
    Scheduler::Task(20),
    gyro(gyro),
    measured(const_cast<Angle&>(measured)),

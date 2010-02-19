@@ -22,8 +22,8 @@ protected:
   const float lambda;
   
 public:
-  CalibrateTask(const volatile Vector& measured, unsigned int address, float lambda) : Scheduler::Task(20), measured(const_cast<Vector&>(measured)), lambda(lambda), state(address) { }
-  void init() volatile { state.init(); }
+  CalibrateTask(const Vector& measured, unsigned int address, float lambda) : Scheduler::Task(20), measured(const_cast<Vector&>(measured)), lambda(lambda), state(address) { }
+  void init() { state.init(); }
   void run();
   
   Persistent<State> state; // TODO: make protected eventually

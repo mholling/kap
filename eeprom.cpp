@@ -1,7 +1,6 @@
 #include "eeprom.h"
 #include <avr/io.h>
 #include "app.h"
-#include "safe.h"
 
 bool Eeprom::Packet::valid() {
   char test = checksum;

@@ -1,6 +1,7 @@
 #include "motors.h"
 #include <avr/io.h>
-#include "app.h"
+#include "critical_section.h"
+#include "pwm.h"
 
 Motors::Motors() :
     disable(standby_shift_register_pin, true),
@@ -12,6 +13,7 @@ Motors::Motors() :
 }
 
 void Motors::Motor::set(float value) {
+  CriticalSection cs;
   if (polarity * value > 0.0) {
     in1_reg |= in1_mask;
     in2_reg &= ~in2_mask;    

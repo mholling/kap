@@ -2,7 +2,6 @@
 #include "app.h"
 #include "vector.h"
 #include "quaternion.h"
-#include "safe.h"
 
 Attitude::Attitude() : measure(app.accelerometer.measure.vector, app.magnetometer.calibrate.vector), estimate() { }
 
@@ -16,8 +15,8 @@ void Attitude::Measure::run() {
   app.magnetometer.measure.wait();
   app.magnetometer.calibrate();
 
-  const Vector b1 = Safe<const Vector>(gravity)->normalised();  // gravity
-  const Vector b2 = b1.cross(*Safe<const Vector>(magnetism)).normalised(); // magnetic west
+  const Vector b1 = gravity.normalised();             // gravity
+  const Vector b2 = b1.cross(magnetism).normalised(); // magnetic west
   const Vector b3 = b1.cross(b2);
   
   const Vector b1r1a1_plus_b2r2a2(a2 * b2[2] - a1 * b1[1], a1 * b1[0], -a2 * b2[0]);
@@ -30,13 +29,11 @@ void Attitude::Measure::run() {
   const float gamma = sqrt(alpha * alpha + beta * beta);
 
   if (alpha >= 0) {
-    Quaternion q(b3r3 * (gamma + alpha) + b3_plus_r3 * beta, (gamma + alpha) * b3_dot_r3_plus_1);
-    q /= 2 * sqrt(gamma * (gamma + alpha) * b3_dot_r3_plus_1);
-    *Safe<Quaternion>(quaternion) = q;
+    quaternion = Quaternion(b3r3 * (gamma + alpha) + b3_plus_r3 * beta, (gamma + alpha) * b3_dot_r3_plus_1);
+    quaternion /= 2 * sqrt(gamma * (gamma + alpha) * b3_dot_r3_plus_1);
   } else {
-    Quaternion q(b3r3 * beta + b3_plus_r3 * (gamma - alpha), beta * b3_dot_r3_plus_1);
-    q /= 2 * sqrt(gamma * (gamma - alpha) * b3_dot_r3_plus_1);
-    *Safe<Quaternion>(quaternion) = q;
+    quaternion = Quaternion(b3r3 * beta + b3_plus_r3 * (gamma - alpha), beta * b3_dot_r3_plus_1);
+    quaternion /= 2 * sqrt(gamma * (gamma - alpha) * b3_dot_r3_plus_1);
   }
 }
 

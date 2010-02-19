@@ -22,8 +22,8 @@ public:
   
   // Hardware:
   Scheduler scheduler;
-  volatile Serial serial;
-  volatile Timer timer;
+   Serial serial;
+   Timer timer;
   Eeprom eeprom;
   I2C i2c;
   Magnetometer magnetometer;
@@ -31,7 +31,7 @@ public:
   Analog analog;
   Gyros gyros;
   Spi spi;
-  volatile ShiftRegister shift_register;  
+   ShiftRegister shift_register;  
   Pwm pwm;
   Motors motors;
   

@@ -2,30 +2,29 @@
 #define __PERSISTENT_H_
 
 #include "eeprom.h"
-#include "safe.h"
 #include "timer.h"
 
 template <typename T>
 class Persistent : public T {
 private:  
-  volatile Eeprom::ReadPacket read;
-  volatile Eeprom::WritePacket write;
+   Eeprom::ReadPacket read;
+   Eeprom::WritePacket write;
   
 public:
   Persistent(unsigned int address) :
-    read( address, reinterpret_cast<char *>(static_cast<T*>(this)), sizeof(T)),
+    read(address, reinterpret_cast<char *>(static_cast<T*>(this)), sizeof(T)),
     write(address, reinterpret_cast<char *>(static_cast<T*>(this)), sizeof(T)) { }
   
-  void init() volatile { if (!restore()) Safe<T>(this)->defaults(); }
+  void init() { if (!restore()) T::defaults(); }
 
-  bool restore() volatile {
+  bool restore() {
     if (!read()) return false;
-    read >> static_cast<volatile T&>(*this);
+    read >> static_cast<T&>(*this);
     return true;
   }
     
-  void store() volatile {
-    write << static_cast<volatile T&>(*this);
+  void store() {
+    write << static_cast<T&>(*this);
     write();
     stored();
   }

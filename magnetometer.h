@@ -49,16 +49,16 @@ private:
     inline char status() { return data[6]; }
   };
   
-  volatile ConfigPacket configure;
-  volatile ModePacket sleep;
-  volatile ModePacket wake;
+  ConfigPacket configure;
+  ModePacket sleep;
+  ModePacket wake;
 
 public:
   Magnetometer() : sleep(ModePacket::sleep), wake(ModePacket::continuous), calibrate(measure.vector, calibration_address, 0.97) { }
   inline void init() { configure(); wake(); calibrate.init(); }
   
-  volatile MeasurementPacket measure;
-  volatile CalibrateTask calibrate;
+  MeasurementPacket measure;
+  CalibrateTask calibrate;
 };
 
 #endif

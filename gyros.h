@@ -24,17 +24,17 @@ public:
   Gyros();
   inline void init() { normal_mode(true); enable(true); }
   
-  volatile ShiftRegister::Bit disable;
-  volatile ShiftRegister::Bit enable;
-  volatile ShiftRegister::Bit test_mode;
-  volatile ShiftRegister::Bit normal_mode;
+   ShiftRegister::Bit disable;
+   ShiftRegister::Bit enable;
+   ShiftRegister::Bit test_mode;
+   ShiftRegister::Bit normal_mode;
   
   void measure();
   
   class Gyro {
   private:
-    const volatile Analog::Channel& value;
-    const volatile Analog::Channel& reference;
+    const Analog::Channel& value;
+    const Analog::Channel& reference;
     const float range;
     
     class Estimate : public Scheduler::Task {
@@ -53,7 +53,7 @@ public:
       void correct();
 
     public:
-      Estimate(const Gyro& gyro, const volatile Angle& measured);
+      Estimate(const Gyro& gyro, const Angle& measured);
       void run();
 
       float angle() const { return x1; }
@@ -62,11 +62,11 @@ public:
     };
     
   public:
-    Gyro(volatile Analog::Channel& value, volatile Analog::Channel& reference, unsigned int range, const volatile Angle& measured) : value(value), reference(reference), range(range), estimate(*this, measured) { }
+    Gyro(Analog::Channel& value,  Analog::Channel& reference, unsigned int range, const Angle& measured) : value(value), reference(reference), range(range), estimate(*this, measured) { }
     
     float operator ()() const;
     
-    volatile Estimate estimate;
+     Estimate estimate;
   };
   
   Gyro yaw;

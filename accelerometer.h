@@ -69,17 +69,17 @@ private:
     Vector vector;
   };
   
-  volatile RatePacket set_rate;
-  volatile ModePacket standby;
-  volatile ModePacket wake;
-  volatile InterruptConfigPacket configure_interrupt;
-  volatile DataFormatPacket set_data_format;
+  RatePacket set_rate;
+  ModePacket standby;
+  ModePacket wake;
+  InterruptConfigPacket configure_interrupt;
+  DataFormatPacket set_data_format;
 
 public:
   Accelerometer() : set_rate(RatePacket::hz_50), standby(ModePacket::standby), wake(ModePacket::measure) { }
   void init() { set_rate(); set_data_format(); configure_interrupt(); wake(); }
   
-  volatile MeasurementPacket measure;
+  MeasurementPacket measure;
 };
 
 #endif

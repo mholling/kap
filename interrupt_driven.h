@@ -11,20 +11,20 @@ public:
   class Item : public Queable<Item> {
   public:
     Item() { }
-    bool enqueue(bool block = false) volatile;
-    bool enqueue();
     void interrupt();
     
-    inline void wait() volatile { do { } while (next); }
+    inline void wait() { do { } while (const_cast<volatile Queable<Item>*>(next)); }
     
   protected:
+    bool enqueue(bool block = false);
+
     virtual void initiate()  = 0;
     virtual bool process()   = 0;  // return true if interrupt sequence for the item is complete
     virtual void terminate() = 0;
     virtual void after_enqueue() { }
   
   private:
-    void dequeue();
+    void dequeue(); // TODO: needed?
   };
   
   void interrupt();

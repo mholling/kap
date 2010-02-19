@@ -3,7 +3,6 @@
 #include <avr/io.h>
 #include <util/twi.h>
 #include "serial.h"
-#include "safe.h"
 
 I2C::I2C() {
   PORTC |= _BV(PINC4) | _BV(PINC5); // set them high to enable pullups

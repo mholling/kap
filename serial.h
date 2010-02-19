@@ -7,26 +7,24 @@
 class Serial {
 private:
   CircularBuffer<char, 64> buffer;
-
-  void send(const char *data);
     
 public:
   Serial();
   
-  void init() volatile { }
+  void init() { }
   
   inline void interrupt();
   
-  void send(const char *data) volatile;
-  void debug(const char * const s, char b) volatile;
-  void debug(const char * const s, bool b) volatile;
-  void debug(const char * const s, int b) volatile;
-  void debug_b(const char * const s, char b) volatile;
-  void debug(const char * const s, float f) volatile;
-  void debug(float f) volatile;
-  void debug(int i) volatile;
-  void debug(const Vector v) volatile;
-  void line() volatile;
+  void send(const char *data);
+  void debug(const char * const s, char b);
+  void debug(const char * const s, bool b);
+  void debug(const char * const s, int b);
+  void debug_b(const char * const s, char b);
+  void debug(const char * const s, float f);
+  void debug(float f);
+  void debug(int i);
+  void debug(const Vector v);
+  void line();
 };
 
 #endif

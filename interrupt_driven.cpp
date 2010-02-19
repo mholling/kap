@@ -1,16 +1,14 @@
 #include "interrupt_driven.h"
-#include "safe.h"
+#include "critical_section.h"
 
-bool InterruptDriven::Item::enqueue(bool block) volatile {
-  bool success = Safe<Item>(this)->enqueue();
-  if (success && block) wait();
-  return success;
-}
-
-bool InterruptDriven::Item::enqueue() {
-  if (!Queable<Item>::enqueue()) return false;
-  after_enqueue();
-  if (at_head()) initiate();
+bool InterruptDriven::Item::enqueue(bool block) {
+  { // TODO: change this to operator () ?
+    CriticalSection cs;
+    if (!Queable<Item>::enqueue()) return false;
+    after_enqueue();
+    if (at_head()) initiate();
+  }
+  if (block) wait();
   return true;
 }
 

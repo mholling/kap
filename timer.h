@@ -2,7 +2,6 @@
 #define __TIMER_H_
 
 #include "scheduler.h"
-#include "safe.h"
 #include "diagnostic_task.h"
 
 class Timer {
@@ -13,20 +12,20 @@ private:
   private:
     unsigned int count;
     
-    volatile DiagnosticTask diagnostic;
+     DiagnosticTask diagnostic;
     
   public:
     Task() : Scheduler::Task(0), count(0) { }
     void run();
   };
   
-  volatile Task task;
+   Task task;
   
 public:
   enum { frequency = 35 };
   
   Timer();
-  inline void init() volatile { }
+  inline void init() { }
   
   void interrupt();
   
@@ -36,16 +35,15 @@ public:
     
   public:
     Stamp();
-    void operator ()() volatile;
-    long int seconds() const volatile;
-    long int seconds_ago() const volatile;
-    bool since(long int duration_in_seconds) const volatile;
+    void operator ()();
+    long int seconds() const;
+    long int seconds_ago() const;
+    bool since(long int duration_in_seconds) const;
 
-    inline bool operator >(const Stamp& rhs) const volatile { return value > rhs.value; }
-    inline bool operator <(const Stamp& rhs) const volatile { return value < rhs.value; }
+    inline bool operator >(const Stamp& rhs) const { return value > rhs.value; }
+    inline bool operator <(const Stamp& rhs) const { return value < rhs.value; }
   };
 
-  unsigned long int stamp() volatile { return Safe<Timer>(this)->stamp(); }
   unsigned long int stamp();
   
   class Diagnostic {

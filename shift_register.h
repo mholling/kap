@@ -2,12 +2,11 @@
 #define __SHIFT_REGISTER_H_
 
 #include "spi.h"
-#include "safe.h"
 
 class ShiftRegister {
 public:
   ShiftRegister();
-  void init() volatile;
+  void init() ;
   
   unsigned char bits;
   

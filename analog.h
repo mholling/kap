@@ -2,7 +2,7 @@
 #define __ADC_H_
 
 #include "interrupt_driven.h"
-#include "safe.h"
+#include "critical_section.h"
 
 class Analog : public InterruptDriven {
 public:
@@ -20,10 +20,8 @@ public:
   public:
     Channel(unsigned int number) : number(number) { }
     
-    inline void convert(bool block = false) volatile { enqueue(block); }
-    
-    inline float operator ()() const volatile { return (*Safe<const Channel>(this))(); }
-    inline float operator ()() const { return static_cast<float>(data) / 1024; }
+    inline void convert(bool block = false) { enqueue(block); }    
+    inline float operator ()() const { CriticalSection cs; return static_cast<float>(data) / 1024; }
   };
 };
 

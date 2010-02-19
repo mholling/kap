@@ -1,16 +1,18 @@
 #include "scheduler.h"
+#include "critical_section.h"
 #include <avr/io.h>
 
-void Scheduler::Task::operator ()() {
-  if (enqueue())
-    if (at_head()) start();
+bool Scheduler::Task::enqueue() {
+  CriticalSection cs;
+  if (!PrioritisedQueable<Task>::enqueue()) return false;
+  if (at_head()) start();
+  return true;
 }
 
 void Scheduler::Task::start() {
-  const unsigned char sreg = SREG;
   sei();
   run();
-  SREG = sreg;
+  cli();
   dequeue();
 }
 

@@ -23,7 +23,7 @@ private:
     Quaternion quaternion;
     
   public:
-    Measure(const volatile Vector& gravity, const volatile Vector& magnetism) : Scheduler::Task(20), gravity(const_cast<Vector&>(gravity)), magnetism(const_cast<Vector&>(magnetism)), a1(1.0), a2(2.0), yaw(quaternion, &Quaternion::yaw), pitch(quaternion, &Quaternion::pitch), roll(quaternion, &Quaternion::roll) { }
+    Measure(const Vector& gravity, const Vector& magnetism) : Scheduler::Task(20), gravity(const_cast<Vector&>(gravity)), magnetism(const_cast<Vector&>(magnetism)), a1(1.0), a2(2.0), yaw(quaternion, &Quaternion::yaw), pitch(quaternion, &Quaternion::pitch), roll(quaternion, &Quaternion::roll) { }
     void run();
   
     Angle yaw, pitch, roll;
@@ -39,9 +39,9 @@ public:
   Attitude();
   void init() { }
   
-  volatile Initiate initiate;
-  volatile Measure measure;
-  volatile Estimate estimate;
+   Initiate initiate;
+   Measure measure;
+   Estimate estimate;
 };
 
 #endif

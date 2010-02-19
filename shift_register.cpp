@@ -7,8 +7,8 @@ ShiftRegister::ShiftRegister() : bits(0) {
   PORTD |= _BV(PIND4);
 }
 
-void ShiftRegister::init() volatile {
-  volatile Bit clear(0,0);
+void ShiftRegister::init() {
+  Bit clear(0,0);
   clear(true);
 }
 

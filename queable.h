@@ -1,8 +1,6 @@
 #ifndef __QUEABLE_H_
 #define __QUEABLE_H_
 
-#include "safe.h"
-
 template <typename T>
 class Queable {
 private:
@@ -10,7 +8,7 @@ private:
   Queable& operator =(const Queable&);
   
 protected:
-  Queable* prev;
+  Queable* prev; // TODO: make these volatile?
   Queable* next;
   static Queable* first;
   

@@ -1,5 +1,6 @@
 #include "timer.h"
 #include <avr/io.h>
+#include "critical_section.h"
 #include "app.h"
 
 Timer::Timer() : count(0) {
@@ -10,6 +11,7 @@ Timer::Timer() : count(0) {
 }
 
 unsigned long int Timer::stamp() {
+  CriticalSection cs;
   return count * OCR2A + TCNT2;
 }
 
@@ -17,19 +19,19 @@ Timer::Stamp::Stamp() {
   (*this)();
 }
 
-void Timer::Stamp::operator ()() volatile {
+void Timer::Stamp::operator ()() {
   value = app.timer.stamp();
 }
 
-long int Timer::Stamp::seconds() const volatile {
+long int Timer::Stamp::seconds() const {
   return value / (F_CPU / 1024);
 }
 
-long int Timer::Stamp::seconds_ago() const volatile {
+long int Timer::Stamp::seconds_ago() const {
   return Stamp().seconds() - seconds();
 }
 
-bool Timer::Stamp::since(long int duration_in_seconds) const volatile {
+bool Timer::Stamp::since(long int duration_in_seconds) const {
   return seconds_ago() < duration_in_seconds;
 }
 
@@ -55,6 +57,6 @@ Timer::Diagnostic::~Diagnostic() {
 }
 
 ISR(TIMER2_COMPA_vect) {
-  Safe<Timer>(app.timer)->interrupt();
+  app.timer.interrupt();
 }
 

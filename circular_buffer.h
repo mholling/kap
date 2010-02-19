@@ -1,8 +1,6 @@
 #ifndef __CIRCULAR_BUFFER_H_
 #define __CIRCULAR_BUFFER_H_
 
-#include "safe.h"
-
 template <typename T, int N>
 class CircularBuffer {
 private:
