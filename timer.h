@@ -1,6 +1,8 @@
 #ifndef __TIMER_H_
 #define __TIMER_H_
 
+// TODO: add a Timer::TimedTask class enabling other classes to queue up there own timed tasks?
+
 #include "scheduler.h"
 #include "diagnostic_task.h"
 
