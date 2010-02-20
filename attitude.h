@@ -35,6 +35,12 @@ private:
     void run();
   };
   
+  class Control: public Scheduler::Task {
+  public:
+    Control() : Scheduler::Task(20) { }
+    void run();
+  };
+  
 public:
   Attitude();
   void init() { }
@@ -42,6 +48,7 @@ public:
    Initiate initiate;
    Measure measure;
    Estimate estimate;
+   Control control;
 };
 
 #endif

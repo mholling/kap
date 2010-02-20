@@ -46,6 +46,7 @@ void Timer::Task::run() {
   app.attitude.initiate();
   app.attitude.measure();
   app.attitude.estimate();
+  app.attitude.control();
   
   if (count % (Timer::frequency / 10) == 0) diagnostic();
 }

@@ -16,6 +16,7 @@ void App::run() {
   pwm.init();
   motors.init();
   attitude.init();
+  pid.init();
     
   // scheduler.run();
   

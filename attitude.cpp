@@ -42,3 +42,8 @@ void Attitude::Estimate::run() {
   app.gyros.pitch.estimate();
   app.gyros.roll.estimate();
 }
+
+void Attitude::Control::run() {
+  app.pid.yaw();
+  app.pid.pitch();
+}

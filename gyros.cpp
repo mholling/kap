@@ -22,7 +22,7 @@ void Gyros::measure() {
   ref_channel.convert();
 }
 
-float Gyros::Gyro::operator ()() const {
+float Gyros::Gyro::rate() const {
   value.wait();
   reference.wait();
   return (value() / reference() - 1.0) * range;
@@ -43,7 +43,7 @@ Gyros::Gyro::Estimate::Estimate(const Gyro& gyro, const Angle& measured) :
 }
 
 void Gyros::Gyro::Estimate::run() {
-  z1 = gyro();
+  z1 = gyro.rate();
   z2 = measured();
   predict();
   correct();

@@ -15,6 +15,7 @@
 #include "pwm.h"
 #include "motors.h"
 #include "attitude.h"
+#include "pid.h"
 
 class App {  
 public:
@@ -37,6 +38,7 @@ public:
   
   // Calculations:
   Attitude attitude;
+  Pid pid;
   
   void run();
 };

@@ -64,9 +64,9 @@ public:
   public:
     Gyro(Analog::Channel& value,  Analog::Channel& reference, unsigned int range, const Angle& measured) : value(value), reference(reference), range(range), estimate(*this, measured) { }
     
-    float operator ()() const;
+    float rate() const;
     
-     Estimate estimate;
+    Estimate estimate;
   };
   
   Gyro yaw;

@@ -8,9 +8,9 @@ void DiagnosticTask::run() {
   app.serial.debug(app.magnetometer.measure.vector);
   app.serial.debug(app.magnetometer.calibrate.state.bias);
   
-  app.serial.debug(app.gyros.yaw());
-  app.serial.debug(app.gyros.pitch());
-  app.serial.debug(app.gyros.roll());
+  app.serial.debug(app.gyros.yaw.rate());
+  app.serial.debug(app.gyros.pitch.rate());
+  app.serial.debug(app.gyros.roll.rate());
     
   app.serial.line();
 }
