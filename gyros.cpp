@@ -11,27 +11,31 @@ Gyros::Gyros() :
   enable(power_down_shift_register_pin, false),
   test_mode(self_test_shift_register_pin, true),
   normal_mode(self_test_shift_register_pin, false),
-  yaw(yaw_channel, fixed_channel, 300.0, app.attitude.measure.yaw),
-  pitch(pitch_channel, ref_channel, 400.0, app.attitude.measure.pitch),
-  roll(roll_channel, ref_channel, 400.0, app.attitude.measure.roll) { }
+  yaw(yaw_channel, fixed_channel, 300.0, &Attitude::Measure::yaw),
+  pitch(pitch_channel, ref_channel, 400.0, &Attitude::Measure::pitch),
+  roll(roll_channel, ref_channel, 400.0, &Attitude::Measure::roll) { }
   
-void Gyros::measure() {
-  yaw_channel.convert();
-  pitch_channel.convert();
-  roll_channel.convert();
-  ref_channel.convert();
+void Gyros::Measure::run() {
+  app.gyros.yaw.measure();
+  app.gyros.pitch.measure();
+  app.gyros.roll.measure();
 }
 
-float Gyros::Gyro::rate() const {
-  value.wait();
+void Gyros::Gyro::Measure::run() {
+  reference.convert(); // TODO: won't work for fixed (fake) channel
+  value.convert();
+}
+
+float Gyros::Gyro::Measure::rate() const {
   reference.wait();
+  value.wait();
   return (value() / reference() - 1.0) * range;
 }
 
-Gyros::Gyro::Estimate::Estimate(const Gyro& gyro, const Angle& measured) :
+Gyros::Gyro::Estimate::Estimate(const Gyro& gyro, Attitude::Measure::angle_method_type measured_angle) :
    Scheduler::Task(20),
    gyro(gyro),
-   measured(const_cast<Angle&>(measured)),
+   measured_angle(measured_angle),
    x1(0.0), x2(0.0), x3(0.0),
    dt(1.0 / Timer::frequency),
    q1(0.2 * dt), q2(0.2), q3(0.1), // TODO: values??
@@ -43,8 +47,8 @@ Gyros::Gyro::Estimate::Estimate(const Gyro& gyro, const Angle& measured) :
 }
 
 void Gyros::Gyro::Estimate::run() {
-  z1 = gyro.rate();
-  z2 = measured();
+  z1 = gyro.measure.rate();
+  z2 = (app.attitude.measure.*measured_angle)();
   predict();
   correct();
 }

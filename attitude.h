@@ -4,10 +4,9 @@
 #include "scheduler.h"
 #include "vector.h"
 #include "quaternion.h"
-#include "angle.h"
 
 class Attitude {
-private:
+public:
   class Initiate : public Scheduler::Task {
   public:
     Initiate() : Scheduler::Task(20) { }
@@ -23,10 +22,13 @@ private:
     Quaternion quaternion;
     
   public:
-    Measure(const Vector& gravity, const Vector& magnetism) : Scheduler::Task(20), gravity(const_cast<Vector&>(gravity)), magnetism(const_cast<Vector&>(magnetism)), a1(1.0), a2(2.0), yaw(quaternion, &Quaternion::yaw), pitch(quaternion, &Quaternion::pitch), roll(quaternion, &Quaternion::roll) { }
+    Measure(const Vector& gravity, const Vector& magnetism) : Scheduler::Task(20), gravity(gravity), magnetism(magnetism), a1(1.0), a2(2.0) { }
     void run();
-  
-    Angle yaw, pitch, roll;
+    
+    typedef float (Measure::*angle_method_type)() const;    
+    float   yaw() const { return quaternion.yaw(); }
+    float pitch() const { return quaternion.pitch(); }
+    float  roll() const { return quaternion.roll(); }
   };
   
   class Estimate : public Scheduler::Task {
@@ -41,14 +43,13 @@ private:
     void run();
   };
   
-public:
   Attitude();
   void init() { }
   
-   Initiate initiate;
-   Measure measure;
-   Estimate estimate;
-   Control control;
+  Initiate initiate;
+  Measure measure;
+  Estimate estimate;
+  Control control;
 };
 
 #endif
