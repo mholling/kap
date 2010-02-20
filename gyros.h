@@ -3,56 +3,45 @@
 
 #include "analog.h"
 #include "shift_register.h"
-#include "scheduler.h"
+#include "timer.h"
 #include "attitude.h"
 
 class Gyros {
 private:
   enum { power_down_shift_register_pin = 0, self_test_shift_register_pin = 5 };
-  
-  Analog::Channel yaw_channel;
-  Analog::Channel pitch_channel;
-  Analog::Channel roll_channel;
-  Analog::Channel ref_channel;
 
   class FakeChannel : public Analog::Channel {
   public:
     FakeChannel(float value) : Analog::Channel(0x0f) { data = 1024 * value; }
-  } fixed_channel;
-  
-  class Measure : public Scheduler::Task {
-  public:
-    Measure() : Scheduler::Task(20) { }
-    void run();
   };
-
+  
 public:
   Gyros();
   void init() { normal_mode(true); enable(true); }
+  
+  class Channels {
+  public:
+    Channels() : yaw(0), pitch(1), roll(2), ref(3), fixed(0.5) { }
+    
+    Analog::Channel yaw;
+    Analog::Channel pitch;
+    Analog::Channel roll;
+    Analog::Channel ref;
+    FakeChannel fixed;
+  } channels;
   
   ShiftRegister::Bit disable;
   ShiftRegister::Bit enable;
   ShiftRegister::Bit test_mode;
   ShiftRegister::Bit normal_mode;
-  
-  Measure measure;
     
   class Gyro {
   private:
-    class Measure : public Scheduler::Task {
-    private:
-      Analog::Channel& value;
-      Analog::Channel& reference;
-      const float range;
+    Analog::Channel& value;
+    Analog::Channel& reference;
+    const float range;
     
-    public:
-      Measure(Analog::Channel& value, Analog::Channel& reference, float range) : Scheduler::Task(20), value(value), reference(reference), range(range) { }
-      void run();
-      
-      float rate() const;
-    };
-    
-    class Estimate : public Scheduler::Task {
+    class Estimate : public Timer::Task {
     private:
       const Gyros::Gyro& gyro;
       const Attitude::Measure::angle_method_type measured_angle;
@@ -72,14 +61,14 @@ public:
       void run();
 
       float angle() const { return x1; }
-      float rate() const { return x2; }
-      float bias() const { return x3; }
+      float  rate() const { return x2; }
+      float  bias() const { return x3; }
     };
     
   public:
-    Gyro(Analog::Channel& value, Analog::Channel& reference, unsigned int range, Attitude::Measure::angle_method_type measured_angle) : measure(value, reference, range), estimate(*this, measured_angle) { }
-    
-    Measure measure;
+    Gyro(Analog::Channel& value, Analog::Channel& reference, unsigned int range, Attitude::Measure::angle_method_type measured_angle) : value(value), reference(reference), range(range), estimate(*this, measured_angle) { }
+        
+    float rate() const;
     Estimate estimate;
   };
   

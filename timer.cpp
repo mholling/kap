@@ -10,6 +10,33 @@ Timer::Timer() : count(0) {
   TIMSK2 = _BV(OCIE2A); 
 }
 
+void Timer::interrupt() {
+  count++;
+  app.magnetometer.measure();
+  app.accelerometer.measure();
+  app.gyros.channels.yaw.measure();
+  app.gyros.channels.pitch.measure();
+  app.gyros.channels.roll.measure();
+  app.gyros.channels.ref.measure();
+
+  timed_tasks();
+}
+
+void Timer::TimedTasks::run() {
+  app.magnetometer.measure.wait(); // TODO: this should really happen inside magnetometer.calibrate task
+  app.magnetometer.calibrate();
+  // app.accelerometer.measure.wait();
+  // app.accelerometer.calibrate();
+  app.accelerometer.measure.wait(); // TODO: this should really happen inside attitude.measure task
+  app.attitude.measure();
+  app.gyros.yaw.estimate();
+  app.gyros.pitch.estimate();
+  app.gyros.roll.estimate();
+  app.pid.yaw();
+  app.pid.pitch();
+  app.diagnostic();
+}
+
 unsigned long int Timer::stamp() {
   CriticalSection cs;
   return count * OCR2A + TCNT2;
@@ -33,22 +60,6 @@ long int Timer::Stamp::seconds_ago() const {
 
 bool Timer::Stamp::since(long int duration_in_seconds) const {
   return seconds_ago() < duration_in_seconds;
-}
-
-void Timer::interrupt() {
-  count++;
-  task();
-}
-
-void Timer::Task::run() {
-  count++;
-  
-  app.attitude.initiate();
-  app.attitude.measure();
-  app.attitude.estimate();
-  app.attitude.control();
-  
-  if (count % (Timer::frequency / 10) == 0) diagnostic();
 }
 
 Timer::Diagnostic::Diagnostic(const char *message) : start(app.timer.stamp()), message(message) { }

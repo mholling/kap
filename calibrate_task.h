@@ -1,11 +1,11 @@
 #ifndef __CALIBRATE_TASK_H_
 #define __CALIBRATE_TASK_H_
 
-#include "scheduler.h"
+#include "timer.h"
 #include "vector.h"
 #include "persistent.h"
 
-class CalibrateTask : public Scheduler::Task {
+class CalibrateTask : public Timer::Task {
 protected:
   class State {
   public:
@@ -22,7 +22,7 @@ protected:
   const float lambda;
   
 public:
-  CalibrateTask(const Vector& measured, unsigned int address, float lambda) : Scheduler::Task(20), measured(const_cast<Vector&>(measured)), lambda(lambda), state(address) { }
+  CalibrateTask(const Vector& measured, unsigned int address, float lambda) : measured(const_cast<Vector&>(measured)), lambda(lambda), state(address) { }
   void init() { state.init(); }
   void run();
   

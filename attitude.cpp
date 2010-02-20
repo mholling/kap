@@ -3,18 +3,9 @@
 #include "vector.h"
 #include "quaternion.h"
 
-Attitude::Attitude() : measure(app.accelerometer.measure.vector, app.magnetometer.calibrate.vector), estimate() { }
-
-void Attitude::Initiate::run() {
-  app.magnetometer.measure();
-  app.accelerometer.measure();
-  app.gyros.measure();  
-}
+Attitude::Attitude() : measure(app.accelerometer.measure.vector, app.magnetometer.calibrate.vector) { }
 
 void Attitude::Measure::run() {
-  app.magnetometer.measure.wait();
-  app.magnetometer.calibrate();
-
   const Vector b1 = gravity.normalised();             // gravity
   const Vector b2 = b1.cross(magnetism).normalised(); // magnetic west
   const Vector b3 = b1.cross(b2);
@@ -35,15 +26,4 @@ void Attitude::Measure::run() {
     quaternion = Quaternion(b3r3 * beta + b3_plus_r3 * (gamma - alpha), beta * b3_dot_r3_plus_1);
     quaternion /= 2 * sqrt(gamma * (gamma - alpha) * b3_dot_r3_plus_1);
   }
-}
-
-void Attitude::Estimate::run() {
-  app.gyros.yaw.estimate();
-  app.gyros.pitch.estimate();
-  app.gyros.roll.estimate();
-}
-
-void Attitude::Control::run() {
-  app.pid.yaw();
-  app.pid.pitch();
 }

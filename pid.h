@@ -10,13 +10,13 @@ public:
   Pid();
   void init() { yaw.init(); pitch.init(); }
   
-  class Controller : public Scheduler::Task {
+  class Controller : public Timer::Task {
   private:
     const Gyros::Gyro& gyro;
     const Motors::Motor& motor;
   
   public:
-    Controller(const Gyros::Gyro& gyro, const Motors::Motor& motor) : Scheduler::Task(20), gyro(gyro), motor(motor) { }
+    Controller(const Gyros::Gyro& gyro, const Motors::Motor& motor) : gyro(gyro), motor(motor) { }
     void init() { }
     
     void run();

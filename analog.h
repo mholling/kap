@@ -20,7 +20,7 @@ public:
   public:
     Channel(unsigned int number) : number(number) { }
     
-    void convert(bool block = false) { Item::operator ()(block); }    
+    void measure(bool block = false) { Item::operator ()(block); }    
     float operator ()() const { CriticalSection cs; return static_cast<float>(data) / 1024; }
   };
 };

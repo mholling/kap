@@ -1,27 +1,17 @@
 #ifndef __TIMER_H_
 #define __TIMER_H_
 
-// TODO: add a Timer::TimedTask class enabling other classes to queue up there own timed tasks?
-
 #include "scheduler.h"
-#include "diagnostic_task.h"
 
 class Timer {
 private:
   unsigned long int count;
   
-  class Task : public Scheduler::Task {
-  private:
-    unsigned int count;
-    
-     DiagnosticTask diagnostic;
-    
+  class TimedTasks : public Scheduler::Task {
   public:
-    Task() : Scheduler::Task(0), count(0) { }
+    TimedTasks() : Scheduler::Task(Timer::Task::priority + 1) { }
     void run();
-  };
-  
-   Task task;
+  } timed_tasks;
   
 public:
   enum { frequency = 35 };
@@ -30,6 +20,12 @@ public:
   void init() { }
   
   void interrupt();
+  
+  class Task : public Scheduler::Task {
+  public:
+    enum { priority = 100 };
+    Task() : Scheduler::Task(priority) { }
+  };
   
   class Stamp {
   private:
