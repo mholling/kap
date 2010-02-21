@@ -28,4 +28,6 @@ bool Spi::Packet::process() {
 
 ISR(SPI_STC_vect) {
   app.spi.interrupt();
+  // Spi::Packet::head().interrupt();
+  // app.spi.interrupt<Spi::Packet>();
 }

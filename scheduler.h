@@ -17,7 +17,7 @@ public:
     
     void operator ()() { enqueue(); }
     
-    virtual void run() = 0;
+    virtual void run() = 0; // TODO: can we use a template to remove this virtual method too?
   };
 
   void init() { sei(); }

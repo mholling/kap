@@ -29,7 +29,7 @@ private:
     int y() { return static_cast<int>((static_cast<unsigned int>(data[2]) << 8) | static_cast<unsigned int>(data[3])); }
     int z() { return static_cast<int>((static_cast<unsigned int>(data[4]) << 8) | static_cast<unsigned int>(data[5])); }
   protected:
-    void terminate() {
+    void terminate() { // TODO: this won't work without virtual!!
       I2C::ReadPacket::terminate();
       
       // // for PCB

@@ -3,9 +3,10 @@
 
 #include "interrupt_driven.h"
 
-class Eeprom : public InterruptDriven<Eeprom> {
+class Eeprom : public InterruptDriven {
 protected:
-  class Packet : public Item {
+  class Packet : public Item<Packet> {
+    friend class Item<Packet>;
   public:
     enum operation_value { reading, writing };
 
@@ -56,6 +57,10 @@ public:
   public:
     WritePacket(unsigned int address, char * buffer, unsigned int length) : Packet(address, buffer, length, writing) { }
   };
+  
+  void interrupt() { // TODO: better way to do this?
+    Queable<Packet>::head().interrupt();
+  }
 };
 
 #endif

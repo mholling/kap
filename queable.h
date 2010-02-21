@@ -19,7 +19,7 @@ protected:
     return true;
   }
   
-  virtual void dequeue() {
+  void dequeue() {
     if (next) {
       next->prev = prev;
       prev->next = next;

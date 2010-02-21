@@ -4,13 +4,17 @@
 #include "queable.h"
 #include "critical_section.h"
 
-template <typename T>
 class InterruptDriven {
 public:
   InterruptDriven() { }
   void init() { }
   
-  class Item : protected Queable<Item> {
+  // TODO: better name than Item?
+  template <typename T>
+  class Item : protected Queable<T> {
+    friend class Queable<T>; // TODO: needed?
+    // friend class InterruptDriven;
+    
   public:
     Item() { }
     
@@ -21,38 +25,32 @@ public:
     }
 
     void interrupt() {
-      if (process()) {
-        terminate();
+      if (static_cast<T&>(*this).process()) {
+        static_cast<T&>(*this).terminate();
         dequeue();
       }
     }
     
-    void wait() const { do { } while (const_cast<volatile Queable<Item>*>(Queable<Item>::next)); }
+    void wait() const { do { } while (const_cast<volatile Queable<T>*>(Queable<T>::next)); }
     
   protected:
-    virtual void initiate()  = 0;
-    virtual bool process()   = 0;  // return true if interrupt sequence for the item is complete
-    virtual void terminate() = 0;
-    virtual void after_enqueue() { }
+    void after_enqueue() { }
   
   private:
     bool enqueue() {
       CriticalSection cs;
-      if (!Queable<Item>::enqueue()) return false;
-      after_enqueue();
-      if (Queable<Item>::at_head()) initiate();
+      if (!Queable<T>::enqueue()) return false;
+      static_cast<T&>(*this).after_enqueue();
+      if (Queable<T>::at_head()) static_cast<T&>(*this).initiate();
       return true;
     }
 
     void dequeue() {
-      Queable<Item>::dequeue();
-      if (Queable<Item>::any()) Queable<Item>::head().initiate();
+      Queable<T>::dequeue();
+      // if (Queable<T>::any()) Queable<T>::head().initiate(); // TODO: which one?
+      if (Queable<T>::any()) static_cast<T&>(*Queable<T>::first).initiate();
     }
   };
-  
-  void interrupt() {
-    Queable<Item>::head().interrupt();
-  }
 };
 
 #endif

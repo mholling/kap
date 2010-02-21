@@ -3,13 +3,15 @@
 
 #include "interrupt_driven.h"
 
-class I2C : public InterruptDriven<I2C> {  
+class I2C : public InterruptDriven {  
 public:
   enum { frequency = 300000 }; // cannot use 400000 as TWSTO doesn't get released and a hang results
   
   I2C();
   
-  class Packet : public Item {
+  class Packet : public Item<Packet> {
+    friend class Item<Packet>;
+    
   protected:
     enum read_write_value { read, write };
     
@@ -44,6 +46,10 @@ public:
   public:
     WritePacket(unsigned char * buffer, unsigned char address, unsigned char reg, int length) : Packet(buffer, address, reg, length, write) { }
   };
+  
+  void interrupt() {
+    Queable<Packet>::head().interrupt();
+  }
 };
 
 #endif

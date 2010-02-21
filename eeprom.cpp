@@ -39,4 +39,6 @@ bool Eeprom::Packet::process() {
 
 ISR(EE_READY_vect) {
   app.eeprom.interrupt();
+  // Eeprom::Packet::head().interrupt();
+  // app.eeprom.interrupt<Eeprom::Packet>();
 }

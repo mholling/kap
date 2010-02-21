@@ -51,7 +51,7 @@ private:
     int y() { return reinterpret_cast<int *>(data)[1]; }
     int z() { return reinterpret_cast<int *>(data)[2]; }
   protected:
-    void terminate() {
+    void terminate() { // TODO: this won't work without virtual!!
       I2C::ReadPacket::terminate();
       
       // // for PCB:

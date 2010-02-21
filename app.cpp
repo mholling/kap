@@ -32,5 +32,5 @@ void App::run() {
 
 App app;
 
-void __cxa_pure_virtual(void) { }
+void __cxa_pure_virtual(void) { } // TODO: needed?
 void atexit(void) { }

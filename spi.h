@@ -3,11 +3,13 @@
 
 #include "interrupt_driven.h"
 
-class Spi : public InterruptDriven<Spi> {
+class Spi : public InterruptDriven {
 public:
   Spi();
   
-  class Packet : public Item {
+  class Packet : public Item<Packet> {
+    friend class Item<Packet>;
+    
   protected:
     void initiate();
     bool process();
@@ -22,7 +24,7 @@ public:
     unsigned char * const rx_buffer;
     const unsigned int rx_length;
     unsigned int index;
-    virtual void toggle_select() = 0;    
+    virtual void toggle_select() = 0; // TODO: use template trick to avoid virtual!
   };
   
   class ReadPacket : public Packet {
@@ -34,6 +36,10 @@ public:
   public:
     WritePacket(const unsigned char *tx_buffer, unsigned int tx_length) : Packet(tx_buffer, tx_length, 0, 0) { }
   };
+  
+  void interrupt() {
+    Queable<Packet>::head().interrupt();
+  }
 };
 
 #endif
