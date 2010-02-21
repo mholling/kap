@@ -15,6 +15,8 @@ void App::run() {
   shift_register.init();  
   pwm.init();
   motors.init();
+  
+  trajectory.init();
   attitude.init();
   pid.init();
     

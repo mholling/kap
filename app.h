@@ -15,6 +15,7 @@
 #include "pwm.h"
 #include "motors.h"
 #include "attitude.h"
+#include "trajectory.h"
 #include "pid.h"
 #include "diagnostic.h"
 
@@ -39,6 +40,7 @@ public:
   
   // Calculations:
   Attitude attitude;
+  Trajectory trajectory;
   Pid pid;
   Diagnostic diagnostic;
   

@@ -32,6 +32,7 @@ void Timer::TimedTasks::run() {
   app.gyros.yaw.estimate();
   app.gyros.pitch.estimate();
   app.gyros.roll.estimate();
+  app.trajectory();
   app.pid.yaw();
   app.pid.pitch();
   app.diagnostic();
