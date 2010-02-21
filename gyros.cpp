@@ -20,8 +20,7 @@ Gyros::Gyro::Estimate::Estimate(const Gyro& gyro, Attitude::Measure::angle_metho
    gyro(gyro),
    measured_angle(measured_angle),
    x1(0.0), x2(0.0), x3(0.0),
-   dt(1.0 / Timer::frequency),
-   q1(0.2 * dt), q2(0.2), q3(0.1), // TODO: values??
+   q1(0.2 / Timer::frequency), q2(0.2), q3(0.1), // TODO: values??
    q11(q1 * q1), q12(q1 * q2), q13(q1 * q3),
    q21(q2 * q1), q22(q2 * q2), q23(q2 * q3),
    q31(q3 * q1), q32(q3 * q2), q33(q3 * q3),
@@ -39,16 +38,16 @@ void Gyros::Gyro::Estimate::run() {
 void Gyros::Gyro::Estimate::predict() {
   // compute  x = A x + B u
   x2  = z1 - x3; // rate = gyro - bias
-  x1 += dt * x2; // angle += dt * rate
+  x1 += x2 / Timer::frequency; // angle += dt * rate
   
   // compute intermediate values for  A P A'
-  float t1 = p11 - dt * p31;
-  float t2 = p13 - dt * p33;
-  float t3 = p31 - dt * p33;
+  float t1 = p11 - p31 / Timer::frequency;
+  float t2 = p13 - p33 / Timer::frequency;
+  float t3 = p31 - p33 / Timer::frequency;
   float t4 = p33;
   
   // compute  P = A P A' + Q
-  p11 = q11 + t1 - dt * t2;
+  p11 = q11 + t1 - t2 / Timer::frequency;
   p12 = q12 - t2;
   p13 = q13 + t2;
   p21 = q21 - t3;
