@@ -17,11 +17,10 @@ public:
     const bool set;
     
   protected:
-    void toggle_select();
     void after_enqueue();
     
   public:
-    Bit(unsigned int bit, bool set) : Spi::WritePacket(&data, 1), mask(1 << bit), set(set) { }
+    Bit(unsigned int bit, bool set) : Spi::WritePacket(PORTD, PIND4, &data, 1), mask(1 << bit), set(set) { }
   };
 };
 

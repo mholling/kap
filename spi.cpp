@@ -9,12 +9,12 @@ Spi::Spi() {
 
 void Spi::Packet::initiate() {
   index = 0;
-  toggle_select();
+  select_reg ^= select_mask;
   SPDR = index < tx_length ? tx_buffer[index] : 0;
 }
 
 void Spi::Packet::terminate() {
-  toggle_select();
+  select_reg ^= select_mask;
 }
 
 bool Spi::Packet::process() {
