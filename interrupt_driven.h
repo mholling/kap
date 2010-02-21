@@ -9,14 +9,11 @@ public:
   InterruptDriven() { }
   void init() { }
   
-  // TODO: better name than Item?
   template <typename T>
-  class Item : protected Queable<T> {
-    friend class Queable<T>; // TODO: needed?
-    // friend class InterruptDriven;
+  class Driven : protected Queable<T> {
     
   public:
-    Item() { }
+    Driven() { }
     
     bool operator ()(bool block = false) {
       if (!enqueue()) return false;
@@ -34,21 +31,22 @@ public:
     void wait() const { do { } while (const_cast<volatile Queable<T>*>(Queable<T>::next)); }
     
   protected:
-    void after_enqueue() { }
+    virtual void after_enqueue() { }
+    virtual void before_dequeue() { }
   
   private:
     bool enqueue() {
       CriticalSection cs;
       if (!Queable<T>::enqueue()) return false;
-      static_cast<T&>(*this).after_enqueue();
+      after_enqueue();
       if (Queable<T>::at_head()) static_cast<T&>(*this).initiate();
       return true;
     }
 
     void dequeue() {
+      before_dequeue();
       Queable<T>::dequeue();
-      // if (Queable<T>::any()) Queable<T>::head().initiate(); // TODO: which one?
-      if (Queable<T>::any()) static_cast<T&>(*Queable<T>::first).initiate();
+      if (Queable<T>::any()) Queable<T>::head().initiate();
     }
   };
 };

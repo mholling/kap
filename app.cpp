@@ -25,12 +25,7 @@ void App::run() {
   while (true) { }
 }
 
-// void toggle_led() {
-//   DDRB |= _BV(5);
-//   PORTB ^= _BV(5); 
-// }
-
 App app;
 
-void __cxa_pure_virtual(void) { } // TODO: needed?
-void atexit(void) { }
+void __cxa_pure_virtual(void) { } // needed for pure virtual methods
+// void atexit(void) { }

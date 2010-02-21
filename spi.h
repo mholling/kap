@@ -7,8 +7,9 @@ class Spi : public InterruptDriven {
 public:
   Spi();
   
-  class Packet : public Item<Packet> {
-    friend class Item<Packet>;
+  class Packet : public Driven<Packet> {
+    friend class Driven<Packet>;
+    friend class Spi;
     
   protected:
     void initiate();
@@ -38,9 +39,7 @@ public:
     WritePacket(volatile unsigned char& select_reg, int select_pin, const unsigned char *tx_buffer, unsigned int tx_length) : Packet(select_reg, select_pin, tx_buffer, tx_length, 0, 0) { }
   };
   
-  void interrupt() {
-    Queable<Packet>::head().interrupt();
-  }
+  void interrupt() { Packet::head().interrupt(); }
 };
 
 #endif

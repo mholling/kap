@@ -8,8 +8,9 @@ class Analog : public InterruptDriven {
 public:
   Analog();
     
-  class Channel : public Item<Channel> {
-    friend class Item<Channel>;
+  class Channel : public Driven<Channel> {
+    friend class Driven<Channel>;
+    friend class Analog;
     
   protected:
     const unsigned int number;
@@ -22,13 +23,11 @@ public:
   public:
     Channel(unsigned int number) : number(number) { }
     
-    void measure(bool block = false) { Item<Channel>::operator ()(block); }    
+    void measure(bool block = false) { Driven<Channel>::operator ()(block); }    
     float operator ()() const { CriticalSection cs; return static_cast<float>(data) / 1024; }
   };
   
-  void interrupt() {
-    Queable<Channel>::head().interrupt();
-  }
+  void interrupt() { Channel::head().interrupt(); }
 };
 
 #endif

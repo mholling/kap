@@ -47,12 +47,10 @@ public:
   void run();
 };
 
-// void toggle_led();
-
 extern App app;
 
 extern "C" void __cxa_pure_virtual(void);
-extern "C" void atexit(void);
+// extern "C" void atexit(void);
 
 
 // class EepromTest : public Eeprom::Packet {

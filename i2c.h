@@ -9,8 +9,9 @@ public:
   
   I2C();
   
-  class Packet : public Item<Packet> {
-    friend class Item<Packet>;
+  class Packet : public Driven<Packet> {
+    friend class Driven<Packet>;
+    friend class I2C;
     
   protected:
     enum read_write_value { read, write };
@@ -47,9 +48,7 @@ public:
     WritePacket(unsigned char * buffer, unsigned char address, unsigned char reg, int length) : Packet(buffer, address, reg, length, write) { }
   };
   
-  void interrupt() {
-    Queable<Packet>::head().interrupt();
-  }
+  void interrupt() { Packet::head().interrupt(); }
 };
 
 #endif

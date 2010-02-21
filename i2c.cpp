@@ -93,6 +93,4 @@ const void I2C::Packet::release() {
 
 ISR(TWI_vect) {
   app.i2c.interrupt();
-  // I2C::Packet::head().interrupt();
-  // app.i2c.interrupt<I2C::Packet>();
 }

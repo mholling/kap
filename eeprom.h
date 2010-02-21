@@ -5,8 +5,10 @@
 
 class Eeprom : public InterruptDriven {
 protected:
-  class Packet : public Item<Packet> {
-    friend class Item<Packet>;
+  class Packet : public Driven<Packet> {
+    friend class Driven<Packet>;
+    friend class Eeprom;
+    
   public:
     enum operation_value { reading, writing };
 
@@ -58,9 +60,7 @@ public:
     WritePacket(unsigned int address, char * buffer, unsigned int length) : Packet(address, buffer, length, writing) { }
   };
   
-  void interrupt() { // TODO: better way to do this?
-    Queable<Packet>::head().interrupt();
-  }
+  void interrupt() { Packet::head().interrupt(); }
 };
 
 #endif

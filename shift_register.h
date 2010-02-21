@@ -17,7 +17,7 @@ public:
     const bool set;
     
   protected:
-    void after_enqueue();
+    virtual void after_enqueue();
     
   public:
     Bit(unsigned int bit, bool set) : Spi::WritePacket(PORTD, PIND4, &data, 1), mask(1 << bit), set(set) { }

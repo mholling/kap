@@ -50,10 +50,9 @@ private:
     int x() { return reinterpret_cast<int *>(data)[0]; }
     int y() { return reinterpret_cast<int *>(data)[1]; }
     int z() { return reinterpret_cast<int *>(data)[2]; }
+    
   protected:
-    void terminate() { // TODO: this won't work without virtual!!
-      I2C::ReadPacket::terminate();
-      
+    virtual void before_dequeue() {
       // // for PCB:
       // vector.x =  static_cast<float>(y());
       // vector.y = -static_cast<float>(z());
@@ -64,6 +63,7 @@ private:
       vector[1] = -static_cast<float>(z());
       vector[2] =  static_cast<float>(x());
     }
+    
   public:
     MeasurementPacket() : I2C::ReadPacket(data, i2c_address, datax0_reg, 6) { }
     Vector vector;

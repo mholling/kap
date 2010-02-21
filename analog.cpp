@@ -22,6 +22,4 @@ void Analog::Channel::terminate() {
 
 ISR(ADC_vect) {
   app.analog.interrupt();
-  // Analog::Channel::head().interrupt();
-  // app.analog.interrupt<Analog::Channel>();
 }
