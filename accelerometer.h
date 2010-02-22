@@ -67,7 +67,7 @@ private:
 
 public:
   Accelerometer() : set_rate(RatePacket::hz_50), standby(ModePacket::standby), wake(ModePacket::measure), measure(i2c_address, datax0_reg), calibrate(measure, calibration_address, 0.97) { }
-  void init() { set_rate(); set_data_format(); configure_interrupt(); wake(); }
+  void init() { set_rate(); set_data_format(); configure_interrupt(); wake(); calibrate.init(); }
   
   MeasurementPacket measure;
   CalibrateTask calibrate;
