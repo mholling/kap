@@ -8,7 +8,7 @@ private:
   Queable& operator =(const Queable&);
   
 protected:
-  T* prev; // TODO: make these private members and define inline pre-casted next(), etc.?
+  T* prev;
   T* next;
   static T* first;
   
@@ -23,8 +23,8 @@ protected:
     if (next) {
       next->prev = prev;
       prev->next = next;
-      if (first == this) first = next;
-      if (first == this) first = 0;
+      if (first == static_cast<T*>(this)) first = next;
+      if (first == static_cast<T*>(this)) first = 0;
       next = prev = 0;
     }
   }
@@ -39,10 +39,10 @@ public:
   Queable() : prev(0), next(0) { }
 
   bool pending() { return next != 0; }
-  bool at_head() { return first == this; }
+  bool at_head() { return first == static_cast<T*>(this); }
 
-  static T& head() { return *static_cast<T*>(first); }
-
+  static T& head() { return *first; }
+  
   static bool empty() { return first == 0; }
   static bool any() { return first != 0; }
 };
