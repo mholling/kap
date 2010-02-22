@@ -8,7 +8,7 @@ private:
   Queable& operator =(const Queable&);
   
 protected:
-  Queable* prev;
+  Queable* prev; // TODO: make these private members and define inline pre-casted next(), etc.?
   Queable* next;
   static Queable* first;
   

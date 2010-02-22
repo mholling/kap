@@ -4,7 +4,7 @@
 
 bool Scheduler::Task::enqueue() {
   CriticalSection cs;
-  if (!PrioritisedQueable<Task>::enqueue()) return false;
+  if (!Base::enqueue()) return false;
   if (at_head()) start();
   return true;
 }
@@ -17,6 +17,6 @@ void Scheduler::Task::start() {
 }
 
 void Scheduler::Task::dequeue() {
-  PrioritisedQueable<Task>::dequeue();
+  Base::dequeue();
   if (any()) head().start();
 }

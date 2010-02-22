@@ -11,6 +11,7 @@ public:
   
   template <typename T>
   class Driven : protected Queable<T> {
+    typedef Queable<T> Base;
     
   public:
     Driven() { }
@@ -28,7 +29,7 @@ public:
       }
     }
     
-    void wait() const { do { } while (const_cast<volatile Queable<T>*>(Queable<T>::next)); }
+    void wait() const { do { } while (const_cast<volatile Base*>(Base::next)); }
     
   protected:
     virtual void after_enqueue() { }
@@ -37,16 +38,16 @@ public:
   private:
     bool enqueue() {
       CriticalSection cs;
-      if (!Queable<T>::enqueue()) return false;
+      if (!Base::enqueue()) return false;
       after_enqueue();
-      if (Queable<T>::at_head()) static_cast<T&>(*this).initiate();
+      if (Base::at_head()) static_cast<T&>(*this).initiate();
       return true;
     }
 
     void dequeue() {
       before_dequeue();
-      Queable<T>::dequeue();
-      if (Queable<T>::any()) Queable<T>::head().initiate();
+      Base::dequeue();
+      if (Base::any()) Base::head().initiate();
     }
   };
 };
