@@ -8,14 +8,14 @@ private:
   Queable& operator =(const Queable&);
   
 protected:
-  Queable* prev; // TODO: make these private members and define inline pre-casted next(), etc.?
-  Queable* next;
-  static Queable* first;
+  T* prev; // TODO: make these private members and define inline pre-casted next(), etc.?
+  T* next;
+  static T* first;
   
   bool enqueue() {
     if (pending()) return false;
     if (first) insert_before(first);
-    else prev = next = first = this;
+    else prev = next = first = static_cast<T*>(this);
     return true;
   }
   
@@ -29,10 +29,10 @@ protected:
     }
   }
 
-  void insert_before(Queable* t) {
+  void insert_before(T* t) {
     prev = t->prev;
     next = t;
-    prev->next = next->prev = this;
+    prev->next = next->prev = static_cast<T*>(this);
   }
   
 public:
@@ -47,6 +47,6 @@ public:
   static bool any() { return first != 0; }
 };
 
-template <typename T> Queable<T>* Queable<T>::first(0);
+template <typename T> T* Queable<T>::first(0);
 
 #endif

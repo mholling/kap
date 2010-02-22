@@ -29,7 +29,8 @@ public:
       }
     }
     
-    void wait() const { do { } while (const_cast<volatile Base*>(Base::next)); }
+    // void wait() const { do { } while (const_cast<volatile Base*>(Base::next)); }
+    void wait() const { do { } while (const_cast<volatile T*>(Base::next)); }
     
   protected:
     virtual void after_enqueue() { }

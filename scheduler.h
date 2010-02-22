@@ -7,9 +7,11 @@
 
 class Scheduler {
 public:
-  class Task : protected Prioritised<Queable<Task> > {
+  // class Task : protected Prioritised<Queable<Task> > {
+  class Task : protected Prioritised<Task> {
   private:
-    typedef Prioritised<Queable<Task> > Base;
+    // typedef Prioritised<Queable<Task> > Base;
+    typedef Prioritised<Task> Base;
     
     bool enqueue();
     void start();
