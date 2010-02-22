@@ -22,8 +22,8 @@ private:
     ModePacket(mode_value mode) : I2C::WritePacket(data, i2c_address, mode_register, 1) { data[0] = mode; }
   };
   
-  class MeasurementPacket : public VectorPacket<MeasurementPacket> {
-    friend class VectorPacket<MeasurementPacket>;
+  class MeasurementPacket : public OrientedVectorPacket<MeasurementPacket> {
+    friend class OrientedVectorPacket<MeasurementPacket>;
     
   protected:
     // // PCB:
@@ -37,7 +37,7 @@ private:
     int z() { return  static_cast<int>((static_cast<unsigned int>(data[0]) << 8) | static_cast<unsigned int>(data[1])); }
     
   public:
-    MeasurementPacket(unsigned char i2c_address, unsigned char i2c_registers) : Base(i2c_address, i2c_registers) { }
+    MeasurementPacket(unsigned char i2c_address, unsigned char i2c_registers) : OrientedVectorPacket<MeasurementPacket>(i2c_address, i2c_registers) { }
   };
   
   ConfigPacket configure;

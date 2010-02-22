@@ -18,12 +18,12 @@ protected:
     void defaults();
   };
   
-  const VectorPacketBase& measure;
+  const VectorPacket& measure;
   Vector previous;
   const float lambda;
   
 public:
-  CalibrateTask(const VectorPacketBase& measure, unsigned int address, float lambda) : measure(measure), lambda(lambda), state(address) { }
+  CalibrateTask(const VectorPacket& measure, unsigned int address, float lambda) : measure(measure), lambda(lambda), state(address) { }
   void init() { state.init(); }
   void run();
   

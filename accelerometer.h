@@ -41,8 +41,8 @@ private:
     ConfigPacket() : I2C::WritePacket(data, i2c_address, bw_rate_reg, 6) { }
   };
   
-  class MeasurementPacket : public VectorPacket<MeasurementPacket> {
-    friend class VectorPacket<MeasurementPacket>;
+  class MeasurementPacket : public OrientedVectorPacket<MeasurementPacket> {
+    friend class OrientedVectorPacket<MeasurementPacket>;
     
   protected:
     // // PCB:
@@ -56,7 +56,7 @@ private:
     int z() { return  reinterpret_cast<int *>(data)[0]; }
     
   public:
-    MeasurementPacket(unsigned char i2c_address, unsigned char i2c_registers) : Base(i2c_address, i2c_registers) { }
+    MeasurementPacket(unsigned char i2c_address, unsigned char i2c_registers) : OrientedVectorPacket<MeasurementPacket>(i2c_address, i2c_registers) { }
   };
   
   RatePacket set_rate;
