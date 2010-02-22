@@ -2,8 +2,7 @@
 #define __ACCELEROMETER_H_
 
 #include "i2c.h"
-#include "scheduler.h"
-#include "vector.h"
+#include "vector_packet.h"
 #include <math.h>
 
 // TODO: add a calibration task for the accelerometer as well?
@@ -44,29 +43,22 @@ private:
     ConfigPacket() : I2C::WritePacket(data, i2c_address, bw_rate_reg, 6) { }
   };
   
-  class MeasurementPacket : public I2C::ReadPacket {
-  private:
-    unsigned char data[6];
-    int x() { return reinterpret_cast<int *>(data)[0]; }
-    int y() { return reinterpret_cast<int *>(data)[1]; }
-    int z() { return reinterpret_cast<int *>(data)[2]; }
+  class MeasurementPacket : public VectorPacket<MeasurementPacket> {
+    friend class VectorPacket<MeasurementPacket>;
     
   protected:
-    virtual void before_dequeue() {
-      // // for PCB:
-      // vector.x =  static_cast<float>(y());
-      // vector.y = -static_cast<float>(z());
-      // vector.z = -static_cast<float>(x());
-      
-      // for breadboard:
-      vector[0] = -static_cast<float>(y());
-      vector[1] = -static_cast<float>(z());
-      vector[2] =  static_cast<float>(x());
-    }
+    // // PCB:
+    // int x() { return  reinterpret_cast<int *>(data)[1]; }
+    // int y() { return -reinterpret_cast<int *>(data)[2]; }
+    // int z() { return -reinterpret_cast<int *>(data)[0]; }
+
+    // breadboard:
+    int x() { return -reinterpret_cast<int *>(data)[1]; }
+    int y() { return -reinterpret_cast<int *>(data)[2]; }
+    int z() { return  reinterpret_cast<int *>(data)[0]; }
     
   public:
-    MeasurementPacket() : I2C::ReadPacket(data, i2c_address, datax0_reg, 6) { }
-    Vector vector;
+    MeasurementPacket(unsigned char i2c_address, unsigned char i2c_registers) : Base(i2c_address, i2c_registers) { }
   };
   
   RatePacket set_rate;
@@ -76,7 +68,7 @@ private:
   DataFormatPacket set_data_format;
 
 public:
-  Accelerometer() : set_rate(RatePacket::hz_50), standby(ModePacket::standby), wake(ModePacket::measure) { }
+  Accelerometer() : set_rate(RatePacket::hz_50), standby(ModePacket::standby), wake(ModePacket::measure), measure(i2c_address, datax0_reg) { }
   void init() { set_rate(); set_data_format(); configure_interrupt(); wake(); }
   
   MeasurementPacket measure;
