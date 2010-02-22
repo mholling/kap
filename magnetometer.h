@@ -46,7 +46,7 @@ private:
   ModePacket wake;
 
 public:
-  Magnetometer() : sleep(ModePacket::sleep), wake(ModePacket::continuous), measure(i2c_address, measurement_registers), calibrate(measure.vector, calibration_address, 0.97) { }
+  Magnetometer() : sleep(ModePacket::sleep), wake(ModePacket::continuous), measure(i2c_address, measurement_registers), calibrate(measure, calibration_address, 0.97) { }
   void init() { configure(); wake(); calibrate.init(); }
   
   MeasurementPacket measure;

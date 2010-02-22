@@ -23,11 +23,8 @@ void Timer::interrupt() {
 }
 
 void Timer::TimedTasks::run() {
-  app.magnetometer.measure.wait(); // TODO: this should really happen inside magnetometer.calibrate task
   app.magnetometer.calibrate();
-  // app.accelerometer.measure.wait();
   // app.accelerometer.calibrate();
-  app.accelerometer.measure.wait(); // TODO: this should really happen inside attitude.measure task
   app.attitude.measure();
   app.gyros.yaw.estimate();
   app.gyros.pitch.estimate();

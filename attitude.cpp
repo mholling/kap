@@ -3,10 +3,12 @@
 #include "vector.h"
 #include "quaternion.h"
 
-Attitude::Attitude() : measure(app.accelerometer.measure.vector, app.magnetometer.calibrate.vector) { }
+Attitude::Attitude() : measure(app.accelerometer.measure, app.magnetometer.calibrate.vector) { }
 
 void Attitude::Measure::run() {
-  const Vector b1 = gravity.normalised();             // gravity
+  gravity.wait();
+  
+  const Vector b1 = gravity.vector.normalised();      // gravity
   const Vector b2 = b1.cross(magnetism).normalised(); // magnetic west
   const Vector b3 = b1.cross(b2);
   

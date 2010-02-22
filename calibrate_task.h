@@ -2,6 +2,7 @@
 #define __CALIBRATE_TASK_H_
 
 #include "timer.h"
+#include "vector_packet.h"
 #include "vector.h"
 #include "persistent.h"
 
@@ -17,12 +18,12 @@ protected:
     void defaults();
   };
   
-  const Vector& measured;
+  const VectorPacketBase& measure;
   Vector previous;
   const float lambda;
   
 public:
-  CalibrateTask(const Vector& measured, unsigned int address, float lambda) : measured(const_cast<Vector&>(measured)), lambda(lambda), state(address) { }
+  CalibrateTask(const VectorPacketBase& measure, unsigned int address, float lambda) : measure(measure), lambda(lambda), state(address) { }
   void init() { state.init(); }
   void run();
   
