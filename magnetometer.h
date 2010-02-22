@@ -4,7 +4,6 @@
 #include "i2c.h"
 #include "vector_packet.h"
 #include "calibrate_task.h"
-#include <math.h>
 
 class Magnetometer {
 private:

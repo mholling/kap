@@ -3,13 +3,11 @@
 
 #include "i2c.h"
 #include "vector_packet.h"
-#include <math.h>
-
-// TODO: add a calibration task for the accelerometer as well?
+#include "calibrate_task.h"
 
 class Accelerometer {
 private:
-  enum { i2c_address = 0x1d, bw_rate_reg = 0x2c, power_ctl_reg = 0x2d, int_enable_reg = 0x2e, data_format_reg = 0x31, datax0_reg = 0x32 };
+  enum { i2c_address = 0x1d, bw_rate_reg = 0x2c, power_ctl_reg = 0x2d, int_enable_reg = 0x2e, data_format_reg = 0x31, datax0_reg = 0x32, calibration_address = 0x180 };
   
   class ModePacket : public I2C::WritePacket {
     unsigned char data[1];
@@ -68,10 +66,11 @@ private:
   DataFormatPacket set_data_format;
 
 public:
-  Accelerometer() : set_rate(RatePacket::hz_50), standby(ModePacket::standby), wake(ModePacket::measure), measure(i2c_address, datax0_reg) { }
+  Accelerometer() : set_rate(RatePacket::hz_50), standby(ModePacket::standby), wake(ModePacket::measure), measure(i2c_address, datax0_reg), calibrate(measure, calibration_address, 0.97) { }
   void init() { set_rate(); set_data_format(); configure_interrupt(); wake(); }
   
   MeasurementPacket measure;
+  CalibrateTask calibrate;
 };
 
 #endif

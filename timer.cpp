@@ -24,7 +24,7 @@ void Timer::interrupt() {
 
 void Timer::TimedTasks::run() {
   app.magnetometer.calibrate();
-  // app.accelerometer.calibrate();
+  app.accelerometer.calibrate();
   app.attitude.measure();
   app.gyros.yaw.estimate();
   app.gyros.pitch.estimate();
