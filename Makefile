@@ -13,9 +13,9 @@
 #                uploading to the AVR and the interface where this hardware
 #                is connected.
 
-DEVICE     = atmega168
+DEVICE     = atmega328p
 CLOCK      = 8000000
-PROGRAMMER = -c arduino -P /dev/tty.usbserial-A800csBR -b 19200
+PROGRAMMER = -c arduino -P /dev/tty.usbserial-A800csBR -b 57600
 OBJECTS    = main.o app.o scheduler.o serial.o timer.o i2c.o calibrate_task.o diagnostic.o eeprom.o accelerometer.o analog.o gyros.o spi.o shift_register.o motors.o attitude.o pwm.o trajectory.o pid.o
 
 # Tune the lines below only if you know what you are doing:
@@ -26,9 +26,12 @@ COMPILE = avr-gcc -Wall -Os -DF_CPU=$(CLOCK) -mmcu=$(DEVICE) -mcall-prologues
 # symbolic targets:
 all:	clear main.hex size
 
+increment:
+	ruby increment.rb
+
 size:
     # avr-size -t -B $(OBJECTS)
-	ruby count.rb
+	ruby size.rb
 
 clear:
 	clear; clear
@@ -52,7 +55,7 @@ debug:
 .c.s:
 	$(COMPILE) -S $< -o $@
 
-flash:	all
+flash:	all increment
 	$(AVRDUDE) -U flash:w:main.hex:i
 
 
