@@ -30,8 +30,7 @@ increment:
 	ruby increment.rb
 
 size:
-    # avr-size -t -B $(OBJECTS)
-	ruby size.rb
+	avr-size $(OBJECTS) main.hex
 
 clear:
 	clear; clear
