@@ -30,7 +30,8 @@ increment:
 	ruby increment.rb
 
 size:
-	avr-size $(OBJECTS) main.hex
+    # avr-size $(OBJECTS) main.hex
+	avr-size -C --mcu=$(DEVICE) main.elf
 
 clear:
 	clear; clear
