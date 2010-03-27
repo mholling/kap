@@ -24,12 +24,12 @@ AVRDUDE = avrdude $(PROGRAMMER) -p $(DEVICE)
 COMPILE = avr-gcc -Wall -Os -DF_CPU=$(CLOCK) -mmcu=$(DEVICE) -mcall-prologues
 
 # symbolic targets:
-all:	clear main.hex size
+all:	clear main.hex
 
 increment:
 	ruby increment.rb
 
-size:
+size:	all
     # avr-size $(OBJECTS) main.hex
 	avr-size -C --mcu=$(DEVICE) main.elf
 
@@ -55,7 +55,7 @@ debug:
 .c.s:
 	$(COMPILE) -S $< -o $@
 
-flash:	all increment
+flash:	all size increment
 	$(AVRDUDE) -U flash:w:main.hex:i
 
 
