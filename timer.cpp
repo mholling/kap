@@ -13,24 +13,24 @@ Timer::Timer() : count(0) {
 void Timer::interrupt() {
   count++;
   app.magnetometer.measure();
-  app.accelerometer.measure();
-  app.gyros.channels.yaw.measure();
-  app.gyros.channels.pitch.measure();
-  app.gyros.channels.roll.measure();
-  app.gyros.channels.ref.measure();
+  // app.accelerometer.measure();
+  // app.gyros.channels.yaw.measure();
+  // app.gyros.channels.pitch.measure();
+  // app.gyros.channels.roll.measure();
+  // app.gyros.channels.ref.measure();
 
   timed_tasks();
 }
 
 void Timer::TimedTasks::run() {
   app.magnetometer.calibrate();
-  app.attitude.measure();
-  app.gyros.yaw.estimate();
-  app.gyros.pitch.estimate();
-  app.gyros.roll.estimate();
-  app.trajectory();
-  app.pid.yaw();
-  app.pid.pitch();
+  // app.attitude.measure();
+  // app.gyros.yaw.estimate();
+  // app.gyros.pitch.estimate();
+  // app.gyros.roll.estimate();
+  // app.trajectory();
+  // app.pid.yaw();
+  // app.pid.pitch();
   app.diagnostic();
 }
 

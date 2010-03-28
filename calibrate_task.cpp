@@ -1,4 +1,5 @@
 #include "calibrate_task.h"
+#include "app.h"
 
 void CalibrateTask::State::defaults() {
   P0[0] = P1[1] = P2[2] = P3[3] = 5000000000.0f; // TODO: value?
@@ -36,7 +37,7 @@ void CalibrateTask::run() {
     state.b2 = state.bias.sqabs();
     state.h2 = state.w3 + state.b2;
   
-    if (!state.stored.since(600)) state.store(); // save calibration data every 10 minutes
+    if (!state.stored.since(60 * autosave_minutes)) state.store(); // save calibration data every autosave interval
   }
   
   vector = measure.vector - state.bias;

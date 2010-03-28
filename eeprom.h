@@ -9,18 +9,21 @@ protected:
     friend class Driven<Packet>;
     friend class Eeprom;
     
+    // unsigned int fletcher8();
+    unsigned int crc16();
+    void validate();
+    bool valid();
+    
   public:
     enum operation_value { reading, writing };
 
-    Packet(unsigned int address, char * buffer, unsigned int length, operation_value operation) : address(address), buffer(buffer), length(length), operation(operation), index(0), checksum(0) { }
-        
-    bool valid();
+    Packet(unsigned int address, char * buffer, unsigned int length, operation_value operation) : address(address), buffer(buffer), length(length), operation(operation), index(0) { }
     
     template <typename T>
     Packet& operator <<(const T& t) { // TODO: disallow if pending?
       const char * c = reinterpret_cast<const char *>(const_cast<const T*>(&t));
       for (unsigned int n = 0; n < sizeof(T); n++, c++)
-        checksum ^= (buffer[index++] = *c);
+        buffer[index++] = *c;
       return *this;
     }
 
@@ -43,19 +46,26 @@ protected:
     const unsigned int length;
     const operation_value operation;
     int unsigned index;
-    char checksum;
+    unsigned int checksum;
   };
   
 public:
   Eeprom() { }
   
   class ReadPacket : public Packet {
+  protected:
+    virtual void before_dequeue();
+    bool valid;
+    
   public:
-    ReadPacket(unsigned int address, char * buffer, unsigned int length) : Packet(address, buffer, length, reading) { }
-    bool operator ()() { return Packet::operator()(true) && valid(); }
+    ReadPacket(unsigned int address, char * buffer, unsigned int length) : Packet(address, buffer, length, reading), valid(false) { }
+    bool operator ()() { return Packet::operator()(true) && valid; }
   };
   
   class WritePacket : public Packet {
+  protected:
+    virtual void after_enqueue();
+
   public:
     WritePacket(unsigned int address, char * buffer, unsigned int length) : Packet(address, buffer, length, writing) { }
   };

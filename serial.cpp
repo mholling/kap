@@ -8,9 +8,10 @@
 // TODO: reduce temp buffer sizes in these methods!
 
 Serial::Serial() {
-  UBRR0 = F_CPU / 38400 / 16 - 1;   // 38.4k baud rate (0.2% error @ 8Mhz)
-	UCSR0C = (3 << UCSZ00);           // 8-bit characters
-	UCSR0B = _BV(TXEN0);              // enable transmitter
+  UBRR0 = F_CPU / 38400 / 16 - 1;     // 38.4k baud rate (0.2% error @ 8Mhz)
+  UCSR0A = 0;
+  UCSR0C = _BV(UCSZ00) | _BV(UCSZ01); // 8-bit characters
+	UCSR0B = _BV(TXEN0);                // enable transmitter
 }
 
 void Serial::interrupt() {

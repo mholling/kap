@@ -8,18 +8,18 @@ void App::run() {
   eeprom.init();
   i2c.init();
   magnetometer.init();
-  accelerometer.init();
+  // accelerometer.init();
   analog.init();
-  gyros.init();
   spi.init();
   shift_register.init();  
+  gyros.init();
   pwm.init();
   motors.init();
   
   trajectory.init();
   attitude.init();
   pid.init();
-    
+  
   // scheduler.run();
   
   while (true) { }

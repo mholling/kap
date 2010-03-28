@@ -8,6 +8,8 @@
 
 class CalibrateTask : public Timer::Task {
 protected:
+  enum { autosave_minutes = 5 };
+  
   class State {
   public:
     float P0[1], P1[2], P2[3], P3[4];

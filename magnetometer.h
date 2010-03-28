@@ -22,22 +22,22 @@ private:
     ModePacket(mode_value mode) : I2C::WritePacket(data, i2c_address, mode_register, 1) { data[0] = mode; }
   };
   
-  class MeasurementPacket : public OrientedVectorPacket<MeasurementPacket> {
-    friend class OrientedVectorPacket<MeasurementPacket>;
+  class MeasurementPacket : public VectorPacket {
     
   protected:
     // // PCB:
     // int x() { return  static_cast<int>((static_cast<unsigned int>(data[2]) << 8) | static_cast<unsigned int>(data[3])); }
     // int y() { return -static_cast<int>((static_cast<unsigned int>(data[4]) << 8) | static_cast<unsigned int>(data[5])); }
     // int z() { return -static_cast<int>((static_cast<unsigned int>(data[0]) << 8) | static_cast<unsigned int>(data[1])); }
-
-    // breadboard:
-    int x() { return -static_cast<int>((static_cast<unsigned int>(data[2]) << 8) | static_cast<unsigned int>(data[3])); }
-    int y() { return -static_cast<int>((static_cast<unsigned int>(data[4]) << 8) | static_cast<unsigned int>(data[5])); }
-    int z() { return  static_cast<int>((static_cast<unsigned int>(data[0]) << 8) | static_cast<unsigned int>(data[1])); }
+    
+    virtual void before_dequeue() { // TODO: check this orientation!
+      vector[0] =  static_cast<int>((static_cast<unsigned int>(data[2]) << 8) | static_cast<unsigned int>(data[3]));
+      vector[1] = -static_cast<int>((static_cast<unsigned int>(data[4]) << 8) | static_cast<unsigned int>(data[5]));
+      vector[2] = -static_cast<int>((static_cast<unsigned int>(data[0]) << 8) | static_cast<unsigned int>(data[1]));
+    }
     
   public:
-    MeasurementPacket(unsigned char i2c_address, unsigned char i2c_registers) : OrientedVectorPacket<MeasurementPacket>(i2c_address, i2c_registers) { }
+    MeasurementPacket(unsigned char i2c_address, unsigned char i2c_registers) : VectorPacket(i2c_address, i2c_registers) { }
   };
   
   ConfigPacket configure;

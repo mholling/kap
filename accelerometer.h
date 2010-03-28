@@ -40,22 +40,22 @@ private:
     ConfigPacket() : I2C::WritePacket(data, i2c_address, bw_rate_reg, 6) { }
   };
   
-  class MeasurementPacket : public OrientedVectorPacket<MeasurementPacket> {
-    friend class OrientedVectorPacket<MeasurementPacket>;
+  class MeasurementPacket : public VectorPacket {
     
   protected:
     // // PCB:
     // int x() { return  reinterpret_cast<int *>(data)[1]; }
     // int y() { return -reinterpret_cast<int *>(data)[2]; }
     // int z() { return -reinterpret_cast<int *>(data)[0]; }
-
-    // breadboard:
-    int x() { return -reinterpret_cast<int *>(data)[1]; }
-    int y() { return -reinterpret_cast<int *>(data)[2]; }
-    int z() { return  reinterpret_cast<int *>(data)[0]; }
+    
+    virtual void before_dequeue() { // TODO: check this orientation!
+      vector[0] = -reinterpret_cast<int *>(data)[1];
+      vector[1] = -reinterpret_cast<int *>(data)[2];
+      vector[2] =  reinterpret_cast<int *>(data)[0];
+    }
     
   public:
-    MeasurementPacket(unsigned char i2c_address, unsigned char i2c_registers) : OrientedVectorPacket<MeasurementPacket>(i2c_address, i2c_registers) { }
+    MeasurementPacket(unsigned char i2c_address, unsigned char i2c_registers) : VectorPacket(i2c_address, i2c_registers) { }
   };
   
   RatePacket set_rate;
