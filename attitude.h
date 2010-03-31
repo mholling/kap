@@ -16,7 +16,7 @@ public:
     Quaternion quaternion;
     
   public:
-    Measure(const VectorPacket& gravity, const Vector& magnetism) : gravity(gravity), magnetism(magnetism), a1(1.0), a2(2.0) { }
+    Measure(const VectorPacket& gravity, const Vector& magnetism) : gravity(gravity), magnetism(magnetism), a1(1.0), a2(0.5) { }
     void run();
     
     typedef float (Measure::*angle_method_type)() const;    

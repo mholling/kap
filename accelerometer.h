@@ -6,7 +6,7 @@
 
 class Accelerometer {
 private:
-  enum { i2c_address = 0x1d, bw_rate_reg = 0x2c, power_ctl_reg = 0x2d, int_enable_reg = 0x2e, data_format_reg = 0x31, datax0_reg = 0x32 };
+  enum { i2c_address = 0x53, bw_rate_reg = 0x2c, power_ctl_reg = 0x2d, int_enable_reg = 0x2e, data_format_reg = 0x31, datax0_reg = 0x32 };
   
   class ModePacket : public I2C::WritePacket {
     unsigned char data[1];
@@ -43,15 +43,13 @@ private:
   class MeasurementPacket : public VectorPacket {
     
   protected:
-    // // PCB:
-    // int x() { return  reinterpret_cast<int *>(data)[1]; }
-    // int y() { return -reinterpret_cast<int *>(data)[2]; }
-    // int z() { return -reinterpret_cast<int *>(data)[0]; }
-    
     virtual void before_dequeue() { // TODO: check this orientation!
-      vector[0] = -reinterpret_cast<int *>(data)[1];
-      vector[1] = -reinterpret_cast<int *>(data)[2];
-      vector[2] =  reinterpret_cast<int *>(data)[0];
+      // vector[0] = -reinterpret_cast<int *>(data)[1];
+      // vector[1] = -reinterpret_cast<int *>(data)[2];
+      // vector[2] =  reinterpret_cast<int *>(data)[0];
+      vector[0] = reinterpret_cast<int *>(data)[0];
+      vector[1] = reinterpret_cast<int *>(data)[1];
+      vector[2] = reinterpret_cast<int *>(data)[2];
     }
     
   public:

@@ -6,7 +6,7 @@
 
 class Serial {
 private:
-  CircularBuffer<char, 64> buffer;
+  CircularBuffer<char, 128> buffer; // TODO: smaller buffer?
     
 public:
   Serial();

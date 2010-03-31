@@ -25,15 +25,13 @@ private:
   class MeasurementPacket : public VectorPacket {
     
   protected:
-    // // PCB:
-    // int x() { return  static_cast<int>((static_cast<unsigned int>(data[2]) << 8) | static_cast<unsigned int>(data[3])); }
-    // int y() { return -static_cast<int>((static_cast<unsigned int>(data[4]) << 8) | static_cast<unsigned int>(data[5])); }
-    // int z() { return -static_cast<int>((static_cast<unsigned int>(data[0]) << 8) | static_cast<unsigned int>(data[1])); }
-    
     virtual void before_dequeue() { // TODO: check this orientation!
-      vector[0] =  static_cast<int>((static_cast<unsigned int>(data[2]) << 8) | static_cast<unsigned int>(data[3]));
-      vector[1] = -static_cast<int>((static_cast<unsigned int>(data[4]) << 8) | static_cast<unsigned int>(data[5]));
-      vector[2] = -static_cast<int>((static_cast<unsigned int>(data[0]) << 8) | static_cast<unsigned int>(data[1]));
+      // vector[0] =  static_cast<int>((static_cast<unsigned int>(data[2]) << 8) | static_cast<unsigned int>(data[3]));
+      // vector[1] = -static_cast<int>((static_cast<unsigned int>(data[4]) << 8) | static_cast<unsigned int>(data[5]));
+      // vector[2] = -static_cast<int>((static_cast<unsigned int>(data[0]) << 8) | static_cast<unsigned int>(data[1]));
+      vector[0] = static_cast<int>((static_cast<unsigned int>(data[0]) << 8) | static_cast<unsigned int>(data[1]));
+      vector[1] = static_cast<int>((static_cast<unsigned int>(data[2]) << 8) | static_cast<unsigned int>(data[3]));
+      vector[2] = static_cast<int>((static_cast<unsigned int>(data[4]) << 8) | static_cast<unsigned int>(data[5]));
     }
     
   public:
