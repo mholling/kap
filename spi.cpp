@@ -3,8 +3,8 @@
 #include "app.h"
 
 Spi::Spi() {
+  DDRB |= _BV(DDB2) | _BV(DDB3) | _BV(DDB5);   // set SS, MOSI and SCK as outputs (SS needed now)
   SPCR = _BV(SPIE) | _BV(SPE) | _BV(MSTR);  // enable SPI in master mode with interrupts, SCK freq = F_CPU/4
-  DDRB |= _BV(DDB3) | _BV(DDB5);            // set MOSI and SCK as outputs
 }
 
 void Spi::Packet::initiate() {

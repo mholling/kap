@@ -16,7 +16,8 @@
 DEVICE     = atmega328p
 CLOCK      = 8000000
 PROGRAMMER = -c arduino -P /dev/tty.usbserial-A800csBR -b 57600
-OBJECTS    = main.o app.o scheduler.o serial.o timer.o i2c.o calibrate_task.o diagnostic.o eeprom.o accelerometer.o analog.o gyros.o spi.o shift_register.o motors.o attitude.o pwm.o trajectory.o pid.o
+# OBJECTS    = main.o app.o scheduler.o serial.o timer.o eeprom.o i2c.o accelerometer.o analog.o spi.o shift_register.o gyros.o pwm.o motors.o trajectory.o attitude.o pid.o diagnostic.o calibrate_task.o
+OBJECTS    = main.o app.o scheduler.o serial.o timer.o eeprom.o i2c.o accelerometer.o analog.o spi.o shift_register.o gyros.o pwm.o motors.o attitude.o diagnostic.o calibrate_task.o
 
 # Tune the lines below only if you know what you are doing:
 

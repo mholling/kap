@@ -6,9 +6,7 @@
 class ShiftRegister {
 public:
   ShiftRegister();
-  void init() ;
-  
-  unsigned char bits;
+  void init() { }
   
   class Bit : public Spi::WritePacket {
   private:
@@ -22,6 +20,9 @@ public:
   public:
     Bit(unsigned int bit, bool set) : Spi::WritePacket(PORTD, PIND4, &data, 1), mask(1 << bit), set(set) { }
   };
+
+private:  
+  unsigned char bits;
 };
 
 #endif

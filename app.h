@@ -32,16 +32,16 @@ public:
   Magnetometer magnetometer;
   Accelerometer accelerometer;
   Analog analog;
-  Gyros gyros;
   Spi spi;
   ShiftRegister shift_register;  
-  Pwm pwm;
-  Motors motors;
+  Gyros gyros;
+  // Pwm pwm;
+  // Motors motors;
   
   // Calculations:
+  // Trajectory trajectory;
   Attitude attitude;
-  Trajectory trajectory;
-  Pid pid;
+  // Pid pid;
   Diagnostic diagnostic;
   
   void run();

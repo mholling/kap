@@ -11,14 +11,14 @@ void App::run() {
   accelerometer.init();
   analog.init();
   spi.init();
-  shift_register.init();  
+  shift_register.init();
   gyros.init();
-  pwm.init();
-  motors.init();
+  // pwm.init();
+  // motors.init();
   
-  trajectory.init();
+  // trajectory.init();
   attitude.init();
-  pid.init();
+  // pid.init();
   
   // scheduler.run();
   

@@ -7,11 +7,6 @@ ShiftRegister::ShiftRegister() : bits(0) {
   PORTD |= _BV(PIND4);
 }
 
-void ShiftRegister::init() {
-  Bit clear(0,0);
-  clear(true);
-}
-
 void ShiftRegister::Bit::after_enqueue() {
   data = set ? (app.shift_register.bits |= mask) : (app.shift_register.bits &= ~mask);
 }
