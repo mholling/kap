@@ -27,7 +27,7 @@ void Timer::TimedTasks::run() {
   app.attitude.measure();
   app.gyros.yaw.estimate();
   app.gyros.pitch.estimate();
-  app.gyros.roll.estimate();
+  // app.gyros.roll.estimate();
   // app.trajectory();
   // app.pid.yaw();
   // app.pid.pitch();

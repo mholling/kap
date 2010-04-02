@@ -5,6 +5,7 @@
 #include "shift_register.h"
 #include "timer.h"
 #include "attitude.h"
+#include "matrix.h"
 
 class Gyros {
 private:
@@ -44,28 +45,41 @@ public:
     class Estimate : public Timer::Task {
     private:
       const Gyros::Gyro& gyro;
-      const Attitude::Measure::angle_method_type measured_angle;
-
-      float z1, z2;     // measured rate, angle
-      float x1, x2, x3; // estimated angle, rate, bias
-      float p11, p12, p13, p21, p22, p23, p31, p32, p33;
-      const float q1, q2, q3, q11, q12, q13, q21, q22, q23, q31, q32, q33;
-      const float r11, r22;
+      const Attitude::Measure::angle_method_type angle_method;
+      
+      Matrix<2, 1> x; // angle, bias
+      
+      Matrix<2, 2> P; // error covariance
+      
+      Matrix<2, 2> Q; // process covariance
+      
+      Matrix<1, 1> R; // variance of angle measurement noise
+      
+      Matrix<2, 2> A; // state transform matrix
+      Matrix<2, 2> At;
+      
+      Matrix<2, 1> B; // input driving matrix
+      
+      Matrix<1, 1> u; // driving input (biased gyro rate)
+      
+      Matrix<1, 2> H; // prediction matrix
+      Matrix<2, 1> Ht;
+      
+      Matrix<1, 1> z; // measured value (angle measurement)
 
       void predict();
       void correct();
 
     public:
-      Estimate(const Gyro& gyro, Attitude::Measure::angle_method_type measured_angle, float angle_variance, float rate_variance);
+      Estimate(const Gyro& gyro, Attitude::Measure::angle_method_type angle_method, float angle_variance);
       void run();
 
-      float angle() const { return x1; }
-      float  rate() const { return x2; }
-      float  bias() const { return x3; }
+      float angle() const { return x(0,0); }
+      float  bias() const { return x(1,0); }
     };
     
   public:
-    Gyro(Analog::Channel& value, Analog::Channel& reference, float range, Attitude::Measure::angle_method_type measured_angle, float angle_variance, float rate_variance);
+    Gyro(Analog::Channel& value, Analog::Channel& reference, float range, Attitude::Measure::angle_method_type angle_method, float angle_variance);
         
     float rate() const;
     Estimate estimate;

@@ -36,8 +36,8 @@ void Diagnostic::run() {
 #endif
 #ifdef COMPARE
     app.serial.debug(0.0f);
-    app.serial.debug(app.attitude.measure.yaw());
-    app.serial.debug(app.gyros.yaw.estimate.angle());
+    app.serial.debug(app.attitude.measure.pitch());
+    app.serial.debug(app.gyros.pitch.estimate.angle());
 #endif
 
     app.serial.line();

@@ -6,15 +6,15 @@ Gyros::Gyros() :
   enable(power_down_shift_register_pin, false),
   test_mode(self_test_shift_register_pin, true),
   normal_mode(self_test_shift_register_pin, false),
-  yaw(channels.yaw, channels.fixed, 300.0, &Attitude::Measure::yaw, 2.2e-5, 0.27),
-  pitch(channels.pitch, channels.ref, 400.0, &Attitude::Measure::pitch, 9.0e-6, 0.25),
-  roll(channels.roll, channels.ref, -400.0, &Attitude::Measure::roll, 5.0e-6, 0.10) { }
+  yaw(channels.yaw, channels.fixed, 300.0, &Attitude::Measure::yaw, 2.2e-5),
+  pitch(channels.pitch, channels.ref, 400.0, &Attitude::Measure::pitch, 9.0e-6),
+  roll(channels.roll, channels.ref, -400.0, &Attitude::Measure::roll, 5.0e-6) { }
 
-Gyros::Gyro::Gyro(Analog::Channel& value, Analog::Channel& reference, float range, Attitude::Measure::angle_method_type measured_angle, float angle_variance, float rate_variance) :
+Gyros::Gyro::Gyro(Analog::Channel& value, Analog::Channel& reference, float range, Attitude::Measure::angle_method_type angle_method, float angle_variance) :
   value(value),
   reference(reference),
   range(range),
-  estimate(*this, measured_angle, angle_variance, rate_variance) { }
+  estimate(*this, angle_method, angle_variance) { }
 
 float Gyros::Gyro::rate() const {
   reference.wait();
@@ -22,98 +22,48 @@ float Gyros::Gyro::rate() const {
   return (value() / reference() - 1.0) * range;
 }
 
-Gyros::Gyro::Estimate::Estimate(const Gyro& gyro, Attitude::Measure::angle_method_type measured_angle, float angle_variance, float rate_variance) :
+Gyros::Gyro::Estimate::Estimate(const Gyro& gyro, Attitude::Measure::angle_method_type angle_method, float angle_variance) :
    gyro(gyro),
-   measured_angle(measured_angle),
-   x1(0.0), x2(0.0), x3(0.0),
-   q1(0.2 / Timer::frequency), q2(0.2), q3(0.1), // TODO: values??
-   q11(q1 * q1), q12(q1 * q2), q13(q1 * q3),
-   q21(q2 * q1), q22(q2 * q2), q23(q2 * q3),
-   q31(q3 * q1), q32(q3 * q2), q33(q3 * q3),
-   r11(rate_variance), r22(angle_variance) // TODO: values???
+   angle_method(angle_method)
+   // q1(0.2 / Timer::frequency), q2(0.2), q3(0.1), // TODO: values??
 {
+  R(0,0) = 0.3;
+
+  Q(0,0) = 0.25 / (Timer::frequency * Timer::frequency);
+  Q(1,1) = 0.003;
+
+  A(0,0) = A(1,1) = 1.0;
+  A(0,1) = -1.0 / Timer::frequency;
+  At = A.t();
+
+  B(0,0) = -1.0 / Timer::frequency;
+
+  H(0,0) = 1.0;
+  Ht = H.t();
 }
 
 void Gyros::Gyro::Estimate::run() {
-  z1 = gyro.rate();
-  z2 = (app.attitude.measure.*measured_angle)();
+  u(0,0) = gyro.rate();
+  z(0,0) = (app.attitude.measure.*angle_method)();
   predict();
   correct();
 }
 
 void Gyros::Gyro::Estimate::predict() {
   // compute  x = A x + B u
-  x2  = z1 - x3; // rate = gyro - bias
-  x1 += x2 / Timer::frequency; // angle += dt * rate
-  
-  // compute intermediate values for  A P A'
-  float t1 = p11 - p31 / Timer::frequency;
-  float t2 = p13 - p33 / Timer::frequency;
-  float t3 = p31 - p33 / Timer::frequency;
-  float t4 = p33;
+  x = A * x + B * u;
   
   // compute  P = A P A' + Q
-  p11 = q11 + t1 - t2 / Timer::frequency;
-  p12 = q12 - t2;
-  p13 = q13 + t2;
-  p21 = q21 - t3;
-  p22 = q22 + t4;
-  p23 = q23 - t4;
-  p31 = q31 + t3;
-  p32 = q32 - t4;
-  p33 = q33 + t4;
+  P = A * P * At + Q;
 }
 
-void Gyros::Gyro::Estimate::correct() {
-  // compute  H P H' + R
-  float hphr11 = p22 + p32 + p23 + p33 + r11;
-  float hphr12 = p21 + p31;
-  float hphr21 = p12 + p13;
-  float hphr22 = p11 + r22;
-  
-  // compute  I / (H P H' + R)
-  float d = hphr11 * hphr22 - hphr12 * hphr21;
-  float t11 =  hphr22 / d;
-  float t12 = -hphr12 / d;
-  float t21 = -hphr21 / d;
-  float t22 =  hphr11 / d;
-  
+void Gyros::Gyro::Estimate::correct() {  
   // compute Kalman gain  K = P H' / (H P H' + R)
-  float k11 = p11 * t21 + (p12 + p13) * t11;
-  float k21 = p21 * t21 + (p22 + p23) * t11;
-  float k31 = p31 * t21 + (p32 + p33) * t11;
-  float k12 = p11 * t22 + (p12 + p13) * t12;
-  float k22 = p21 * t22 + (p22 + p23) * t12;
-  float k32 = p31 * t22 + (p32 + p33) * t12;
-  
-  // compute  z - H x
-  float i1 = z1 - x2 - x3;
-  float i2 = z2 - x1;
+  Matrix<2, 1> K = (P * Ht) / (H * P * Ht + R);
   
   // compute  x += K (z - H x)
-  x1 += k11 * i1 + k12 * i2;
-  x2 += k21 * i1 + k22 * i2;
-  x3 += k31 * i1 + k32 * i2;
-  
-  // compute  K H P
-  float dp11 = k12 * p11 + k11 * (p21 + p31);
-  float dp21 = k22 * p11 + k21 * (p21 + p31);
-  float dp31 = k32 * p11 + k31 * (p21 + p31);
-  float dp12 = k12 * p12 + k11 * (p22 + p32);
-  float dp22 = k22 * p12 + k21 * (p22 + p32);
-  float dp32 = k32 * p12 + k31 * (p22 + p32);
-  float dp13 = k12 * p13 + k11 * (p23 + p33);
-  float dp23 = k22 * p13 + k21 * (p23 + p33);
-  float dp33 = k32 * p13 + k31 * (p23 + p33);
+  x += K * (z - H * x);
   
   // compute  P -= K H P
-  p11 -= dp11;
-  p21 -= dp21;
-  p31 -= dp31;
-  p12 -= dp12;
-  p22 -= dp22;
-  p32 -= dp32;
-  p13 -= dp13;
-  p23 -= dp23;
-  p33 -= dp33;
+  P -= K * H * P;
 }
