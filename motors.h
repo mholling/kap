@@ -5,11 +5,11 @@
 #include <avr/io.h>
 
 class Motors {
-  enum { standby_shift_register_pin = 1, yaw_polarity = +1, pitch_polarity = +1 };
+  enum { standby_shift_register_pin = 7, yaw_polarity = +1, pitch_polarity = +1 };
   
 public:
   Motors();
-  void init() { disable(true); }
+  void init() { disable(); }
   
   ShiftRegister::Bit disable;
   ShiftRegister::Bit enable;

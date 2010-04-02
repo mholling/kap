@@ -13,8 +13,8 @@ void App::run() {
   spi.init();
   shift_register.init();
   gyros.init();
-  // pwm.init();
-  // motors.init();
+  pwm.init();
+  motors.init();
   
   // trajectory.init();
   attitude.init();

@@ -73,18 +73,18 @@ void Serial::debug_b(const char * const s, char b) {
 //   send(temp);
 // }
 
-void Serial::debug(const char * const s, float f) {
-  char temp[18];
+void Serial::debug(const char * const s, float f, int dp) {
+  char temp[22];
   sprintf(temp, "%15s: ", s);
   send(temp);
-  dtostre((double)f, temp, 4, DTOSTR_PLUS_SIGN);
+  dtostre((double)f, temp, dp, DTOSTR_PLUS_SIGN);
   send(temp);
   send("\r\n");
 }
 
-void Serial::debug(float f) {
-  char temp[12];
-  dtostre((double)f, temp, 4, DTOSTR_PLUS_SIGN);
+void Serial::debug(float f, int dp) {
+  char temp[16];
+  dtostre((double)f, temp, dp, DTOSTR_PLUS_SIGN);
   send(temp);
   send(" ");
 }

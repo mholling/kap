@@ -21,7 +21,7 @@ public:
   
   class Channels {
   public:
-    Channels() : yaw(0), pitch(1), roll(2), ref(3), fixed(0.5) { }
+    Channels() : yaw(0), pitch(3), roll(2), ref(1), fixed(0.5) { }
     
     Analog::Channel yaw;
     Analog::Channel pitch;
@@ -56,7 +56,7 @@ public:
       void correct();
 
     public:
-      Estimate(const Gyro& gyro, Attitude::Measure::angle_method_type measured_angle);
+      Estimate(const Gyro& gyro, Attitude::Measure::angle_method_type measured_angle, float angle_variance, float rate_variance);
       void run();
 
       float angle() const { return x1; }
@@ -65,7 +65,7 @@ public:
     };
     
   public:
-    Gyro(Analog::Channel& value, Analog::Channel& reference, unsigned int range, Attitude::Measure::angle_method_type measured_angle) : value(value), reference(reference), range(range), estimate(*this, measured_angle) { }
+    Gyro(Analog::Channel& value, Analog::Channel& reference, float range, Attitude::Measure::angle_method_type measured_angle, float angle_variance, float rate_variance);
         
     float rate() const;
     Estimate estimate;

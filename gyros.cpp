@@ -6,17 +6,23 @@ Gyros::Gyros() :
   enable(power_down_shift_register_pin, false),
   test_mode(self_test_shift_register_pin, true),
   normal_mode(self_test_shift_register_pin, false),
-  yaw(channels.yaw, channels.fixed, 300.0, &Attitude::Measure::yaw),
-  pitch(channels.pitch, channels.ref, 400.0, &Attitude::Measure::pitch),
-  roll(channels.roll, channels.ref, 400.0, &Attitude::Measure::roll) { }
-  
+  yaw(channels.yaw, channels.fixed, 300.0, &Attitude::Measure::yaw, 2.2e-5, 0.27),
+  pitch(channels.pitch, channels.ref, 400.0, &Attitude::Measure::pitch, 9.0e-6, 0.25),
+  roll(channels.roll, channels.ref, -400.0, &Attitude::Measure::roll, 5.0e-6, 0.10) { }
+
+Gyros::Gyro::Gyro(Analog::Channel& value, Analog::Channel& reference, float range, Attitude::Measure::angle_method_type measured_angle, float angle_variance, float rate_variance) :
+  value(value),
+  reference(reference),
+  range(range),
+  estimate(*this, measured_angle, angle_variance, rate_variance) { }
+
 float Gyros::Gyro::rate() const {
   reference.wait();
   value.wait();
   return (value() / reference() - 1.0) * range;
 }
 
-Gyros::Gyro::Estimate::Estimate(const Gyro& gyro, Attitude::Measure::angle_method_type measured_angle) :
+Gyros::Gyro::Estimate::Estimate(const Gyro& gyro, Attitude::Measure::angle_method_type measured_angle, float angle_variance, float rate_variance) :
    gyro(gyro),
    measured_angle(measured_angle),
    x1(0.0), x2(0.0), x3(0.0),
@@ -24,7 +30,7 @@ Gyros::Gyro::Estimate::Estimate(const Gyro& gyro, Attitude::Measure::angle_metho
    q11(q1 * q1), q12(q1 * q2), q13(q1 * q3),
    q21(q2 * q1), q22(q2 * q2), q23(q2 * q3),
    q31(q3 * q1), q32(q3 * q2), q33(q3 * q3),
-   r11(), r22() // TODO: values???
+   r11(rate_variance), r22(angle_variance) // TODO: values???
 {
 }
 

@@ -35,8 +35,8 @@ public:
   Spi spi;
   ShiftRegister shift_register;  
   Gyros gyros;
-  // Pwm pwm;
-  // Motors motors;
+  Pwm pwm;
+  Motors motors;
   
   // Calculations:
   // Trajectory trajectory;

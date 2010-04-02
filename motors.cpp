@@ -4,8 +4,8 @@
 #include "pwm.h"
 
 Motors::Motors() :
-    disable(standby_shift_register_pin, true),
-    enable(standby_shift_register_pin, false),
+    disable(standby_shift_register_pin, false),
+    enable(standby_shift_register_pin, true),
     yaw(OCR1A, PORTD, PIND7, PORTB, PINB0, false),
     pitch(OCR1B, PORTD, PIND5, PORTD, PIND4, false) {
   DDRD |= _BV(DDD4) | _BV(DDD5) | _BV(DDD7);
