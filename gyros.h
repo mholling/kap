@@ -47,29 +47,16 @@ public:
       const Gyros::Gyro& gyro;
       const Attitude::Measure::angle_method_type angle_method;
       
-      Matrix<2, 1> x; // angle, bias
-      Matrix<2, 2> P; // error covariance
-      Matrix<2, 2> Q; // process covariance
-      Matrix<1, 1> R; // variance of angle measurement noise
-      Matrix<2, 2> A; // state transform matrix
-      Matrix<2, 2> At;
-      Matrix<2, 1> B; // input driving matrix
-      Matrix<1, 1> u; // driving input (biased gyro rate)
-      Matrix<1, 2> H; // prediction matrix
-      Matrix<2, 1> Ht;
-      Matrix<1, 1> z; // measured value (angle measurement)
+      float x1, x2;
+      float P11, P12, P22;
+      float Q11, Q12, Q22;
+      float r;
       
-      // TODO: optimise code to get rid of matrix calculations once tuned.
-
-      void predict();
-      void correct();
-
     public:
       Estimate(const Gyro& gyro, Attitude::Measure::angle_method_type angle_method, float angle_sd, float rate_sd, float bias_sd);
       void run();
 
-      float angle() const { return x(0,0); }
-      float  bias() const { return x(1,0); }
+      float angle() const { return x1; }
     };
     
   public:

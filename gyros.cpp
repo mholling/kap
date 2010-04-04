@@ -1,5 +1,6 @@
 #include "gyros.h"
 #include "app.h"
+#include "timer.h"
 
 Gyros::Gyros() :
   disable(power_down_shift_register_pin, true),
@@ -26,47 +27,35 @@ Gyros::Gyro::Estimate::Estimate(const Gyro& gyro, Attitude::Measure::angle_metho
    gyro(gyro),
    angle_method(angle_method)
 {
-  R(0,0) = angle_sd * angle_sd; // variance of angle jitter due to accelerometer
-  
-  // TODO: have values for Q vary according to whether motors are going or not?
-  
-  Matrix<2, 1> q;
-  q(0,0) = rate_sd / Timer::frequency;
-  q(1,0) = bias_sd; // standard deviation of bias
-  Q = q * q.t();
-
-  A(0,0) = A(1,1) = 1.0;
-  A(0,1) = -1.0 / Timer::frequency;
-  At = A.t();
-
-  B(0,0) = -1.0 / Timer::frequency;
-
-  H(0,0) = 1.0;
-  Ht = H.t();
+  r = angle_sd * angle_sd;
+  Q11 = rate_sd * rate_sd / (Timer::frequency * Timer::frequency);
+  Q12 = rate_sd * bias_sd / Timer::frequency;
+  Q22 = bias_sd * bias_sd;
 }
+
 
 void Gyros::Gyro::Estimate::run() {
-  u(0,0) = gyro.rate();
-  z(0,0) = (app.attitude.measure.*angle_method)();
-  predict();
-  correct();
-}
-
-void Gyros::Gyro::Estimate::predict() {
   // compute  x = A x + B u
-  x = A * x + B * u;
+  x1 += (gyro.rate() - x2) / Timer::frequency;
   
   // compute  P = A P A' + Q
-  P = A * P * At + Q;
-}
+  P11 -= P12 / Timer::frequency;
+  P12 -= P22 / Timer::frequency;
+  P11 -= P12 / Timer::frequency;
+  P11 += Q11;
+  P12 += Q12;
+  P22 += Q22;
 
-void Gyros::Gyro::Estimate::correct() {  
-  // compute Kalman gain  K = P H' / (H P H' + R)
-  Matrix<2, 1> K = (P * Ht) / (H * P * Ht + R);
+  // compute Kalman gain  S = H P H' + R,  K = P H' / S
+  float s = P11 + r;
   
   // compute  x += K (z - H x)
-  x += K * (z - H * x);
+  float y_s = ((app.attitude.measure.*angle_method)() - x1) / s;
+  x1 += P11 * y_s;
+  x2 += P12 * y_s;
   
   // compute  P -= K H P
-  P -= K * H * P;
+  P22 -= P12 * P12 / s;
+  P12 -= P12 * P11 / s;
+  P11 -= P11 * P11 / s;
 }
