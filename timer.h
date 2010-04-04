@@ -14,7 +14,7 @@ private:
   } timed_tasks;
   
 public:
-  enum { frequency = 35 };
+  enum { frequency = 50 };
   
   Timer();
   void init() { }

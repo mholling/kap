@@ -44,12 +44,12 @@ private:
     
   protected:
     virtual void before_dequeue() { // TODO: check this orientation!
-      // vector[0] = -reinterpret_cast<int *>(data)[1];
-      // vector[1] = -reinterpret_cast<int *>(data)[2];
-      // vector[2] =  reinterpret_cast<int *>(data)[0];
-      vector[0] = reinterpret_cast<int *>(data)[0];
-      vector[1] = reinterpret_cast<int *>(data)[1];
-      vector[2] = reinterpret_cast<int *>(data)[2];
+      // vector[0] = reinterpret_cast<int *>(data)[0];
+      // vector[1] = reinterpret_cast<int *>(data)[1];
+      // vector[2] = reinterpret_cast<int *>(data)[2];
+      vector[0] =  reinterpret_cast<int *>(data)[0];
+      vector[1] = -reinterpret_cast<int *>(data)[1];
+      vector[2] = -reinterpret_cast<int *>(data)[2];
     }
     
   public:
