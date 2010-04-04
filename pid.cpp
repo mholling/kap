@@ -5,8 +5,8 @@ Pid::Pid() : yaw(app.gyros.yaw, app.trajectory.yaw, app.motors.yaw), pitch(app.g
 
 void Pid::Controller::run() {
   float error = target() - gyro.estimate.angle();
-  float derivative = (target() - previous) * Timer::frequency - gyro.estimate.rate();
-  integral += error / Timer::frequency;
+  float derivative = (target() - previous) / Timer::dt() - gyro.estimate.rate();
+  integral += error * Timer::dt();
   if (integral >  clamp) integral =  clamp;
   if (integral < -clamp) integral = -clamp;
   previous = target();

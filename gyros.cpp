@@ -28,20 +28,20 @@ Gyros::Gyro::Estimate::Estimate(const Gyro& gyro, Attitude::Measure::angle_metho
    angle_method(angle_method)
 {
   r = angle_sd * angle_sd;
-  Q11 = rate_sd * rate_sd / (Timer::frequency * Timer::frequency);
-  Q12 = rate_sd * bias_sd / Timer::frequency;
+  Q11 = rate_sd * rate_sd * Timer::dt() * Timer::dt();
+  Q12 = rate_sd * bias_sd * Timer::dt();
   Q22 = bias_sd * bias_sd;
 }
 
 
 void Gyros::Gyro::Estimate::run() {
   // compute  x = A x + B u
-  x1 += (gyro.rate() - x2) / Timer::frequency;
+  x1 += (gyro.rate() - x2) * Timer::dt();
   
   // compute  P = A P A' + Q
-  P11 -= P12 / Timer::frequency;
-  P12 -= P22 / Timer::frequency;
-  P11 -= P12 / Timer::frequency;
+  P11 -= P12 * Timer::dt();
+  P12 -= P22 * Timer::dt();
+  P11 -= P12 * Timer::dt();
   P11 += Q11;
   P12 += Q12;
   P22 += Q22;

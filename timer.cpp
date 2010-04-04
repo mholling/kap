@@ -6,7 +6,7 @@
 Timer::Timer() : count(0) {
   TCCR2A = _BV(WGM21); // CTC mode
   TCCR2B = _BV(CS22) | _BV(CS21) | _BV(CS20);
-  OCR2A = F_CPU / 1024 / frequency - 1;
+  OCR2A = ocr2a; // = F_CPU / 1024 / frequency - 1;
   TIMSK2 = _BV(OCIE2A); 
 }
 
@@ -64,7 +64,7 @@ bool Timer::Stamp::since(long int duration_in_seconds) const {
 Timer::Diagnostic::Diagnostic(const char *message) : start(app.timer.stamp()), message(message) { }
 
 Timer::Diagnostic::~Diagnostic() {
-  app.serial.debug(message, static_cast<float>(app.timer.stamp() - start) / (OCR2A * Timer::frequency));
+  app.serial.debug(message, static_cast<float>(app.timer.stamp() - start) * Timer::dt() / Timer::ocr2a);
 }
 
 ISR(TIMER2_COMPA_vect) {
