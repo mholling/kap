@@ -50,13 +50,17 @@ public:
       float x1, x2;
       float P11, P12, P22;
       float Q11, Q12, Q22;
-      float r;
+      float R;
+      
+      float old_angle;
+      int revolutions;
       
     public:
       Estimate(const Gyro& gyro, Attitude::Measure::angle_method_type angle_method, float angle_sd, float rate_sd, float bias_sd);
       void run();
 
       float angle() const { return x1; }
+      float rate() const { return x2; }
     };
     
   public:
