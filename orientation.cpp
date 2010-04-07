@@ -5,7 +5,7 @@ void Orientation::init() {
   angles.init();
 }
 
-const Vector Orientation::adjust_vector(const Vector& vector) const {
+Vector Orientation::adjust_vector(const Vector& vector) const {
   Vector result = vector;
   result.rotate_90<2>(angles.yaw);
   result.rotate_90<1>(angles.pitch);
@@ -13,7 +13,7 @@ const Vector Orientation::adjust_vector(const Vector& vector) const {
   return result;
 }
 
-const Vector Orientation::adjust_variance(float vx, float vy, float vz) const {
+Vector Orientation::adjust_variance(float vx, float vy, float vz) const {
   Vector result(vx, vy, vz);
   result.rotate_90<2>(angles.yaw);
   result.rotate_90<1>(angles.pitch);

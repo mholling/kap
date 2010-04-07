@@ -31,8 +31,6 @@ private:
       vector[1] = -static_cast<int>((static_cast<unsigned int>(data[2]) << 8) | static_cast<unsigned int>(data[3]));
       vector[2] = -static_cast<int>((static_cast<unsigned int>(data[4]) << 8) | static_cast<unsigned int>(data[5]));
     }
-    
-    Vector vector;
   };
   
   ConfigPacket configure;

@@ -4,7 +4,6 @@
 #include "quaternion.h"
 
 void Attitude::Measure::run() {
-  // Timer::Diagnostic d("measure", 1);
   app.accelerometer.measure.wait();
     
   const Vector b1 = app.orientation.adjust_vector(app.accelerometer.vector()).normalised();          // gravity
@@ -42,7 +41,6 @@ void Attitude::Estimate::init() {
 }
 
 void Attitude::Estimate::run() {
-  // Timer::Diagnostic d("estimate", 1);
   Vector rates = app.orientation.adjust_vector(app.gyros.rates());
   
   yaw.filter(app.attitude.measure.yaw(), rates[0]);
@@ -52,7 +50,7 @@ void Attitude::Estimate::run() {
 
 void Attitude::Estimate::Kalman::set_variances(float angle_variance, float rate_variance, float bias_variance) {
   Q11 = rate_variance * Timer::dt * Timer::dt;
-  Q12 = 0.0; // sqrt(Q11 * bias_variance); // TODO?
+  Q12 = sqrt(Q11 * bias_variance); // 0.0; // TODO?
   Q22 = bias_variance;
   R   = angle_variance;
 }
