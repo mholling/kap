@@ -6,12 +6,10 @@
 
 class Orientation {
 private:
-  Matrix<3, 3> rotation;
-  
   class Angles {
   public:
     int yaw, pitch, roll;
-    void defaults() { yaw = pitch = roll = 0; roll = 0; } // -90;}
+    void defaults() { yaw = 0; pitch = 0; roll = 3;}
   };
   
   Persistent<Angles> angles;

@@ -49,13 +49,12 @@ public:
     Kalman yaw, pitch, roll;
     
     Estimate() { };
-    // Estimate() : yaw(0.9, 0.012, 0.1), pitch(0.5, 0.008, 0.1), roll(0.5, 0.008, 0.1) { }
     void init();
     void run();
   };
     
   Attitude() { }
-  void init();
+  inline void init() { estimate.init(); }
   
   Measure measure;
   Estimate estimate;

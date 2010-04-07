@@ -67,7 +67,8 @@ public:
   const Matrix normalised() const { return Matrix(*this).normalise(); }
 
   // Vectors:
-  Matrix(float x, float y, float z) { data[0] = x; data[1] = y; data[2] = z; }  
+  Matrix(float x, float y, float z) { data[0] = x; data[1] = y; data[2] = z; }
+  template <int axis> void rotate_90(int times);
   
   // Quaternions:
   Matrix(const Matrix<3, 1>& v, float w) { data[0] = v[0]; data[1] = v[1]; data[2] = v[2]; data[3] = w; }  
@@ -87,6 +88,40 @@ template <>
 inline const Vector Vector::cross(const Vector& rhs) const {
   return Vector(data[1] * rhs[2] - data[2] * rhs[1], data[2] * rhs[0] - data[0] * rhs[2], data[0] * rhs[1] - data[1] * rhs[0]);
 }
+
+// Vector 90-degree rotation:
+template <>
+template <int axis>
+inline void Vector::rotate_90(int times) {
+  float& x = data[(axis + 1) % 3];
+  float& y = data[(axis + 2) % 3];
+  float t = x;
+  switch (times) {
+    case 1:
+      x = -y;
+      y = t;
+      break;
+    case 2:
+      x = -x;
+      y = -y;
+      break;
+    case 3:
+      x = y;
+      y = -t;
+      break;
+  }
+}
+
+// template <>
+// inline void Vector::rotate_90(int axis, int times) {
+//   float& first  = data[(axis + 1) % 3];
+//   float& second = data[(axis + 2) % 3];
+//   for (int n = 0; n < times; n++) {
+//     float temp = second;
+//     second = first;
+//     first = -temp;
+//   }
+// }
 
 // Quaternion cross-product:
 template <>

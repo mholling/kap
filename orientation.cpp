@@ -3,25 +3,23 @@
 
 void Orientation::init() {
   angles.init();
-  rotation = Matrix<3, 3>::rotation(0, static_cast<float>(angles.roll)  * M_PI / 180.0) *
-             Matrix<3, 3>::rotation(1, static_cast<float>(angles.pitch) * M_PI / 180.0) *
-             Matrix<3, 3>::rotation(2, static_cast<float>(angles.yaw)   * M_PI / 180.0);
 }
 
 const Vector Orientation::adjust_vector(const Vector& vector) const {
-  return rotation * vector;
+  Vector result = vector;
+  result.rotate_90<2>(angles.yaw);
+  result.rotate_90<1>(angles.pitch);
+  result.rotate_90<0>(angles.roll);
+  return result;
 }
 
 const Vector Orientation::adjust_variance(float vx, float vy, float vz) const {
-  Matrix<3, 3> covariance;
-  covariance(0,0) = vx;
-  covariance(1,1) = vy;
-  covariance(2,2) = vz;
-  covariance = rotation * covariance * rotation.t();
-  Vector result;
-  result[0] = covariance(0,0);
-  result[1] = covariance(1,1);
-  result[2] = covariance(2,2);
+  Vector result(vx, vy, vz);
+  result.rotate_90<2>(angles.yaw);
+  result.rotate_90<1>(angles.pitch);
+  result.rotate_90<0>(angles.roll);
+  for (int n = 0; n < 3; n++)
+    if (result[n] < 0.0) result[n] = -result[n];
   return result;
 }
 

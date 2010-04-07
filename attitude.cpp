@@ -3,11 +3,8 @@
 #include "vector.h"
 #include "quaternion.h"
 
-void Attitude::init() {
-  estimate.init(); // TODO: move to header
-}
-
 void Attitude::Measure::run() {
+  // Timer::Diagnostic d("measure", 1);
   app.accelerometer.measure.wait();
     
   const Vector b1 = app.orientation.adjust_vector(app.accelerometer.vector()).normalised();          // gravity
@@ -45,6 +42,7 @@ void Attitude::Estimate::init() {
 }
 
 void Attitude::Estimate::run() {
+  // Timer::Diagnostic d("estimate", 1);
   Vector rates = app.orientation.adjust_vector(app.gyros.rates());
   
   yaw.filter(app.attitude.measure.yaw(), rates[0]);
@@ -52,17 +50,8 @@ void Attitude::Estimate::run() {
   roll.filter(app.attitude.measure.roll(), rates[2]);
 }
 
-// Attitude::Estimate::Kalman::Kalman(float angle_sd, float rate_sd, float bias_sd) :
-//   Q11(rate_sd * rate_sd * Timer::dt() * Timer::dt()),
-//   Q12(rate_sd * bias_sd * Timer::dt()),
-//   Q22(bias_sd * bias_sd),
-//   R(angle_sd * angle_sd),
-//   old_angle(0.0),
-//   revolutions(0) { }
-
-
 void Attitude::Estimate::Kalman::set_variances(float angle_variance, float rate_variance, float bias_variance) {
-  Q11 = rate_variance * Timer::dt() * Timer::dt();
+  Q11 = rate_variance * Timer::dt * Timer::dt;
   Q12 = 0.0; // sqrt(Q11 * bias_variance); // TODO?
   Q22 = bias_variance;
   R   = angle_variance;
@@ -76,12 +65,12 @@ void Attitude::Estimate::Kalman::filter(float measured_angle, float measured_rat
   measured_angle += revolutions * 2 * M_PI;
     
   // compute:  x = A x + B u
-  x1 += (measured_rate - x2) * Timer::dt();
+  x1 += (measured_rate - x2) * Timer::dt;
   
   // compute:  P = A P A' + Q
-  P11 -= P12 * Timer::dt();
-  P12 -= P22 * Timer::dt();
-  P11 -= P12 * Timer::dt();
+  P11 -= P12 * Timer::dt;
+  P12 -= P22 * Timer::dt;
+  P11 -= P12 * Timer::dt;
   P11 += Q11;
   P12 += Q12;
   P22 += Q22;

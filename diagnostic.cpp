@@ -6,7 +6,7 @@
 void Diagnostic::run() {
   if (count++ % (Timer::frequency / 10) == 0) {
 
-#define xxCOMPAREALL
+#define COMPAREALL
 
 #ifdef COMPAREALL
     app.serial.debug(app.attitude.measure.yaw());

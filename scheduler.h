@@ -18,8 +18,8 @@ public:
     Task(unsigned int level) : Base(level) { }
     
     void operator ()() { enqueue(); }
-    
     virtual void run() = 0;
+    bool pending() { return Base::pending(); }
   };
 
   void init() { sei(); }

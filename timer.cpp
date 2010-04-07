@@ -14,6 +14,8 @@ void Timer::interrupt() {
   if (count++ < Timer::frequency) return; // TODO: temporary fix, make permanent
   // count++;
   
+  if (app.attitude.estimate.pending()) app.serial.send("Overrun!!\r\n"); // TODO: just for debugging
+  
   app.magnetometer.measure();
   app.accelerometer.measure();
   app.gyros.channels.z.measure();
@@ -38,7 +40,15 @@ void Timer::TimedTasks::run() {
 
 unsigned long int Timer::stamp() {
   CriticalSection cs;
-  return count * OCR2A + TCNT2;
+  return count * ocr2a + TCNT2;
+}
+
+long int Timer::Interval::seconds() const {
+  return value * 1024 / F_CPU;
+}
+
+long int Timer::Interval::microseconds() const {
+  return value * 1024 / (F_CPU / 1000000);
 }
 
 Timer::Stamp::Stamp() {
@@ -49,23 +59,18 @@ void Timer::Stamp::operator ()() {
   value = app.timer.stamp();
 }
 
-long int Timer::Stamp::seconds() const {
-  return value / (F_CPU / 1024);
-}
-
-long int Timer::Stamp::seconds_ago() const {
-  return Stamp().seconds() - seconds();
-}
-
 bool Timer::Stamp::since(long int duration_in_seconds) const {
-  return seconds_ago() < duration_in_seconds;
+  return (Stamp() - *this).seconds() < duration_in_seconds;
 }
 
-Timer::Diagnostic::Diagnostic(const char *message, int seconds) : start(app.timer.stamp()), message(message), report(seconds < 1 || (app.timer.count % (frequency * seconds) == 0)) { }
+Timer::Diagnostic::Diagnostic(const char *message, int seconds) : message(message), report(seconds < 1 || (app.timer.count % (frequency * seconds) == 0)) { }
 
 Timer::Diagnostic::~Diagnostic() {
-  if (report) app.serial.debug(message, static_cast<float>(app.timer.stamp() - start) * Timer::dt() / Timer::ocr2a);
+  if (report) app.serial.debug(message, static_cast<int>((Stamp() - start).microseconds()));
 }
+
+const float Timer::dt = static_cast<float>(ocr2a + 1) * 1024 / F_CPU;
+
 
 ISR(TIMER2_COMPA_vect) {
   app.timer.interrupt();

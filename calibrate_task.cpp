@@ -1,5 +1,6 @@
 #include "calibrate_task.h"
 #include "app.h"
+#include "timer.h"
 
 void CalibrateTask::State::defaults() {
   P0[0] = P1[1] = P2[2] = P3[3] = 5000000000.0f; // TODO: value?
@@ -7,6 +8,7 @@ void CalibrateTask::State::defaults() {
 }
 
 void CalibrateTask::run() {
+  // Timer::Diagnostic d("calibrate", 1);
   measure.wait();
   const Vector& vector = measure.vector;
   
