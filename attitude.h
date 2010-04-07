@@ -2,7 +2,6 @@
 #define __ATTITUDE_H_
 
 #include "timer.h"
-#include "vector_packet.h"
 #include "quaternion.h"
 
 class Attitude {

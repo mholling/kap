@@ -2,7 +2,7 @@
 #define __ACCELEROMETER_H_
 
 #include "i2c.h"
-#include "vector_packet.h"
+#include "vector.h"
 
 class Accelerometer {
 private:
@@ -40,17 +40,19 @@ private:
     ConfigPacket() : I2C::WritePacket(data, i2c_address, bw_rate_reg, 6) { }
   };
   
-  class MeasurementPacket : public VectorPacket {
+  class MeasurementPacket : public I2C::ReadPacket {
+  protected:
+    unsigned char data[6];
+
   public:
-    MeasurementPacket(unsigned char i2c_address, unsigned char i2c_registers) : VectorPacket(i2c_address, i2c_registers) { }
+    MeasurementPacket(unsigned char i2c_address, unsigned char i2c_registers) : I2C::ReadPacket(data, i2c_address, i2c_registers, 6) { }
     
+    Vector vector;
     virtual void before_dequeue() {
       vector[0] =  reinterpret_cast<int *>(data)[0];
       vector[1] = -reinterpret_cast<int *>(data)[1];
       vector[2] = -reinterpret_cast<int *>(data)[2];
     }
-    
-    Vector vector;
   };
   
   RatePacket set_rate;

@@ -1,7 +1,6 @@
 #include "attitude.h"
 #include "app.h"
 #include "vector.h"
-#include "quaternion.h"
 
 void Attitude::Measure::run() {
   app.accelerometer.measure.wait();
