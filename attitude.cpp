@@ -32,7 +32,7 @@ void Attitude::Measure::run() {
 void Attitude::Estimate::init() {
   Vector angle_variance = app.orientation.adjust_variance(square(0.5),   square(0.5),   square(0.9));
   Vector rate_variance  = app.orientation.adjust_variance(square(0.008), square(0.008), square(0.012));
-  Vector bias_variance  = app.orientation.adjust_variance(square(0.1),   square(0.1),   square(0.1));
+  Vector bias_variance  = app.orientation.adjust_variance(square(0.12),   square(0.12),   square(0.1));
   
   roll.set_variances(angle_variance[0], rate_variance[0], bias_variance[0]);
   pitch.set_variances(angle_variance[1], rate_variance[1], bias_variance[1]);
