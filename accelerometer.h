@@ -18,7 +18,7 @@ private:
   class RatePacket : public I2C::WritePacket {
     unsigned char data[1];
   public:
-    enum rate_value { hz12 = 0x07, hz_25, hz_50, hz_100, hz_200, hz_400,hz_800 };
+    enum rate_value { hz12 = 0x07, hz_25, hz_50, hz_100, hz_200, hz_400, hz_800 };
     RatePacket(rate_value rate) : I2C::WritePacket(data, i2c_address, bw_rate_reg, 1) { data[0] = rate; }
   };
 
@@ -41,19 +41,16 @@ private:
   };
   
   class MeasurementPacket : public VectorPacket {
+  public:
+    MeasurementPacket(unsigned char i2c_address, unsigned char i2c_registers) : VectorPacket(i2c_address, i2c_registers) { }
     
-  protected:
-    virtual void before_dequeue() { // TODO: check this orientation!
-      // vector[0] = reinterpret_cast<int *>(data)[0];
-      // vector[1] = reinterpret_cast<int *>(data)[1];
-      // vector[2] = reinterpret_cast<int *>(data)[2];
+    virtual void before_dequeue() {
       vector[0] =  reinterpret_cast<int *>(data)[0];
       vector[1] = -reinterpret_cast<int *>(data)[1];
       vector[2] = -reinterpret_cast<int *>(data)[2];
     }
     
-  public:
-    MeasurementPacket(unsigned char i2c_address, unsigned char i2c_registers) : VectorPacket(i2c_address, i2c_registers) { }
+    Vector vector;
   };
   
   RatePacket set_rate;
@@ -63,10 +60,12 @@ private:
   DataFormatPacket set_data_format;
 
 public:
-  Accelerometer() : set_rate(RatePacket::hz_50), standby(ModePacket::standby), wake(ModePacket::measure), measure(i2c_address, datax0_reg) { }
-  void init() { set_rate(); set_data_format(); configure_interrupt(); wake(); }
+  Accelerometer() : set_rate(RatePacket::hz_100), standby(ModePacket::standby), wake(ModePacket::measure), measure(i2c_address, datax0_reg) { }
+  inline void init() { set_rate(); set_data_format(); configure_interrupt(); wake(); }
   
   MeasurementPacket measure;
+  
+  inline Vector vector() const { return measure.vector; }
 };
 
 #endif

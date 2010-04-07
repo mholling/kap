@@ -5,6 +5,7 @@
 #include "serial.h"
 #include "timer.h"
 #include "eeprom.h"
+#include "orientation.h"
 #include "i2c.h"
 #include "magnetometer.h"
 #include "accelerometer.h"
@@ -28,6 +29,7 @@ public:
   Serial serial;
   Timer timer;
   Eeprom eeprom;
+  Orientation orientation;
   I2C i2c;
   Magnetometer magnetometer;
   Accelerometer accelerometer;

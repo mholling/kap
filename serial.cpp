@@ -22,6 +22,7 @@ void Serial::interrupt() {
 }
 
 void Serial::send(const char *data) {
+  if (data == 0) return; // TODO: needed?
   CriticalSection cs;
   for (const char *c = data; *c != 0; buffer << *c++) ;
 	UCSR0B = _BV(UDRIE0) | _BV(TXEN0);  // enable transmitter and data-register-empty interrupts

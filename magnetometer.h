@@ -23,19 +23,16 @@ private:
   };
   
   class MeasurementPacket : public VectorPacket {
+  public:
+    MeasurementPacket(unsigned char i2c_address, unsigned char i2c_registers) : VectorPacket(i2c_address, i2c_registers) { }
     
-  protected:
-    virtual void before_dequeue() { // TODO: check this orientation!
-      // vector[0] = static_cast<int>((static_cast<unsigned int>(data[0]) << 8) | static_cast<unsigned int>(data[1]));
-      // vector[1] = static_cast<int>((static_cast<unsigned int>(data[2]) << 8) | static_cast<unsigned int>(data[3]));
-      // vector[2] = static_cast<int>((static_cast<unsigned int>(data[4]) << 8) | static_cast<unsigned int>(data[5]));
+    virtual void before_dequeue() {
       vector[0] =  static_cast<int>((static_cast<unsigned int>(data[0]) << 8) | static_cast<unsigned int>(data[1]));
       vector[1] = -static_cast<int>((static_cast<unsigned int>(data[2]) << 8) | static_cast<unsigned int>(data[3]));
       vector[2] = -static_cast<int>((static_cast<unsigned int>(data[4]) << 8) | static_cast<unsigned int>(data[5]));
     }
     
-  public:
-    MeasurementPacket(unsigned char i2c_address, unsigned char i2c_registers) : VectorPacket(i2c_address, i2c_registers) { }
+    Vector vector;
   };
   
   ConfigPacket configure;
@@ -44,10 +41,12 @@ private:
 
 public:
   Magnetometer() : sleep(ModePacket::sleep), wake(ModePacket::continuous), measure(i2c_address, measurement_registers), calibrate(measure, calibration_address, 0.97) { }
-  void init() { configure(); wake(); calibrate.init(); }
+  inline void init() { configure(); wake(); calibrate.init(); }
   
   MeasurementPacket measure;
   CalibrateTask calibrate;
+  
+  inline Vector vector() const { return measure.vector - calibrate.bias(); }
 };
 
 #endif

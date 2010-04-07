@@ -75,6 +75,8 @@ public:
   float pitch() const;
   float roll() const;
   
+  // 3 x 3 Matrix
+  static const Matrix rotation(int axis, float angle);
 };
 
 typedef Matrix<3, 1> Vector;
@@ -134,6 +136,17 @@ template <>
 inline const Matrix<1, 1>& Matrix<1, 1>::invert() {
   data[0] = 1.0 / data[0];
   return *this;
+}
+
+// 3 x 3 rotation matrix:
+template <>
+inline const Matrix<3, 3> Matrix<3, 3>::rotation(int axis, float angle) {
+  Matrix<3, 3> result;
+  result(axis,axis) = 1.0;
+  result((axis + 1) % 3, (axis + 1) % 3) = result((axis + 2) % 3, (axis + 2) % 3) = cos(angle);
+  result((axis + 2) % 3, (axis + 1) % 3) = sin(angle);
+  result((axis + 1) % 3, (axis + 2) % 3) = -sin(angle);
+  return result;
 }
 
 #endif

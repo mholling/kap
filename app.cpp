@@ -4,8 +4,9 @@
 void App::run() {
   scheduler.init();
   serial.init();
-  timer.init();
+  timer.init(); // TODO: should be inited last to make sure to premature tasks run...
   eeprom.init();
+  orientation.init();
   i2c.init();
   magnetometer.init();
   accelerometer.init();

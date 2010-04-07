@@ -29,7 +29,10 @@ public:
       }
     }
     
-    void wait() const { for (volatile bool waiting = true; waiting; waiting = const_cast<T * volatile>(Base::next) != 0) ; }
+    // void wait() const { for (volatile bool waiting = true; waiting; waiting = const_cast<T * volatile>(Base::next) != 0) ; }
+    void wait() const { const_cast<volatile Driven&>(*this).wait(); }
+    void wait() const volatile { while (Base::next != 0) ; } 
+    
     
   protected:
     virtual void after_enqueue() { }

@@ -12,9 +12,9 @@ void Diagnostic::run() {
     app.serial.debug(app.attitude.measure.yaw());
     app.serial.debug(app.attitude.measure.pitch());
     app.serial.debug(app.attitude.measure.roll());
-    app.serial.debug(app.gyros.yaw.estimate.angle());
-    app.serial.debug(app.gyros.pitch.estimate.angle());
-    app.serial.debug(app.gyros.roll.estimate.angle());
+    app.serial.debug(app.attitude.estimate.yaw());
+    app.serial.debug(app.attitude.estimate.pitch());
+    app.serial.debug(app.attitude.estimate.roll());
 #endif
 
 #ifdef CALIBRATION

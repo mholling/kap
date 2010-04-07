@@ -26,11 +26,12 @@ protected:
   
 public:
   CalibrateTask(const VectorPacket& measure, unsigned int address, float lambda) : measure(measure), lambda(lambda), state(address) { }
+  
   void init() { state.init(); }
   void run();
   
   Persistent<State> state; // TODO: make protected eventually
-  Vector vector;
+  inline Vector bias() const { return state.bias; }
 };
 
 #endif

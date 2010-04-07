@@ -22,19 +22,13 @@ public:
   
   class Channels {
   public:
-    Channels() : yaw(0), pitch(3), roll(2), ref(1), fixed(0.5) { }
+    Channels() : x(3), y(2), z(0), ref(1), fixed(0.5) { }
     
-    Analog::Channel yaw;
-    Analog::Channel pitch;
-    Analog::Channel roll;
-    Analog::Channel ref;
+    Analog::Channel x, y, z, ref;
     FakeChannel fixed;
   } channels;
   
-  ShiftRegister::Bit disable;
-  ShiftRegister::Bit enable;
-  ShiftRegister::Bit test_mode;
-  ShiftRegister::Bit normal_mode;
+  ShiftRegister::Bit disable, enable, test_mode, normal_mode;
     
   class Gyro {
   private:
@@ -42,37 +36,15 @@ public:
     Analog::Channel& reference;
     const float range;
     
-    class Estimate : public Timer::Task {
-    private:
-      const Gyros::Gyro& gyro;
-      const Attitude::Measure::angle_method_type angle_method;
-      
-      float x1, x2;
-      float P11, P12, P22;
-      float Q11, Q12, Q22;
-      float R;
-      
-      float old_angle;
-      int revolutions;
-      
-    public:
-      Estimate(const Gyro& gyro, Attitude::Measure::angle_method_type angle_method, float angle_sd, float rate_sd, float bias_sd);
-      void run();
-
-      float angle() const { return x1; }
-      float rate() const { return x2; }
-    };
-    
   public:
-    Gyro(Analog::Channel& value, Analog::Channel& reference, float range, Attitude::Measure::angle_method_type angle_method, float angle_sd, float rate_sd, float bias_sd);
+    Gyro(Analog::Channel& value, Analog::Channel& reference, float range);
         
     float rate() const;
-    Estimate estimate;
   };
   
-  Gyro yaw;
-  Gyro pitch;
-  Gyro roll;
+  Gyro x, y, z;
+  
+  const Vector rates() const;
 };
 
 #endif

@@ -15,7 +15,7 @@ public:
     read(address, reinterpret_cast<char *>(static_cast<T*>(this)), sizeof(T)),
     write(address, reinterpret_cast<char *>(static_cast<T*>(this)), sizeof(T)) { }
   
-  void init() { if (!restore()) T::defaults(); }
+  void init() { if (!restore()) T::defaults(); } // TODO: add after_init callback?
 
   bool restore() {
     if (!read()) return false;
