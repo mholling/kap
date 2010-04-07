@@ -8,6 +8,10 @@ void Orientation::init() {
              Matrix<3, 3>::rotation(2, static_cast<float>(angles.yaw)   * M_PI / 180.0);
 }
 
+const Vector Orientation::adjust_vector(const Vector& vector) const {
+  return rotation * vector;
+}
+
 const Vector Orientation::adjust_variance(float vx, float vy, float vz) const {
   Matrix<3, 3> covariance;
   covariance(0,0) = vx;

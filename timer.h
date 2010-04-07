@@ -14,8 +14,7 @@ private:
   } timed_tasks;
   
 public:
-  enum { frequency = 100, ocr2a = F_CPU / 1024 / frequency - 1 };
-  // enum { frequency = 32, ocr2a = F_CPU / 1024 / frequency - 1 };
+  enum { frequency = 35, ocr2a = F_CPU / 1024 / frequency - 1 };
   static inline const float dt() { return static_cast<float>(ocr2a + 1) * 1024 / F_CPU; }
   
   Timer();
@@ -50,8 +49,9 @@ public:
   private:
     const unsigned long int start;
     const char *message;
+    const bool report;
   public:
-    Diagnostic(const char *message);
+    Diagnostic(const char *message, int seconds = 0);
     ~Diagnostic();
   };
 };

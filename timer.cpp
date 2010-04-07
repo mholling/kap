@@ -61,10 +61,10 @@ bool Timer::Stamp::since(long int duration_in_seconds) const {
   return seconds_ago() < duration_in_seconds;
 }
 
-Timer::Diagnostic::Diagnostic(const char *message) : start(app.timer.stamp()), message(message) { }
+Timer::Diagnostic::Diagnostic(const char *message, int seconds) : start(app.timer.stamp()), message(message), report(seconds < 1 || (app.timer.count % (frequency * seconds) == 0)) { }
 
 Timer::Diagnostic::~Diagnostic() {
-  app.serial.debug(message, static_cast<float>(app.timer.stamp() - start) * Timer::dt() / Timer::ocr2a);
+  if (report) app.serial.debug(message, static_cast<float>(app.timer.stamp() - start) * Timer::dt() / Timer::ocr2a);
 }
 
 ISR(TIMER2_COMPA_vect) {
