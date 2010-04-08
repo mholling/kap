@@ -1,8 +1,10 @@
 #include "app.h"
 #include <avr/io.h>
+#include <avr/interrupt.h>
 
 void App::run() {
-  scheduler.init();
+  sei();
+  
   serial.init();
   timer.init(); // TODO: should be inited last to make sure to premature tasks run...
   eeprom.init();

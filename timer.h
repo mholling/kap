@@ -1,15 +1,15 @@
 #ifndef __TIMER_H_
 #define __TIMER_H_
 
-#include "scheduler.h"
+#include "task.h"
 
 class Timer {
 private:
   unsigned long int count;
   
-  class TimedTasks : public Scheduler::Task {
+  class TimedTasks : public ::Task {
   public:
-    TimedTasks() : Scheduler::Task(Timer::Task::priority + 1) { }
+    TimedTasks() : ::Task(Timer::Task::priority + 1) { }
     void run();
   } timed_tasks;
   
@@ -22,10 +22,10 @@ public:
   
   void interrupt();
   
-  class Task : public Scheduler::Task {
+  class Task : public ::Task {
   public:
     enum { priority = 100 };
-    Task() : Scheduler::Task(priority) { }
+    Task() : ::Task(priority) { }
   };
   
   class Interval {

@@ -1,7 +1,7 @@
 #ifndef __PID_H_
 #define __PID_H_
 
-#include "scheduler.h"
+#include "task.h"
 #include "gyros.h"
 #include "motors.h"
 #include "trajectory.h"

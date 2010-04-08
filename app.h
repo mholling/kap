@@ -1,7 +1,7 @@
 #ifndef __APP_H_
 #define __APP_H_
 
-#include "scheduler.h"
+#include "task.h"
 #include "serial.h"
 #include "timer.h"
 #include "eeprom.h"
@@ -25,7 +25,6 @@ public:
   App() { }
   
   // Hardware:
-  Scheduler scheduler;
   Serial serial;
   Timer timer;
   Eeprom eeprom;
