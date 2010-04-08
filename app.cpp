@@ -10,20 +10,19 @@ void App::run() {
   eeprom.init();
   orientation.init();
   i2c.init();
-  magnetometer.init();
-  accelerometer.init();
   analog.init();
   spi.init();
   shift_register.init();
-  gyros.init();
   pwm.init();
   motors.init();
+
+  magnetometer.init();
+  accelerometer.init();
+  gyros.init();
   
   // trajectory.init();
   attitude.init();
   // pid.init();
-  
-  // scheduler.run();
   
   while (true) { }
 }
