@@ -112,17 +112,6 @@ inline void Vector::rotate_90(int times) {
   }
 }
 
-// template <>
-// inline void Vector::rotate_90(int axis, int times) {
-//   float& first  = data[(axis + 1) % 3];
-//   float& second = data[(axis + 2) % 3];
-//   for (int n = 0; n < times; n++) {
-//     float temp = second;
-//     second = first;
-//     first = -temp;
-//   }
-// }
-
 // Quaternion cross-product:
 template <>
 inline const Quaternion Quaternion::cross(const Quaternion& rhs) const {
