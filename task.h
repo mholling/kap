@@ -3,7 +3,7 @@
 
 #include "prioritised.h"
 
-class Task : protected Prioritised<Task> {
+class Task : public Prioritised<Task> {
 private:
   typedef Prioritised<Task> Base;
   

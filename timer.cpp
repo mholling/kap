@@ -10,6 +10,10 @@ Timer::Timer() : count(0) {
   TIMSK2 = _BV(OCIE2A); 
 }
 
+bool Timer::Task::any() {
+  return ::Task::any() && ::Task::head().level >= priority;
+}
+
 void Timer::interrupt() {
   if (count++ < Timer::frequency) return; // TODO: temporary fix, make permanent
   // count++;
@@ -21,7 +25,7 @@ void Timer::interrupt() {
   app.gyros.channels.x.measure();
   app.gyros.channels.ref.measure();
 
-  if (app.pid.pitch.pending())
+  if (Timer::Task::any())
     app.serial.send("\r\n!\r\n"); // TODO: just for debugging
   else
     timed_tasks();

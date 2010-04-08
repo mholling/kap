@@ -27,6 +27,8 @@ public:
   public:
     enum { priority = 100 };
     Task() : ::Task(priority) { }
+    
+    static bool any();
   };
   
   class Interval {
