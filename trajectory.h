@@ -3,7 +3,7 @@
 
 #include "timer.h"
 
-class Trajectory : public Timer::Task {
+class Trajectory {
 public:
   class Angle {
   private:
@@ -16,9 +16,14 @@ public:
   
   Angle yaw, pitch;
   
+  class Calculate : public Timer::Task {
+  public:
+    Calculate() { }
+    void run();
+  } calculate;
+  
   Trajectory() { }
   void init() { }
-  void run();
 };
 
 #endif

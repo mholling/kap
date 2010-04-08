@@ -21,7 +21,7 @@ void Timer::interrupt() {
   app.gyros.channels.x.measure();
   app.gyros.channels.ref.measure();
 
-  if (app.attitude.estimate.pending())
+  if (app.pid.pitch.pending())
     app.serial.send("\r\n!\r\n"); // TODO: just for debugging
   else
     timed_tasks();
@@ -31,12 +31,11 @@ void Timer::TimedTasks::run() {
   app.magnetometer.calibrate();
   app.attitude.measure();
   app.attitude.estimate();
-  
-  // app.trajectory();
-  // app.pid.yaw();
-  // app.pid.pitch();
+  app.trajectory.calculate();
+  app.pid.yaw();
+  app.pid.pitch();
 
-  app.diagnostic();
+  // app.diagnostic();
 }
 
 unsigned long int Timer::stamp() {

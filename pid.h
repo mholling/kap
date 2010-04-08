@@ -13,8 +13,8 @@ public:
   
   class Controller : public Timer::Task {
   private:
-    const Attitude::Estimate::Kalman actual;
-    const Trajectory::Angle target;
+    const Attitude::Estimate::Kalman& actual;
+    const Trajectory::Angle& target;
     Motors::Motor& motor;
 
     float previous;
@@ -26,7 +26,7 @@ public:
     const float clamp;
     
   public:
-    Controller(const Attitude::Estimate::Kalman actual, const Trajectory::Angle target, Motors::Motor& motor) :
+    Controller(const Attitude::Estimate::Kalman& actual, const Trajectory::Angle& target, Motors::Motor& motor) :
       actual(actual),
       target(target),
       motor(motor),

@@ -5,6 +5,7 @@
 
 class Timer {
 private:
+public:
   unsigned long int count;
   
   class TimedTasks : public ::Task {
@@ -14,7 +15,7 @@ private:
   } timed_tasks;
   
 public:
-  enum { frequency = 100, ocr2a = F_CPU / 1024 / frequency - 1 };
+  enum { frequency = 90, ocr2a = F_CPU / 1024 / frequency - 1 };
   static const float dt;
   
   Timer();
