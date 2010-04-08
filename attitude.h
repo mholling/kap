@@ -22,6 +22,7 @@ public:
   };
   
   class Estimate : public Timer::Task {
+  public:
     class Kalman {
     private:
       float x1, x2;
@@ -31,20 +32,18 @@ public:
 
       float old_angle;
       int revolutions;
+      float actual_rate;
 
     public:
-      // Kalman(float angle_sd, float rate_sd, float bias_sd);
-      // Kalman();
       Kalman() : old_angle(0.0), revolutions(0) { }
       
       void set_variances(float angle_variance, float rate_variance, float bias_variance);
       void filter(float measured_angle, float measured_rate);
 
       float operator ()() const { return x1; }
-      float rate() const { return - x2; }
+      float rate() const { return actual_rate; }
     };
     
-  public:
     Kalman yaw, pitch, roll;
     
     Estimate() { };

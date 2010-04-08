@@ -2,7 +2,7 @@
 #define __PID_H_
 
 #include "task.h"
-#include "gyros.h"
+#include "attitude.h"
 #include "motors.h"
 #include "trajectory.h"
 
@@ -13,7 +13,7 @@ public:
   
   class Controller : public Timer::Task {
   private:
-    const Gyros::Gyro& gyro;
+    const Attitude::Estimate::Kalman actual;
     const Trajectory::Angle target;
     Motors::Motor& motor;
 
@@ -26,21 +26,19 @@ public:
     const float clamp;
     
   public:
-    Controller(const Gyros::Gyro& gyro, const Trajectory::Angle target, Motors::Motor& motor) :
-      gyro(gyro),
+    Controller(const Attitude::Estimate::Kalman actual, const Trajectory::Angle target, Motors::Motor& motor) :
+      actual(actual),
       target(target),
       motor(motor),
-      kp(1.0), ti(0.2), td(0.0), clamp(ti / kp) { reset(); }
-    void init() { }
+      kp(1.0), ti(0.2), td(0.0), clamp(ti / kp) { }
+    void init() { reset(); }
     
     void run();
-
     void reset();
     void update();
   };
   
-  Controller yaw;
-  Controller pitch;
+  Controller yaw, pitch;
 };
 
 #endif

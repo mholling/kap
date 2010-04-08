@@ -35,7 +35,7 @@ void Timer::TimedTasks::run() {
   // app.pid.yaw();
   // app.pid.pitch();
 
-  app.diagnostic();
+  // app.diagnostic();
 }
 
 unsigned long int Timer::stamp() {

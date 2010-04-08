@@ -34,15 +34,17 @@ public:
   ShiftRegister shift_register;  
   Pwm pwm;
   Motors motors;
-
+  
+  // Sensors:
   Magnetometer magnetometer;
   Accelerometer accelerometer;
   Gyros gyros;
   
   // Calculations:
-  // Trajectory trajectory;
+  Trajectory trajectory;
   Attitude attitude;
-  // Pid pid;
+  Pid pid;
+  
   Diagnostic diagnostic;
   
   void run();

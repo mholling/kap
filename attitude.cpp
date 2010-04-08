@@ -84,4 +84,7 @@ void Attitude::Estimate::Kalman::filter(float measured_angle, float measured_rat
   P22 -= P12 * P12 / s;
   P12 -= P12 * P11 / s;
   P11 -= P11 * P11 / s;
+  
+  // compute: actual rate
+  actual_rate = measured_rate - x2;
 }

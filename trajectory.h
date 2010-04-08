@@ -14,8 +14,7 @@ public:
     float operator ()() const { return target; }
   };
   
-  Angle yaw;
-  Angle pitch;
+  Angle yaw, pitch;
   
   Trajectory() { }
   void init() { }

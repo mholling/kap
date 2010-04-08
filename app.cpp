@@ -20,9 +20,9 @@ void App::run() {
   accelerometer.init();
   gyros.init();
   
-  // trajectory.init();
+  trajectory.init();
   attitude.init();
-  // pid.init();
+  pid.init();
   
   while (true) { }
 }
