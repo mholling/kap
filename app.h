@@ -55,14 +55,4 @@ extern App app;
 extern "C" void __cxa_pure_virtual(void);
 // extern "C" void atexit(void);
 
-
-// class EepromTest : public Eeprom::Packet {
-// public:
-//   char data[6];
-//   
-// public:
-//   EepromTest(unsigned int address) : Eeprom::Packet(address, data, 6) { }
-// };
-
-
 #endif

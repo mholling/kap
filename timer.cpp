@@ -13,9 +13,7 @@ Timer::Timer() : count(0) {
 void Timer::interrupt() {
   if (count++ < Timer::frequency) return; // TODO: temporary fix, make permanent
   // count++;
-  
-  if (app.attitude.estimate.pending()) app.serial.send("Overrun!!\r\n"); // TODO: just for debugging
-  
+    
   app.magnetometer.measure();
   app.accelerometer.measure();
   app.gyros.channels.z.measure();
@@ -23,7 +21,10 @@ void Timer::interrupt() {
   app.gyros.channels.x.measure();
   app.gyros.channels.ref.measure();
 
-  timed_tasks();
+  if (app.attitude.estimate.pending())
+    app.serial.send("\r\n!\r\n"); // TODO: just for debugging
+  else
+    timed_tasks();
 }
 
 void Timer::TimedTasks::run() {
@@ -35,7 +36,7 @@ void Timer::TimedTasks::run() {
   // app.pid.yaw();
   // app.pid.pitch();
 
-  // app.diagnostic();
+  app.diagnostic();
 }
 
 unsigned long int Timer::stamp() {
