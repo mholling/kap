@@ -3,7 +3,7 @@
 #include "critical_section.h"
 #include "app.h"
 
-Timer::Timer() : count(0) {
+Timer::Timer() : count(0), steps(0) {
   TCCR2A = _BV(WGM21); // CTC mode
   TCCR2B = _BV(CS22) | _BV(CS21) | _BV(CS20);
   OCR2A = ocr2a; // = F_CPU / 1024 / frequency - 1;
@@ -25,21 +25,26 @@ void Timer::interrupt() {
   app.gyros.channels.x.measure();
   app.gyros.channels.ref.measure();
 
+  // if (Timer::Task::any())
+  //   app.serial.send("\r\n!\r\n"); // TODO: just for debugging
+  // else
+  //   timed_tasks();
+  steps++;
   if (Timer::Task::any())
-    app.serial.send("\r\n!\r\n"); // TODO: just for debugging
-  else
-    timed_tasks();
-}
-
-void Timer::TimedTasks::run() {
-  app.magnetometer.calibrate();
-  app.attitude.measure();
-  app.attitude.estimate();
-  app.trajectory.calculate();
-  app.pid.yaw();
-  app.pid.pitch();
-
-  // app.diagnostic();
+    app.serial.send("#"); // TODO: just for debugging
+  else {
+    float ndt = dt * steps;
+    
+    app.magnetometer.calibrate(ndt);
+    app.attitude.measure(ndt);
+    app.attitude.estimate(ndt);
+    app.trajectory.calculate(ndt);
+    app.pid.yaw(ndt);
+    app.pid.pitch(ndt);
+    app.diagnostic(ndt);
+    
+    steps = 0;
+  }
 }
 
 unsigned long int Timer::stamp() {

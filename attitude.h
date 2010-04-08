@@ -38,7 +38,7 @@ public:
       Kalman() : old_angle(0.0), revolutions(0) { }
       
       void set_variances(float angle_variance, float rate_variance, float bias_variance);
-      void filter(float measured_angle, float measured_rate);
+      void filter(float measured_angle, float measured_rate, float dt);
 
       float operator ()() const { return x1; }
       float rate() const { return actual_rate; }

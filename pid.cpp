@@ -6,8 +6,8 @@ Pid::Pid() : yaw(app.attitude.estimate.yaw,   app.trajectory.yaw,   app.motors.y
 
 void Pid::Controller::run() {
   float error = target() - actual();
-  float derivative = (target() - previous) / Timer::dt - actual.rate();
-  integral += error * Timer::dt;
+  float derivative = (target() - previous) / dt() - actual.rate();
+  integral += error * dt();
   if (integral >  clamp) integral =  clamp;
   if (integral < -clamp) integral = -clamp;
   previous = target();

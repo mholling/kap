@@ -42,34 +42,38 @@ void Attitude::Estimate::init() {
 void Attitude::Estimate::run() {
   Vector rates = app.orientation.adjust_vector(app.gyros.rates());
   
-  yaw.filter(app.attitude.measure.yaw(), rates[0]);
-  pitch.filter(app.attitude.measure.pitch(), rates[1]);
-  roll.filter(app.attitude.measure.roll(), rates[2]);
+  yaw.filter(app.attitude.measure.yaw(), rates[0], dt());
+  pitch.filter(app.attitude.measure.pitch(), rates[1], dt());
+  roll.filter(app.attitude.measure.roll(), rates[2], dt());
 }
 
 void Attitude::Estimate::Kalman::set_variances(float angle_variance, float rate_variance, float bias_variance) {
-  Q11 = rate_variance * Timer::dt * Timer::dt;
-  Q12 = sqrt(Q11 * bias_variance); // 0.0; // TODO?
+  // Q11 = rate_variance * Timer::dt * Timer::dt;
+  // Q12 = sqrt(Q11 * bias_variance); // 0.0; // TODO?
+  Q11 = rate_variance;
+  Q12 = sqrt(rate_variance * bias_variance); // 0.0; // TODO?
   Q22 = bias_variance;
   R   = angle_variance;
 }
 
-void Attitude::Estimate::Kalman::filter(float measured_angle, float measured_rate) {
+void Attitude::Estimate::Kalman::filter(float measured_angle, float measured_rate, float dt) {
   if (measured_angle < old_angle - M_PI) revolutions++;
   if (measured_angle > old_angle + M_PI) revolutions--;
   old_angle = measured_angle;
   
   measured_angle += revolutions * 2 * M_PI;
-    
+  
   // compute:  x = A x + B u
-  x1 += (measured_rate - x2) * Timer::dt;
+  x1 += (measured_rate - x2) * dt;
   
   // compute:  P = A P A' + Q
-  P11 -= P12 * Timer::dt;
-  P12 -= P22 * Timer::dt;
-  P11 -= P12 * Timer::dt;
-  P11 += Q11;
-  P12 += Q12;
+  P11 -= P12 * dt;
+  P12 -= P22 * dt;
+  P11 -= P12 * dt;
+  // P11 += Q11;
+  // P12 += Q12;
+  P11 += Q11 * dt * dt;
+  P12 += Q12 * dt;
   P22 += Q22;
 
   // compute Kalman gain:  S = H P H' + R,  K = P H' / S

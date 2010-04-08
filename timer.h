@@ -5,15 +5,9 @@
 
 class Timer {
 private:
-public:
   unsigned long int count;
-  
-  class TimedTasks : public ::Task {
-  public:
-    TimedTasks() : ::Task(Timer::Task::priority + 1) { }
-    void run();
-  } timed_tasks;
-  
+  int steps;
+    
 public:
   enum { frequency = 90, ocr2a = F_CPU / 1024 / frequency - 1 };
   static const float dt;
@@ -24,9 +18,17 @@ public:
   void interrupt();
   
   class Task : public ::Task {
+  private:
+    float _dt;
+    
+  protected:
+    inline float dt() { return _dt; }
+    
   public:
     enum { priority = 100 };
     Task() : ::Task(priority) { }
+    
+    void operator ()(float ndt) { _dt = ndt; ::Task::operator ()(); }
     
     static bool any();
   };
