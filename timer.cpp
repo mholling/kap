@@ -25,10 +25,7 @@ void Timer::interrupt() {
     
   app.magnetometer.measure();
   app.accelerometer.measure();
-  app.gyros.channels.z.measure();
-  app.gyros.channels.y.measure();
-  app.gyros.channels.x.measure();
-  app.gyros.channels.ref.measure();
+  app.gyros.measure();
   
   steps++;
   if (Timer::Task::any())

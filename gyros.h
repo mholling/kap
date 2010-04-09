@@ -16,10 +16,6 @@ private:
     FakeChannel(float value) : Analog::Channel(0x0f) { data = 1024 * value; }
   };
   
-public:
-  Gyros();
-  void init() { normal_mode(true); enable(true); }
-  
   class Channels {
   public:
     Channels() : x(3), y(2), z(0), ref(1), fixed(0.5) { }
@@ -27,8 +23,6 @@ public:
     Analog::Channel x, y, z, ref;
     FakeChannel fixed;
   } channels;
-  
-  ShiftRegister::Bit disable, enable, test_mode, normal_mode;
     
   class Gyro {
   private:
@@ -42,8 +36,14 @@ public:
     float rate() const;
   };
   
-  Gyro x, y, z; // TODO: make these private
+  Gyro x, y, z;
   
+public:
+  Gyros();
+  void init() { normal_mode(true); enable(true); }
+  
+  ShiftRegister::Bit disable, enable, test_mode, normal_mode;
+  void measure();
   Vector rates() const;
 };
 
