@@ -20,7 +20,7 @@ protected:
     Packet(unsigned int address, char * buffer, unsigned int length, operation_value operation) : address(address), buffer(buffer), length(length), operation(operation), index(0) { }
     
     template <typename T>
-    Packet& operator <<(const T& t) { // TODO: disallow if pending?
+    Packet& operator <<(const T& t) {
       const char * c = reinterpret_cast<const char *>(const_cast<const T*>(&t));
       for (unsigned int n = 0; n < sizeof(T); n++, c++)
         buffer[index++] = *c;
@@ -28,7 +28,7 @@ protected:
     }
 
     template <typename T>
-    Packet& operator >>(T& t) { // TODO: disallow if pending?
+    Packet& operator >>(T& t) {
       char * c = reinterpret_cast<char *>(const_cast<T*>(&t));
       for (unsigned int n = 0; n < sizeof(T); n++, c++)
         *c = buffer[index++];

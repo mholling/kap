@@ -3,7 +3,7 @@
 #include "timer.h"
 
 void Magnetometer::Calibrate::State::defaults() {
-  P0[0] = P1[1] = P2[2] = P3[3] = 5000000000.0f; // TODO: value?
+  P0[0] = P1[1] = P2[2] = P3[3] = 5000000000.0f;
   P1[0] = P2[0] = P2[1] = P3[0] = P3[1] = P3[2] = w3 = h2 = b2 = bias[0] = bias[1] = bias[2] = 0.0;
 }
 
@@ -11,7 +11,7 @@ void Magnetometer::Calibrate::run() {
   app.magnetometer.measure.wait();
   const Vector& vector = app.magnetometer.measure.vector;
 
-  if (state.b2 > 0.5 * state.h2 || (previous - vector).sqabs() > 0.4 * state.h2) { // TODO: adjust these fractions...
+  if (state.b2 > 0.5 * state.h2 || (previous - vector).sqabs() > 0.4 * state.h2) {
     previous = vector;
       
     float Px[4];

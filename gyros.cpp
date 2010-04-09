@@ -1,7 +1,6 @@
 #include "gyros.h"
-#include "app.h"
-#include "timer.h"
 #include "vector.h"
+#include "app.h"
 
 Gyros::Gyros() :
   x(channels.x, channels.ref, 400.0 * M_PI / 180.0),

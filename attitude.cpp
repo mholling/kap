@@ -3,7 +3,7 @@
 #include "vector.h"
 
 void Attitude::Measure::run() {
-  app.accelerometer.measure.wait(); // TODO: move this inside Accelerometer::vector() ?
+  app.accelerometer.measure.wait();
   
   const Vector b1 = app.accelerometer.vector().normalise();          // gravity
   const Vector b2 = b1.cross(app.magnetometer.vector()).normalise(); // magnetic west
