@@ -6,7 +6,6 @@
 class Timer {
 private:
   unsigned long int count;
-  unsigned int steps;
     
 public:
   enum { frequency = 90, ocr2a = F_CPU / 1024 / frequency - 1 };
@@ -17,19 +16,15 @@ public:
   void interrupt();
   
   class Task : public ::Task {
-  private:
-    float dt_;
-    
   protected:
-    inline float dt() { return dt_; }
+    float dt;
     
   public:
     enum { priority = 100 };
     Task() : ::Task(priority) { }
     
-    void operator ()(float dt) { dt_ = dt; ::Task::operator()(); }
-    
     static bool any();
+    void operator ()(float _dt);    
   };
   
   class Interval {

@@ -42,9 +42,9 @@ void Attitude::Estimate::init() {
 void Attitude::Estimate::run() {
   Vector rates = app.orientation.adjust_vector(app.gyros.rates());
   
-  yaw.filter(app.attitude.measure.yaw(), rates[0], dt());
-  pitch.filter(app.attitude.measure.pitch(), rates[1], dt());
-  roll.filter(app.attitude.measure.roll(), rates[2], dt());
+  yaw.filter(app.attitude.measure.yaw(), rates[0], dt);
+  pitch.filter(app.attitude.measure.pitch(), rates[1], dt);
+  roll.filter(app.attitude.measure.roll(), rates[2], dt);
 }
 
 void Attitude::Estimate::Kalman::set_variances(float angle_variance, float rate_variance, float bias_variance) {
