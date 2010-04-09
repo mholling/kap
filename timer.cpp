@@ -24,24 +24,20 @@ void Timer::interrupt() {
   app.gyros.channels.y.measure();
   app.gyros.channels.x.measure();
   app.gyros.channels.ref.measure();
-
-  // if (Timer::Task::any())
-  //   app.serial.send("\r\n!\r\n"); // TODO: just for debugging
-  // else
-  //   timed_tasks();
+  
   steps++;
   if (Timer::Task::any())
     app.serial.send("#"); // TODO: just for debugging
   else {
-    float ndt = dt * steps;
+    float dt = static_cast<float>(ocr2a + 1) * 1024 * steps / F_CPU;
     
-    app.magnetometer.calibrate(ndt);
-    app.attitude.measure(ndt);
-    app.attitude.estimate(ndt);
-    app.trajectory.calculate(ndt);
-    app.pid.yaw(ndt);
-    app.pid.pitch(ndt);
-    app.diagnostic(ndt);
+    app.magnetometer.calibrate(dt);
+    app.attitude.measure(dt);
+    app.attitude.estimate(dt);
+    app.trajectory.calculate(dt);
+    app.pid.yaw(dt);
+    app.pid.pitch(dt);
+    app.diagnostic(dt);
     
     steps = 0;
   }
@@ -77,9 +73,6 @@ Timer::Diagnostic::Diagnostic(const char *message, int seconds) : message(messag
 Timer::Diagnostic::~Diagnostic() {
   if (report) app.serial.debug(message, static_cast<int>((Stamp() - start).microseconds()));
 }
-
-const float Timer::dt = static_cast<float>(ocr2a + 1) * 1024 / F_CPU;
-
 
 ISR(TIMER2_COMPA_vect) {
   app.timer.interrupt();

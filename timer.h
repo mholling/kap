@@ -6,11 +6,10 @@
 class Timer {
 private:
   unsigned long int count;
-  int steps;
+  unsigned int steps;
     
 public:
   enum { frequency = 90, ocr2a = F_CPU / 1024 / frequency - 1 };
-  static const float dt;
   
   Timer();
   void init() { }
@@ -19,16 +18,16 @@ public:
   
   class Task : public ::Task {
   private:
-    float _dt;
+    float dt_;
     
   protected:
-    inline float dt() { return _dt; }
+    inline float dt() { return dt_; }
     
   public:
     enum { priority = 100 };
     Task() : ::Task(priority) { }
     
-    void operator ()(float ndt) { _dt = ndt; ::Task::operator ()(); }
+    void operator ()(float dt) { dt_ = dt; ::Task::operator()(); }
     
     static bool any();
   };
