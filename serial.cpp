@@ -5,8 +5,6 @@
 #include <stdlib.h>
 #include "app.h"
 
-// TODO: reduce temp buffer sizes in these methods!
-
 Serial::Serial() {
   UBRR0 = F_CPU / 38400 / 16 - 1;     // 38.4k baud rate (0.2% error @ 8Mhz)
   UCSR0A = 0;
@@ -29,7 +27,7 @@ void Serial::send(const char *data) {
 }
 
 void Serial::debug(const char * const s, char b) {
-  char temp[64];
+  char temp[24];
   sprintf(temp, "%15s: 0x%02x\r\n", s, b);
   send(temp);
 }
@@ -41,13 +39,13 @@ void Serial::debug(const char * const s, bool b) {
 }
 
 void Serial::debug(const char * const s, int b) {
-  char temp[64];
+  char temp[28];
   sprintf(temp, "%15s: %i\r\n", s, b);
   send(temp);
 }
 
 void Serial::debug_b(const char * const s, char b) {
-  char temp[64];
+  char temp[32];
   char binary[9];
   for (int n = 0; n < 8; n++)
     binary[n] = ((b & _BV(7 - n)) ? '1' : '0');
@@ -55,24 +53,6 @@ void Serial::debug_b(const char * const s, char b) {
   sprintf(temp, "%15s: 0b%s\r\n", s, binary);
   send(temp);
 }
-
-// void Serial::debug(const char * const s, float f) {
-//   char temp[64];
-//   sprintf(temp, "%15s: %.3g\r\n", s, (double)f);
-//   send(temp);
-// }
-// 
-// void Serial::debug(const char * const s, const Vector v) {
-//   char temp[64];
-//   sprintf(temp, "%15s: (%.5g, %.5g, %.5g)\r\n", s, (double)v[0], (double)v[1], (double)v[2]);
-//   send(temp);
-// }
-// 
-// void Serial::debug(float f) {
-//   char temp[13];
-//   sprintf(temp, "%+.4e ", (double)f);
-//   send(temp);
-// }
 
 void Serial::debug(const char * const s, float f, int dp) {
   char temp[22];
