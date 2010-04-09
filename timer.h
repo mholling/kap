@@ -6,6 +6,8 @@
 class Timer {
 private:
   unsigned long int count;
+  int steps;
+  
     
 public:
   enum { frequency = 90, ocr2a = F_CPU / 1024 / frequency - 1 };

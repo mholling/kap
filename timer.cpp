@@ -3,7 +3,7 @@
 #include "critical_section.h"
 #include "app.h"
 
-Timer::Timer() : count(0), previous(0) {
+Timer::Timer() : count(0), steps(0) {
   TCCR2A = _BV(WGM21); // CTC mode
   TCCR2B = _BV(CS22) | _BV(CS21) | _BV(CS20);
   OCR2A = ocr2a; // = F_CPU / 1024 / frequency - 1;
@@ -30,11 +30,12 @@ void Timer::interrupt() {
   app.gyros.channels.x.measure();
   app.gyros.channels.ref.measure();
   
+  steps++;
   if (Timer::Task::any())
     app.serial.send("#"); // TODO: just for debugging
   else {
-    float dt = (count - previous) * static_cast<float>(ocr2a + 1) * 1024 / F_CPU;
-    app.serial.debug((int)(count - previous));
+    float dt = (static_cast<float>(ocr2a + 1) * 1024 / F_CPU) * steps;
+    steps = 0; // must be above task calls below as this function is re-entrant if the tasks overrun
     
     app.magnetometer.calibrate(dt);
     app.attitude.measure(dt);
@@ -43,8 +44,6 @@ void Timer::interrupt() {
     app.pid.yaw(dt);
     app.pid.pitch(dt);
     app.diagnostic(dt);
-    
-    previous = count;
   }
 }
 
