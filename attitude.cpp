@@ -5,8 +5,8 @@
 void Attitude::Measure::run() {
   app.accelerometer.measure.wait();
     
-  const Vector b1 = app.orientation.adjust_vector(app.accelerometer.vector()).normalised();          // gravity
-  const Vector b2 = b1.cross(app.orientation.adjust_vector(app.magnetometer.vector())).normalised(); // magnetic west
+  const Vector b1 = app.orientation.adjust(app.accelerometer.vector()).normalised();          // gravity
+  const Vector b2 = b1.cross(app.orientation.adjust(app.magnetometer.vector())).normalised(); // magnetic west
   const Vector b3 = b1.cross(b2);
   
   const Vector b1r1a1_plus_b2r2a2(a2 * b2[2] - a1 * b1[1], a1 * b1[0], -a2 * b2[0]);
@@ -28,9 +28,9 @@ void Attitude::Measure::run() {
 }
 
 void Attitude::Estimate::init() {
-  Vector angle_variance = app.orientation.adjust_variance(square(0.5),   square(0.5),   square(0.9));
-  Vector rate_variance  = app.orientation.adjust_variance(square(0.008), square(0.008), square(0.012));
-  Vector bias_variance  = app.orientation.adjust_variance(square(0.12),   square(0.12),   square(0.1));
+  Vector angle_variance = app.orientation.variance_from_sd(0.5,   0.5,   0.9);
+  Vector rate_variance  = app.orientation.variance_from_sd(0.008, 0.008, 0.012);
+  Vector bias_variance  = app.orientation.variance_from_sd(0.12,  0.12,  0.1);
   
   roll.set_variances(angle_variance[0], rate_variance[0], bias_variance[0]);
   pitch.set_variances(angle_variance[1], rate_variance[1], bias_variance[1]);
@@ -40,7 +40,7 @@ void Attitude::Estimate::init() {
 }
 
 void Attitude::Estimate::run() {
-  Vector rates = app.orientation.adjust_vector(app.gyros.rates());
+  Vector rates = app.orientation.adjust(app.gyros.rates());
   
   yaw.filter(app.attitude.measure.yaw(), rates[0], dt);
   pitch.filter(app.attitude.measure.pitch(), rates[1], dt);
@@ -48,11 +48,9 @@ void Attitude::Estimate::run() {
 }
 
 void Attitude::Estimate::Kalman::set_variances(float angle_variance, float rate_variance, float bias_variance) {
-  // Q11 = rate_variance * Timer::dt * Timer::dt;
-  // Q12 = sqrt(Q11 * bias_variance); // 0.0; // TODO?
   Q11 = rate_variance;
-  Q12 = sqrt(rate_variance * bias_variance); // 0.0; // TODO?
   Q22 = bias_variance;
+  Q12 = sqrt(rate_variance * bias_variance);
   R   = angle_variance;
 }
 
@@ -70,8 +68,6 @@ void Attitude::Estimate::Kalman::filter(float measured_angle, float measured_rat
   P11 -= P12 * dt;
   P12 -= P22 * dt;
   P11 -= P12 * dt;
-  // P11 += Q11;
-  // P12 += Q12;
   P11 += Q11 * dt * dt;
   P12 += Q12 * dt;
   P22 += Q22;

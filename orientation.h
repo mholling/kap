@@ -18,8 +18,8 @@ public:
   Orientation() : angles(0xf0) { } // TODO: unified scheme for EEPROM addresses!
   void init();
   
-  Vector adjust_vector(const Vector& vector) const;
-  Vector adjust_variance(float vx, float vy, float vz) const;
+  Vector adjust(const Vector& vector) const;
+  Vector variance_from_sd(float sdx, float sdy, float sdz) const;
 };
 
 #endif
