@@ -67,7 +67,7 @@ public:
   
   MeasurementPacket measure;
   
-  inline Vector vector() const { return measure.vector; }
+  Vector vector() const;
 };
 
 #endif

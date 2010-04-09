@@ -3,10 +3,10 @@
 #include "vector.h"
 
 void Attitude::Measure::run() {
-  app.accelerometer.measure.wait();
-    
-  const Vector b1 = app.orientation.adjust(app.accelerometer.vector()).normalised();          // gravity
-  const Vector b2 = b1.cross(app.orientation.adjust(app.magnetometer.vector())).normalised(); // magnetic west
+  app.accelerometer.measure.wait(); // TODO: move this inside Accelerometer::vector() ?
+  
+  const Vector b1 = app.accelerometer.vector().normalise();          // gravity
+  const Vector b2 = b1.cross(app.magnetometer.vector()).normalise(); // magnetic west
   const Vector b3 = b1.cross(b2);
   
   const Vector b1r1a1_plus_b2r2a2(a2 * b2[2] - a1 * b1[1], a1 * b1[0], -a2 * b2[0]);
@@ -40,7 +40,7 @@ void Attitude::Estimate::init() {
 }
 
 void Attitude::Estimate::run() {
-  Vector rates = app.orientation.adjust(app.gyros.rates());
+  const Vector rates = app.gyros.rates();
   
   yaw.filter(app.attitude.measure.yaw(), rates[0], dt);
   pitch.filter(app.attitude.measure.pitch(), rates[1], dt);

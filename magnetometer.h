@@ -76,7 +76,7 @@ public:
   MeasurementPacket measure;
   Calibrate calibrate;
   
-  inline Vector vector() const { return measure.vector - calibrate.bias(); }
+  Vector vector() const;
 };
 
 #endif

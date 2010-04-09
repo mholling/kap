@@ -23,10 +23,8 @@ float Gyros::Gyro::rate() const {
   return (value() / reference() - 1.0) * range;
 }
 
-const Vector Gyros::rates() const {
-  Vector result;
-  result[0] = x.rate();
-  result[1] = y.rate();
-  result[2] = z.rate();
+Vector Gyros::rates() const {
+  Vector result(x.rate(), y.rate(), z.rate());
+  app.orientation.adjust(result);
   return result;
 }

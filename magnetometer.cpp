@@ -42,3 +42,9 @@ void Magnetometer::Calibrate::run() {
     if (!state.stored.since(60 * autosave_minutes)) state.store(); // save calibration data every autosave interval
   }
 }
+
+Vector Magnetometer::vector() const {
+  Vector result = measure.vector - calibrate.bias();
+  app.orientation.adjust(result);
+  return result;
+}

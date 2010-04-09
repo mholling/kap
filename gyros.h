@@ -42,9 +42,9 @@ public:
     float rate() const;
   };
   
-  Gyro x, y, z;
+  Gyro x, y, z; // TODO: make these private
   
-  const Vector rates() const;
+  Vector rates() const;
 };
 
 #endif

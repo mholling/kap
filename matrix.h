@@ -59,7 +59,7 @@ public:
   }
   
   // Columns:
-  const Matrix cross(const Matrix& rhs) const;
+  Matrix cross(const Matrix& rhs) const;
   float dot(const Matrix& rhs) const { return (t() * rhs)[0]; } 
   float sqabs() const { return dot(*this); }
   float abs() const { return sqrt(sqabs()); }
@@ -85,7 +85,7 @@ typedef Matrix<4, 1> Quaternion;
 
 // Vector cross-product:
 template <>
-inline const Vector Vector::cross(const Vector& rhs) const {
+inline Vector Vector::cross(const Vector& rhs) const {
   return Vector(data[1] * rhs[2] - data[2] * rhs[1], data[2] * rhs[0] - data[0] * rhs[2], data[0] * rhs[1] - data[1] * rhs[0]);
 }
 
@@ -114,7 +114,7 @@ inline void Vector::rotate_90(int times) {
 
 // Quaternion cross-product:
 template <>
-inline const Quaternion Quaternion::cross(const Quaternion& rhs) const {
+inline Quaternion Quaternion::cross(const Quaternion& rhs) const {
   Quaternion result;
   for (int n = 0; n < 3; n++) {
     result[n] = data[3] * rhs[n] + rhs[3] * data[n];
