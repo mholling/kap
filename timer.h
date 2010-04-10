@@ -13,7 +13,7 @@ public:
   enum { frequency = 90, ocr2a = F_CPU / 1024 / frequency - 1 };
   
   Timer();
-  void init() { }
+  void init();
   
   void interrupt();
   

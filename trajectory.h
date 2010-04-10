@@ -23,7 +23,7 @@ public:
   } calculate;
   
   Trajectory() { }
-  void init() { }
+  inline void init() { }
 };
 
 #endif

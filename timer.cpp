@@ -7,7 +7,10 @@ Timer::Timer() : count(0), steps(0) {
   TCCR2A = _BV(WGM21); // CTC mode
   TCCR2B = _BV(CS22) | _BV(CS21) | _BV(CS20);
   OCR2A = ocr2a; // = F_CPU / 1024 / frequency - 1;
-  TIMSK2 = _BV(OCIE2A);
+}
+
+void Timer::init() {
+  TIMSK2 = _BV(OCIE2A);  
 }
 
 bool Timer::Task::any() {
@@ -20,8 +23,7 @@ void Timer::Task::operator ()(float _dt) {
 }
 
 void Timer::interrupt() {
-  if (count++ < Timer::frequency) return; // TODO: temporary fix, make permanent
-  // count++;
+  count++;
     
   app.magnetometer.measure();
   app.accelerometer.measure();

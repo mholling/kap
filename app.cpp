@@ -1,12 +1,10 @@
 #include "app.h"
-#include <avr/io.h>
 #include <avr/interrupt.h>
 
 void App::run() {
   sei();
   
   serial.init();
-  timer.init(); // TODO: should be inited last to make sure to premature tasks run...
   eeprom.init();
   orientation.init();
   i2c.init();
@@ -24,6 +22,8 @@ void App::run() {
   attitude.init();
   pid.init();
   
+  timer.init(); // init timerlast so timed tasks can't preceed other init() calls
+    
   while (true) { }
 }
 

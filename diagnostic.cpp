@@ -5,10 +5,10 @@
 
 void Diagnostic::run() {
   if (count++ % (Timer::frequency / 20) == 0) {
-    // app.serial.debug(static_cast<int>(app.attitude.estimate.yaw()   * 1800.0 / M_PI));
-    // app.serial.debug(static_cast<int>(app.attitude.estimate.pitch() * 1800.0 / M_PI));
-    // app.serial.debug(static_cast<int>(app.attitude.estimate.roll()  * 1800.0 / M_PI));
-    // app.serial.line();
+    app.serial.debug(static_cast<int>(app.attitude.estimate.yaw()   * 1800.0 / M_PI));
+    app.serial.debug(static_cast<int>(app.attitude.estimate.pitch() * 1800.0 / M_PI));
+    app.serial.debug(static_cast<int>(app.attitude.estimate.roll()  * 1800.0 / M_PI));
+    app.serial.line();
   }
 }
 

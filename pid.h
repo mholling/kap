@@ -9,7 +9,7 @@
 class Pid {
 public:
   Pid();
-  void init() { yaw.init(); pitch.init(); }
+  inline void init() { yaw.init(); pitch.init(); }
   
   class Controller : public Timer::Task {
   private:
