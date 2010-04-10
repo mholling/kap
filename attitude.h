@@ -8,12 +8,12 @@ class Attitude {
 public:
   class Measure : public Timer::Task {
   private:
-    const float a1, a2; // TODO: normalise these weights around a1?
+    const float a2; // a1 = 1.0, a2 is relative to a1
     
     Quaternion quaternion;
     
   public:
-    Measure() : a1(1.0), a2(0.5) { }
+    Measure() : a2(0.5) { }
     void run();
     
     float   yaw() const { return quaternion.yaw(); }
