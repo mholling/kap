@@ -6,7 +6,7 @@
 class ShiftRegister {
 public:
   ShiftRegister();
-  void init() { }
+  inline void init() { }
   
   class Bit : public Spi::WritePacket {
   private:

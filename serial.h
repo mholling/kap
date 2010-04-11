@@ -11,7 +11,7 @@ private:
 public:
   Serial();
   
-  void init() { }
+  inline void init() { }
   
   void interrupt();
   

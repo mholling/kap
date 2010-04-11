@@ -15,7 +15,7 @@ private:
   Persistent<Angles> angles;
   
 public:
-  Orientation() : angles(0xf0) { } // TODO: unified scheme for EEPROM addresses!
+  Orientation() : angles(0x00) { }
   void init();
   
   void adjust(Vector& vector) const;
