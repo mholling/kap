@@ -43,7 +43,7 @@ public:
   void init() { normal_mode(true); enable(true); }
   
   ShiftRegister::Bit disable, enable, test_mode, normal_mode;
-  void measure();
+  void measure(bool wait = false);
   Vector rates() const;
 };
 

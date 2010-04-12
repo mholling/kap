@@ -22,11 +22,11 @@ float Gyros::Gyro::rate() const {
   return (value() / reference() - 1.0) * range;
 }
 
-void Gyros::measure() {
-  channels.z.measure();
-  channels.y.measure();
-  channels.x.measure();
-  channels.ref.measure();
+void Gyros::measure(bool wait) {
+  channels.z.measure(wait);
+  channels.y.measure(wait);
+  channels.x.measure(wait);
+  channels.ref.measure(wait);
 }
 
 Vector Gyros::rates() const {

@@ -32,11 +32,25 @@ void Attitude::Estimate::init() {
   Vector rate_variance  = app.orientation.variance_from_sd(0.008, 0.008, 0.012);
   Vector bias_variance  = app.orientation.variance_from_sd(0.12,  0.12,  0.1);
   
-  roll.set_variances(angle_variance[0], rate_variance[0], bias_variance[0]);
-  pitch.set_variances(angle_variance[1], rate_variance[1], bias_variance[1]);
-  yaw.set_variances(angle_variance[2], rate_variance[2], bias_variance[2]);
+  app.accelerometer.measure(true);
+  app.magnetometer.measure(true);
+  app.gyros.measure(true);
+  app.attitude.measure(true);
   
- // TODO: eventually, initialize Kalman states to measured attitude
+  const Vector initial_rates = app.gyros.rates();
+  
+   roll.init( app.attitude.measure.roll(), initial_rates[0], angle_variance[0], rate_variance[0], bias_variance[0]);
+  pitch.init(app.attitude.measure.pitch(), initial_rates[1], angle_variance[1], rate_variance[1], bias_variance[1]);
+    yaw.init(  app.attitude.measure.yaw(), initial_rates[2], angle_variance[2], rate_variance[2], bias_variance[2]);
+}
+
+void Attitude::Estimate::Kalman::init(float initial_angle, float initial_rate, float angle_variance, float rate_variance, float bias_variance) {
+  x1  = initial_angle;
+  x2  = initial_rate;
+  Q11 = rate_variance;
+  Q22 = bias_variance;
+  Q12 = sqrt(rate_variance * bias_variance);
+  R   = angle_variance;
 }
 
 void Attitude::Estimate::run() {
@@ -45,13 +59,6 @@ void Attitude::Estimate::run() {
   yaw.filter(app.attitude.measure.yaw(), rates[0], dt);
   pitch.filter(app.attitude.measure.pitch(), rates[1], dt);
   roll.filter(app.attitude.measure.roll(), rates[2], dt);
-}
-
-void Attitude::Estimate::Kalman::set_variances(float angle_variance, float rate_variance, float bias_variance) {
-  Q11 = rate_variance;
-  Q22 = bias_variance;
-  Q12 = sqrt(rate_variance * bias_variance);
-  R   = angle_variance;
 }
 
 void Attitude::Estimate::Kalman::filter(float measured_angle, float measured_rate, float dt) {
